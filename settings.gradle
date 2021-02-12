@@ -1,0 +1,5 @@
+rootProject.name = 'common'
+include 'spigot'
+include 'bungeecord'
+include 'shared'
+

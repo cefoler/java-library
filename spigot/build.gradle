@@ -1,0 +1,25 @@
+plugins {
+    id 'java'
+}
+
+group 'com.celeste'
+version '1.0-SNAPSHOT'
+
+repositories {
+    mavenLocal()
+    mavenCentral()
+
+    maven { url 'https://hub.spigotmc.org/nexus/content/repositories/snapshots/'}
+    maven { url 'https://oss.sonatype.org/content/repositories/snapshots'}
+
+    maven { url 'https://jitpack.io' }
+
+}
+
+dependencies {
+    compileOnly 'org.spigotmc:spigot-api:1.8.8-R0.1-SNAPSHOT'
+    implementation 'com.github.SaiintBrisson.command-framework:bukkit:1.0.0'
+
+    compileOnly 'org.projectlombok:lombok:1.18.10'
+    annotationProcessor 'org.projectlombok:lombok:1.18.10'
+}
