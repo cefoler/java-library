@@ -12,11 +12,23 @@ public class JacksonAdapter {
 
     public final ObjectMapper factory = new ObjectMapper();
 
-    public <T> T fromJson(final String json, final Class<T> clazz) throws JsonProcessingException {
-        return factory.readValue(json, clazz);
+    public <T> T fromJson(final String json, final Class<T> clazz) {
+        try {
+            return factory.readValue(json, clazz);
+        } catch (JsonProcessingException exception) {
+            exception.printStackTrace();
+        }
+
+        return null;
     }
-    public <T> String toJson(final T value) throws JsonProcessingException {
-        return factory.writeValueAsString(value);
+    public <T> String toJson(final T value) {
+        try {
+            return factory.writeValueAsString(value);
+        } catch (JsonProcessingException exception) {
+            exception.printStackTrace();
+        }
+
+        return null;
     }
 
     public ObjectNode createNode() {
