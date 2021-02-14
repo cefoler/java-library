@@ -26,13 +26,13 @@ public class BungeePlugin extends Plugin {
                 messageHolder.setMessage(MessageType.ERROR, "§cUm erro ocorreu.");
                 messageHolder.setMessage(MessageType.INCORRECT_TARGET, "§cApenas jogadores podem executar esse comando.");
                 messageHolder.setMessage(MessageType.INCORRECT_USAGE, "§cUso incorreto! Utilize: /{usage}");
-                messageHolder.setMessage(MessageType.NO_PERMISSION, "&cVocê não tem permissão para executar esse comando.");
+                messageHolder.setMessage(MessageType.NO_PERMISSION, "§cVocê não tem permissão para executar esse comando.");
             }
             case "eua": {
                 messageHolder.setMessage(MessageType.ERROR, "§cA error occurred.");
                 messageHolder.setMessage(MessageType.INCORRECT_TARGET, "§cOnly players can execute this command..");
                 messageHolder.setMessage(MessageType.INCORRECT_USAGE, "§cWrong use! The correct is: /{usage}");
-                messageHolder.setMessage(MessageType.NO_PERMISSION, "&cYou don't have the permission to use this command!");
+                messageHolder.setMessage(MessageType.NO_PERMISSION, "§cYou don't have the permission to use this command!");
             }
         }
 
