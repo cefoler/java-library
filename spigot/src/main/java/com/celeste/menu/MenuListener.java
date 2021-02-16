@@ -7,6 +7,11 @@ import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.inventory.InventoryOpenEvent;
 import org.bukkit.inventory.Inventory;
 
+/**
+ * The listener for the Menu events.
+ *
+ * @author luiza
+ */
 public class MenuListener implements Listener {
 
     @EventHandler(ignoreCancelled = true)
@@ -32,4 +37,5 @@ public class MenuListener implements Listener {
         if (inventory.getHolder() instanceof MenuHolder)
             ((MenuHolder) (inventory.getHolder())).handleOpen(event);
     }
+
 }

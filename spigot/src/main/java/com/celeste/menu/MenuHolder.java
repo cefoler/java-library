@@ -31,6 +31,12 @@ public class MenuHolder implements InventoryHolder {
         this.propertiesMap = new HashMap<>(propertiesMap);
     }
 
+    /**
+     * Puts the item on the specific slot.
+     *
+     * @param item ItemStack
+     * @param slot Slot
+     */
     public final MenuItem slot(int slot, ItemStack item) {
         final MenuItem menuItem = new MenuItem(slot).withItem(item);
 
@@ -47,6 +53,11 @@ public class MenuHolder implements InventoryHolder {
         return menuItem;
     }
 
+    /**
+     * Creates the inventory and sets all items.
+     *
+     * @param player Player that will open the inventory
+     */
     public void show(Player player) {
         menu.onRender(player, this);
 
@@ -81,6 +92,9 @@ public class MenuHolder implements InventoryHolder {
         menu.onClose(event, this);
     }
 
+    /**
+     * Gets the properties with that Key on the ImmutableMap.
+     */
     public <T> T getProperty(String key) {
         return (T) propertiesMap.get(key);
     }

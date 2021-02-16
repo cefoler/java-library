@@ -1,4 +1,4 @@
-package com.celeste.util;
+package com.celeste.util.item;
 
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.util.io.BukkitObjectInputStream;

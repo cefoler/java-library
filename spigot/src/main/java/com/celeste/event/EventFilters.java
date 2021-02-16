@@ -11,7 +11,9 @@ import org.bukkit.event.player.PlayerMoveEvent;
 
 import java.util.function.Predicate;
 
-@SuppressWarnings("unchecked")
+/**
+ * EventFilters that can be used along with the EventWaiter
+ */
 public class EventFilters {
 
     private static final Predicate<? extends Cancellable> CANCELLED = Cancellable::isCancelled;

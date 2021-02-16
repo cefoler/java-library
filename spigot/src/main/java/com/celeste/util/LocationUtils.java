@@ -7,7 +7,7 @@ public class LocationUtils {
 
     public static String serialize(Location location) {
         return location.getWorld().getName() + ";" + location.getX() + ";"
-            + location.getY() + ";" + location.getZ() + ";" + location.getYaw() + ";" + location.getPitch() ;
+            + location.getY() + ";" + location.getZ() + ";" + location.getYaw() + ";" + location.getPitch();
     }
 
     public static Location deserialize(String s) {

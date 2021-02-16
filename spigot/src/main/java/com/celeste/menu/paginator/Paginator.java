@@ -8,6 +8,13 @@ import java.util.LinkedList;
 import java.util.List;
 
 @AllArgsConstructor
+
+/**
+ * Will create a paginator for the Menu with the
+ * specific List.
+ *
+ * @author luiza
+ */
 public class Paginator<T> {
 
     private int pageSize;

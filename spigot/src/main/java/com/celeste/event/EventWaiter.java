@@ -10,7 +10,10 @@ import java.util.Objects;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
 
-public class EventSubscription<E extends Event> {
+/**
+ * This class is used to trigger when the specific Event is triggered by Bukkit.
+ */
+public class EventWaiter<E extends Event> {
 
     private final Class<E> clazz;
     private Predicate<E> filter;
@@ -23,8 +26,11 @@ public class EventSubscription<E extends Event> {
     private EventPriority priority;
     private boolean ignoreCancelled;
 
-
-    private EventSubscription(Class<E> clazz) {
+    /**
+     * Constructor for the EventSubscription
+     * @param clazz Event class.
+     */
+    private EventWaiter(Class<E> clazz) {
         this.clazz = clazz;
         this.filter = Objects::nonNull;
         this.expireAfterExecute = false;
@@ -33,33 +39,39 @@ public class EventSubscription<E extends Event> {
         this.ignoreCancelled = false;
     }
 
-    public static <T extends Event> EventSubscription<T> of(Class<T> clazz) {
-        return new EventSubscription<>(clazz);
+    public static <T extends Event> EventWaiter<T> of(Class<T> clazz) {
+        return new EventWaiter<>(clazz);
     }
 
-    public EventSubscription<E> filter(Predicate<E> predicate) {
+    /**
+     * Filters the contents of the Event.
+     */
+    public EventWaiter<E> filter(Predicate<E> predicate) {
         filter = filter.and(predicate);
         return this;
     }
 
-    public EventSubscription<E> expireAfterExecute(int executions) {
+    public EventWaiter<E> expireAfterExecute(int executions) {
         this.expireAfterExecute = true;
         this.executions = executions;
         return this;
     }
 
-    public EventSubscription<E> priority(EventPriority priority) {
+    public EventWaiter<E> priority(EventPriority priority) {
         this.priority = priority;
         return this;
     }
 
-    public EventSubscription<E> ignoreCancelled(boolean ignoreCancelled) {
+    /**
+     * Boolean for ignoreCancelled of the Event.
+     */
+    public EventWaiter<E> ignoreCancelled(boolean ignoreCancelled) {
         this.ignoreCancelled = ignoreCancelled;
         return this;
     }
 
 
-    public EventSubscription<E> handler(Consumer<E> consumer) {
+    public EventWaiter<E> handler(Consumer<E> consumer) {
         if (action == null) {
             action = consumer;
         } else {
@@ -69,7 +81,10 @@ public class EventSubscription<E extends Event> {
         return this;
     }
 
-    public EventSubscription<E> cancel() {
+    /**
+     * Cancel event.
+     */
+    public EventWaiter<E> cancel() {
         return handler(e -> {
             if (e instanceof Cancellable) {
                 ((Cancellable) e).setCancelled(true);
@@ -85,7 +100,7 @@ public class EventSubscription<E extends Event> {
     @AllArgsConstructor
     private static class EventListenerExecutor<I extends Event> implements Listener, EventExecutor {
 
-        private final EventSubscription<I> builder;
+        private final EventWaiter<I> builder;
 
         @Override
         public void execute(Listener listener, Event e) {
