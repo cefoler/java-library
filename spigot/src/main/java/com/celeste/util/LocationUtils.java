@@ -12,7 +12,7 @@ public class LocationUtils {
 
     public static Location deserialize(String s) {
         String[] stripped = s.split(";");
-        if (stripped.length != 4) return null;
+        if (stripped.length != 6) return null;
 
         return new Location(
             Bukkit.getWorld(stripped[0]),
