@@ -15,8 +15,14 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
 
-public class BungeePlugin extends Plugin {
+public abstract class BungeePlugin extends Plugin {
 
+    /**
+     * Starts the BukkitFrame and MessageHolder
+     * With the default messages
+     *
+     * @param objects Command classes
+     */
     public void startCommandManager(final String language, final Object... objects) {
         final BungeeFrame frame = new BungeeFrame(this);
         final MessageHolder messageHolder = frame.getMessageHolder();
@@ -59,6 +65,11 @@ public class BungeePlugin extends Plugin {
         return null;
     }
 
+    /**
+     * Registers all listeners used as parameters
+     *
+     * @param listeners Listener classes
+     */
     public void registerListeners(Listener... listeners) {
         final PluginManager manager = getProxy().getPluginManager();
 

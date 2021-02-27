@@ -1,8 +1,10 @@
 package com.celeste.util;
 
+import lombok.experimental.UtilityClass;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 
+@UtilityClass
 public class LocationUtils {
 
     public static String serialize(Location location) {

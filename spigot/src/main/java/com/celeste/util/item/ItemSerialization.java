@@ -1,5 +1,6 @@
 package com.celeste.util.item;
 
+import lombok.experimental.UtilityClass;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.util.io.BukkitObjectInputStream;
 import org.bukkit.util.io.BukkitObjectOutputStream;
@@ -11,21 +12,21 @@ import java.io.IOException;
 import static org.yaml.snakeyaml.external.biz.base64Coder.Base64Coder.decodeLines;
 import static org.yaml.snakeyaml.external.biz.base64Coder.Base64Coder.encodeLines;
 
+@UtilityClass
 public class ItemSerialization {
 
     public static String serialize(final ItemStack[] items) {
         try (final ByteArrayOutputStream byteStream = new ByteArrayOutputStream()) {
 
-            try (final BukkitObjectOutputStream bukkitStream = new BukkitObjectOutputStream(byteStream)) {
-                bukkitStream.writeInt(items.length);
+            final BukkitObjectOutputStream bukkitStream = new BukkitObjectOutputStream(byteStream);
 
-                for (final ItemStack item : items) bukkitStream.writeObject(item);
+            bukkitStream.writeInt(items.length);
+            for (final ItemStack item : items) bukkitStream.writeObject(item);
 
-                return encodeLines(byteStream.toByteArray());
-            }
+            return encodeLines(byteStream.toByteArray());
 
         } catch (IOException exception) {
-            exception.printStackTrace();
+            System.out.println("Error while serializing an item. " + exception.getMessage());
         }
 
         return null;
@@ -34,16 +35,15 @@ public class ItemSerialization {
     public static ItemStack[] deserialize(final String data) {
         try (final ByteArrayInputStream inputStream = new ByteArrayInputStream(decodeLines(data))) {
 
-            try (final BukkitObjectInputStream dataInput = new BukkitObjectInputStream(inputStream)) {
-                final ItemStack[] items = new ItemStack[dataInput.readInt()];
+            final BukkitObjectInputStream dataInput = new BukkitObjectInputStream(inputStream);
 
-                for (int i=0; i<items.length; i++)  items[i] = (ItemStack) dataInput.readObject();
+            final ItemStack[] items = new ItemStack[dataInput.readInt()];
+            for (int i = 0; i < items.length; i++) items[i] = (ItemStack) dataInput.readObject();
 
-                return items;
-            }
+            return items;
 
         } catch (IOException | ClassNotFoundException exception) {
-            exception.printStackTrace();
+            System.out.println("Error while deserializing an item. " + exception.getMessage());
         }
 
         return new ItemStack[0];

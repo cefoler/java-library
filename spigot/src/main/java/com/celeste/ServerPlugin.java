@@ -1,14 +1,14 @@
 package com.celeste;
 
-import com.celeste.menu.MenuListener;
 import me.saiintbrisson.bukkit.command.BukkitFrame;
 import me.saiintbrisson.minecraft.command.message.MessageHolder;
 import me.saiintbrisson.minecraft.command.message.MessageType;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
+import com.celeste.menu.MenuListener;
 
-public class ServerPlugin extends JavaPlugin {
+public abstract class ServerPlugin extends JavaPlugin {
 
     /**
      * Registers all listeners used as parameters

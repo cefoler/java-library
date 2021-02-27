@@ -2,6 +2,7 @@ package com.celeste.event.wrappers;
 
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
+import org.jetbrains.annotations.NotNull;
 
 public abstract class EventWrapper extends Event {
 
@@ -12,7 +13,7 @@ public abstract class EventWrapper extends Event {
     }
 
     @Override
-    public HandlerList getHandlers() {
+    public @NotNull HandlerList getHandlers() {
         return handlerList;
     }
 

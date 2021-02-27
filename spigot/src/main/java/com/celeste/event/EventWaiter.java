@@ -5,6 +5,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.event.*;
 import org.bukkit.plugin.EventExecutor;
 import org.bukkit.plugin.Plugin;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.Objects;
 import java.util.function.Consumer;
@@ -103,36 +104,26 @@ public class EventWaiter<E extends Event> {
         private final EventWaiter<I> builder;
 
         @Override
-        public void execute(Listener listener, Event e) {
-            if (!builder.clazz.isInstance(e)) {
-                return;
-            }
+        public void execute(@NotNull Listener listener, @NotNull Event e) {
+            if (!builder.clazz.isInstance(e)) return;
 
-            I event = builder.clazz.cast(e);
-            if (builder.filter.negate().test(event)) {
-                return;
-            }
+            final I event = builder.clazz.cast(e);
+            if (builder.filter.negate().test(event)) return;
 
-            Consumer<I> action = builder.action;
-            if (action != null) {
-                action.accept(event);
-            }
+            final Consumer<I> action = builder.action;
+            if (action != null) action.accept(event);
 
             if (builder.expireAfterExecute) {
-                if (builder.executions > 1) {
-                    builder.executions--;
-                } else {
-                    unregister();
-                }
+                if (builder.executions > 1) builder.executions--;
+                else unregister();
             }
 
         }
 
         public void unregister() {
-            for (HandlerList handlerList : HandlerList.getHandlerLists()) {
-                handlerList.unregister(this);
-            }
+            for (HandlerList handlerList : HandlerList.getHandlerLists()) handlerList.unregister(this);
         }
 
     }
+
 }
