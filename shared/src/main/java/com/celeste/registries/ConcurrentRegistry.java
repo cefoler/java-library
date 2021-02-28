@@ -1,5 +1,7 @@
 package com.celeste.registries;
 
+import lombok.Getter;
+
 import java.util.Collection;
 import java.util.Map;
 import java.util.Set;
@@ -7,6 +9,7 @@ import java.util.concurrent.ConcurrentHashMap;
 
 public class ConcurrentRegistry<K, V> {
 
+    @Getter
     private final Map<K, V> map;
 
     public ConcurrentRegistry() {
@@ -27,6 +30,10 @@ public class ConcurrentRegistry<K, V> {
 
     public void remove(K k) {
         map.remove(k);
+    }
+
+    public int size() {
+       return map.size();
     }
 
     public Set<Map.Entry<K, V>> getKeys() {

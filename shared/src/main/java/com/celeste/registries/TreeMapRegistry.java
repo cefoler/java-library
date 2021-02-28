@@ -1,5 +1,7 @@
 package com.celeste.registries;
 
+import lombok.Getter;
+
 import java.util.Collection;
 import java.util.Map;
 import java.util.Set;
@@ -7,6 +9,7 @@ import java.util.TreeMap;
 
 public class TreeMapRegistry<K, V> {
 
+    @Getter
     private final Map<K, V> map;
 
     public TreeMapRegistry() {
@@ -31,6 +34,10 @@ public class TreeMapRegistry<K, V> {
 
     public void remove(K k) {
         map.remove(k);
+    }
+
+    public int size() {
+        return map.size();
     }
 
     public Collection<V> getAll() {

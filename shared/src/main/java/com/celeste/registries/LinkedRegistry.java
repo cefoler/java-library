@@ -1,5 +1,7 @@
 package com.celeste.registries;
 
+import lombok.Getter;
+
 import java.util.Collection;
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -7,6 +9,7 @@ import java.util.Set;
 
 public class LinkedRegistry<K, V>  {
 
+    @Getter
     private final Map<K, V> map;
 
     public LinkedRegistry() {
@@ -27,6 +30,10 @@ public class LinkedRegistry<K, V>  {
 
     public Set<Map.Entry<K, V>> getKeys() {
         return map.entrySet();
+    }
+
+    public int size() {
+        return map.size();
     }
 
     public void remove(K k) {
