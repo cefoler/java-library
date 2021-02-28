@@ -1,10 +1,11 @@
 package com.celeste.util.date;
 
-import lombok.experimental.UtilityClass;
+
+import com.celeste.annotation.Utility;
 
 import java.text.SimpleDateFormat;
 
-@UtilityClass
+@Utility
 public class DateUtil {
 
     private static final SimpleDateFormat SIMPLE_DATE_FORMAT = new SimpleDateFormat("MM/dd/yyyy hh:mm");

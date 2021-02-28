@@ -1,7 +1,10 @@
 package com.celeste.util;
 
+import com.celeste.annotation.Utility;
+
 import java.util.Properties;
 
+@Utility
 public class PropertiesBuilder {
 
     private final Properties properties;
