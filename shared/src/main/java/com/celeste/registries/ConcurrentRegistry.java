@@ -25,6 +25,10 @@ public class ConcurrentRegistry<K, V> {
         return map.containsKey(key);
     }
 
+    public void remove(K k) {
+        map.remove(k);
+    }
+
     public Set<Map.Entry<K, V>> getKeys() {
         return map.entrySet();
     }

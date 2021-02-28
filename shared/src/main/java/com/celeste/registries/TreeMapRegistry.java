@@ -29,6 +29,10 @@ public class TreeMapRegistry<K, V> {
         return map.entrySet();
     }
 
+    public void remove(K k) {
+        map.remove(k);
+    }
+
     public Collection<V> getAll() {
         return map.values();
     }
