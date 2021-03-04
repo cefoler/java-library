@@ -27,7 +27,13 @@ public class Menu {
 
     private final MenuItem[] items;
 
-    public Menu(String title, int size) {
+    /**
+     * Creates the Menu with the title and size specified.
+     *
+     * @param title String
+     * @param size int
+     */
+    public Menu(final String title, final int size) {
         this.title = title;
         this.size = size;
         this.items = new MenuItem[size];
@@ -38,17 +44,11 @@ public class Menu {
      *
      * @param slot Int
      * @param item ItemStack
+     *
+     * @return MenuItem
      */
-    public final MenuItem slot(int slot, ItemStack item) {
+    public final MenuItem slot(final int slot, final ItemStack item) {
         final MenuItem menuItem = new MenuItem(slot).withItem(item);
-
-        items[slot] = menuItem;
-
-        return menuItem;
-    }
-
-    public final MenuItem slot(int slot) {
-        final MenuItem menuItem = new MenuItem(slot);
 
         items[slot] = menuItem;
 
@@ -59,22 +59,25 @@ public class Menu {
      * Event when the menu is rendered
      *
      * @param player Player that will render the menu
+     * @param holder MenuHolder
      */
-    protected void onRender(Player player, MenuHolder holder) { }
+    protected void onRender(final Player player, final MenuHolder holder) { }
 
     /**
      * Event when the menu is opened
      *
      * @param event InventoryOpenEvent for the Menu
+     * @param holder MenuHolder
      */
-    protected void onOpen(InventoryOpenEvent event, MenuHolder holder) { }
+    protected void onOpen(final InventoryOpenEvent event, final MenuHolder holder) { }
 
     /**
      * Event when the menu is opened
      *
      * @param event InventoryCloseEvent for the Menu
+     * @param holder MenuHolder
      */
-    protected void onClose(InventoryCloseEvent event, MenuHolder holder) { }
+    protected void onClose(final InventoryCloseEvent event, final MenuHolder holder) { }
 
     /**
      *
@@ -82,8 +85,9 @@ public class Menu {
      * Any properties.
      *
      * @param player The player that will open the Menu
+     * @return MenuHolder
      */
-    public final MenuHolder show(Player player) {
+    public final MenuHolder show(final Player player) {
         return show(player, ImmutableMap.of());
     }
 
@@ -93,8 +97,9 @@ public class Menu {
      * @param player The player that will open the Menu
      * @param properties ImmutableMap of properties needed on the Menu class
      *
+     * @return MenuHolder
      */
-    public final MenuHolder show(Player player, Map<String, Object> properties) {
+    public final MenuHolder show(final Player player, final Map<String, Object> properties) {
         final MenuHolder holder = new MenuHolder(this, properties);
         holder.show(player);
 
@@ -102,3 +107,4 @@ public class Menu {
     }
 
 }
+

@@ -1,5 +1,6 @@
-package com.celeste.json.gson;
+package com.celeste.json;
 
+import com.celeste.annotation.Utility;
 import com.celeste.registries.LinkedRegistry;
 import com.google.gson.*;
 import com.google.gson.internal.Streams;
@@ -14,9 +15,12 @@ import java.util.Arrays;
 import java.util.Map;
 
 /**
- * @author Luiza Prestes, Deser
+ * Used to create a TypeAdapter for the class.
+ *
+ * @param <T> Class
  */
 @AllArgsConstructor
+@Utility
 public class GsonTypeAdapterFactory<T> implements TypeAdapterFactory {
 
     private final Class<?> baseType;
@@ -27,21 +31,60 @@ public class GsonTypeAdapterFactory<T> implements TypeAdapterFactory {
 
     private final boolean maintainType;
 
+    /**
+     * Creates a TypeAdapter for the class specified.
+     *
+     * @param baseType Class
+     * @param typeFieldName Name
+     * @param maintainType Boolean
+     * @param <T> Class for the TypeAdapter
+     *
+     * @return TypeAdapter
+     */
     public static <T> GsonTypeAdapterFactory<T> of(final Class<T> baseType, final String typeFieldName, final boolean maintainType) {
         return new GsonTypeAdapterFactory<>(baseType, typeFieldName, maintainType);
     }
 
+    /**
+     * Creates a TypeAdapter for the class specified.
+     * MaintainType is always false in this method.
+     *
+     * @param baseType Class
+     * @param typeFieldName Name
+     * @param <T> Class for the TypeAdapter
+     *
+     * @return TypeAdapter
+     */
     public static <T> GsonTypeAdapterFactory<T> of(final Class<T> baseType, final String typeFieldName) {
         return new GsonTypeAdapterFactory<>(baseType, typeFieldName, false);
     }
 
+    /**
+     * Creates a TypeAdapter for the class specified.
+     * MaintainType is always false in this method.
+     * TypeField is always "type" in this method.
+     *
+     * @param baseType Class
+     * @param <T> Class for the TypeAdapter
+     *
+     * @return TypeAdapter
+     */
     public static <T> GsonTypeAdapterFactory<T> of(final Class<T> baseType) {
         return new GsonTypeAdapterFactory<>(baseType, "type", false);
     }
 
+    /**
+     * Registers SubType on the factory.
+     *
+     * @param subType Class of the subType.
+     * @param label Name
+     *
+     * @return TypeAdapter
+     */
     public GsonTypeAdapterFactory<T> registerSubtype(@NotNull final Class<? extends T> subType, @NotNull final String label) {
-        if (subtypeToLabel.containsKey(subType) || labelToSubtype.containsKey(label))
+        if (subtypeToLabel.containsKey(subType) || labelToSubtype.containsKey(label)) {
             throw new IllegalArgumentException("Types and labels must be unique.");
+        }
 
         labelToSubtype.register(label, subType);
         subtypeToLabel.register(subType, label);
@@ -49,18 +92,44 @@ public class GsonTypeAdapterFactory<T> implements TypeAdapterFactory {
         return this;
     }
 
+    /**
+     * Registers SubType on the factory.
+     * The label is always the subType class name.
+     *
+     * @param subType Class of the subType.
+     *
+     * @return TypeAdapter
+     */
     public GsonTypeAdapterFactory<T> registerSubtype(final Class<? extends T> subType) {
         return registerSubtype(subType, subType.getSimpleName());
     }
 
+    /**
+     * Registers multiple subTypes into the factory.
+     *
+     * @param subTypes Class
+     *
+     * @return TypeAdapter
+     */
     @SafeVarargs
     public final GsonTypeAdapterFactory<T> registerSubtypes(final Class<? extends T>... subTypes) {
         Arrays.stream(subTypes).forEach(this::registerSubtype);
         return this;
     }
 
+    /**
+     * Creates a TypeAdapter
+     *
+     * @param gson Gson instance
+     * @param type TypeToken
+     * @param <U> Class for the adapter
+     *
+     * @return TypeAdapter
+     */
     public <U> TypeAdapter<U> create(final Gson gson, final TypeToken<U> type) {
-        if (type.getRawType() != baseType) return null;
+        if (type.getRawType() != baseType) {
+            return null;
+        }
 
         final LinkedRegistry<String, TypeAdapter<?>> labelToDelegate = new LinkedRegistry<>();
         final LinkedRegistry<Class<?>, TypeAdapter<?>> subtypeToDelegate = new LinkedRegistry<>();
@@ -79,17 +148,22 @@ public class GsonTypeAdapterFactory<T> implements TypeAdapterFactory {
           final JsonElement jsonElement = Streams.parse(in);
           final JsonElement labelJsonElement;
 
-          if (maintainType) labelJsonElement = jsonElement.getAsJsonObject().get(typeFieldName);
-          else labelJsonElement = jsonElement.getAsJsonObject().remove(typeFieldName);
+          if (maintainType) {
+              labelJsonElement = jsonElement.getAsJsonObject().get(typeFieldName);
+          } else {
+              labelJsonElement = jsonElement.getAsJsonObject().remove(typeFieldName);
+          }
 
-          if (labelJsonElement == null)
+          if (labelJsonElement == null) {
               throw new JsonParseException("Cannot deserialize " + baseType + ". It doesn't define a Field named " + typeFieldName);
+          }
 
           final String label = labelJsonElement.getAsString();
           final TypeAdapter<U> delegate = (TypeAdapter<U>) labelToDelegate.getByValue(label);
 
-          if (delegate == null)
+          if (delegate == null) {
               throw new JsonParseException("Cannot deserialize " + baseType + " on SubType named " + label);
+          }
 
           return delegate.fromJsonTree(jsonElement);
         }
@@ -101,8 +175,9 @@ public class GsonTypeAdapterFactory<T> implements TypeAdapterFactory {
           final String label = subtypeToLabel.getByValue(srcType);
           final TypeAdapter<U> delegate = (TypeAdapter<U>) subtypeToDelegate.getByValue(srcType);
 
-          if (delegate == null)
+          if (delegate == null) {
               throw new JsonParseException("Cannot serialize " + srcType.getName());
+          }
 
           final JsonObject jsonObject = delegate.toJsonTree(value).getAsJsonObject();
 
@@ -111,14 +186,16 @@ public class GsonTypeAdapterFactory<T> implements TypeAdapterFactory {
               return;
           }
 
-          if (jsonObject.has(typeFieldName))
+          if (jsonObject.has(typeFieldName)) {
               throw new JsonParseException("Cannot serialize " + srcType.getName() + ". It already defines a Field named " + typeFieldName);
+          }
 
           final JsonObject clone = new JsonObject();
           clone.add(typeFieldName, new JsonPrimitive(label));
 
-          for (final Map.Entry<String, JsonElement> entry : jsonObject.entrySet())
+          for (final Map.Entry<String, JsonElement> entry : jsonObject.entrySet()) {
               clone.add(entry.getKey(), entry.getValue());
+          }
 
           Streams.write(clone, out);
         }

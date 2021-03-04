@@ -13,8 +13,10 @@ import java.util.function.Predicate;
 
 /**
  * This class is used to trigger when the specific Event is triggered by Bukkit.
+ *
+ * @param <E> Event class
  */
-public class EventWaiter<E extends Event> {
+public final class EventWaiter<E extends Event> {
 
     private final Class<E> clazz;
     private Predicate<E> filter;
@@ -29,9 +31,10 @@ public class EventWaiter<E extends Event> {
 
     /**
      * Constructor for the EventSubscription
+     *
      * @param clazz Event class.
      */
-    private EventWaiter(Class<E> clazz) {
+    private EventWaiter(final Class<E> clazz) {
         this.clazz = clazz;
         this.filter = Objects::nonNull;
         this.expireAfterExecute = false;
@@ -40,39 +43,71 @@ public class EventWaiter<E extends Event> {
         this.ignoreCancelled = false;
     }
 
-    public static <T extends Event> EventWaiter<T> of(Class<T> clazz) {
+    /**
+     * Creates the EventWaiter with that Event class.
+     *
+     * @param clazz Event class
+     * @param <T> Event class
+     *
+     * @return Event class
+     */
+    public static <T extends Event> EventWaiter<T> of(final Class<T> clazz) {
         return new EventWaiter<>(clazz);
     }
 
     /**
      * Filters the contents of the Event.
+     *
+     * @param predicate Predicate of event
+     * @return EventWaiter
      */
-    public EventWaiter<E> filter(Predicate<E> predicate) {
+    public EventWaiter<E> filter(final Predicate<E> predicate) {
         filter = filter.and(predicate);
         return this;
     }
 
-    public EventWaiter<E> expireAfterExecute(int executions) {
+    /**
+     * Expires after that number of executions
+     *
+     * @param executions Integer
+     * @return EventWaiter
+     */
+    public EventWaiter<E> expireAfterExecute(final int executions) {
         this.expireAfterExecute = true;
         this.executions = executions;
         return this;
     }
 
-    public EventWaiter<E> priority(EventPriority priority) {
+    /**
+     * Sets the EventPriority of the EventWaiter
+     *
+     * @param priority EventPriority
+     * @return EventWaiter
+     */
+    public EventWaiter<E> priority(final EventPriority priority) {
         this.priority = priority;
         return this;
     }
 
     /**
      * Boolean for ignoreCancelled of the Event.
+     *
+     * @param ignoreCancelled boolean
+     * @return EventWaiter
      */
-    public EventWaiter<E> ignoreCancelled(boolean ignoreCancelled) {
+    public EventWaiter<E> ignoreCancelled(final boolean ignoreCancelled) {
         this.ignoreCancelled = ignoreCancelled;
         return this;
     }
 
 
-    public EventWaiter<E> handler(Consumer<E> consumer) {
+    /**
+     * Handler for the EventWaiter
+     *
+     * @param consumer Consumer of the event
+     * @return EventWaiter
+     */
+    public EventWaiter<E> handler(final Consumer<E> consumer) {
         if (action == null) {
             action = consumer;
         } else {
@@ -83,7 +118,9 @@ public class EventWaiter<E extends Event> {
     }
 
     /**
-     * Cancel event.
+     * Cancels the event.
+     *
+     * @return EventWaiter
      */
     public EventWaiter<E> cancel() {
         return handler(e -> {
@@ -93,7 +130,12 @@ public class EventWaiter<E extends Event> {
         });
     }
 
-    public void listen(Plugin plugin) {
+    /**
+     * Registers EventWaiter as a listener.
+     *
+     * @param plugin Plugin
+     */
+    public void listen(final Plugin plugin) {
         final EventListenerExecutor executor = new EventListenerExecutor<>(this);
         Bukkit.getPluginManager().registerEvent(clazz, executor, priority, executor, plugin, ignoreCancelled);
     }
@@ -104,24 +146,35 @@ public class EventWaiter<E extends Event> {
         private final EventWaiter<I> builder;
 
         @Override
-        public void execute(@NotNull Listener listener, @NotNull Event e) {
-            if (!builder.clazz.isInstance(e)) return;
+        public void execute(@NotNull final Listener listener, @NotNull final Event eventOne) {
+            if (!builder.clazz.isInstance(eventOne)) {
+                return;
+            }
 
-            final I event = builder.clazz.cast(e);
-            if (builder.filter.negate().test(event)) return;
+            final I event = builder.clazz.cast(eventOne);
+            if (builder.filter.negate().test(event)) {
+                return;
+            }
 
             final Consumer<I> action = builder.action;
-            if (action != null) action.accept(event);
+            if (action != null) {
+                action.accept(event);
+            }
 
             if (builder.expireAfterExecute) {
-                if (builder.executions > 1) builder.executions--;
-                else unregister();
+                if (builder.executions > 1) {
+                    builder.executions--;
+                } else {
+                    unregister();
+                }
             }
 
         }
 
         public void unregister() {
-            for (HandlerList handlerList : HandlerList.getHandlerLists()) handlerList.unregister(this);
+            for (HandlerList handlerList : HandlerList.getHandlerLists()) {
+                handlerList.unregister(this);
+            }
         }
 
     }

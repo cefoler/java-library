@@ -1,20 +1,37 @@
 package com.celeste.util;
 
-import lombok.experimental.UtilityClass;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 
-@UtilityClass
-public class LocationUtils {
+public final class LocationUtils {
 
-    public static String serialize(Location location) {
-        return location.getWorld().getName() + ";" + location.getX() + ";"
-            + location.getY() + ";" + location.getZ() + ";" + location.getYaw() + ";" + location.getPitch();
+    private LocationUtils() {}
+
+    /**
+     * Serializes a location into String.
+     *
+     * @param location Location
+     * @return String
+     */
+    public static String serialize(final Location location) {
+        return location.getWorld().getName()
+            + ";" + location.getX()
+            + ";" + location.getY()
+            + ";" + location.getZ()
+            + ";" + location.getYaw()
+            + ";" + location.getPitch();
     }
 
-    public static Location deserialize(String s) {
-        String[] stripped = s.split(";");
-        if (stripped.length != 6) return null;
+    /**
+     * Deserializes a String that was serialized by this util.
+     * @param context String
+     * @return Location
+     */
+    public static Location deserialize(final String context) {
+        String[] stripped = context.split(";");
+        if (stripped.length != 6) {
+            return null;
+        }
 
         return new Location(
             Bukkit.getWorld(stripped[0]),

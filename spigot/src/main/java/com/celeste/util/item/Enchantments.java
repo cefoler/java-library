@@ -1,4 +1,4 @@
-package com.celeste.util;
+package com.celeste.util.item;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -59,6 +59,12 @@ public enum Enchantments {
         this.names = copyOf(names);
     }
 
+    /**
+     * Gets type by name
+     *
+     * @param enchant String name
+     * @return Enchantments
+     */
     public static Enchantments getType(final String enchant) {
         return Arrays.stream(values())
             .filter(type -> type.getNames().contains(enchant.toUpperCase()))
@@ -66,10 +72,19 @@ public enum Enchantments {
             .orElse(null);
     }
 
+    /**
+     * Gets Enchantment by name
+     *
+     * @param enchant String name
+     * @return Enchantment
+     */
     public static Enchantment getEnchant(final String enchant) {
         final Enchantments type = getType(enchant);
 
-        if (type == null) return null;
+        if (type == null) {
+            return null;
+        }
+
         return getByName(type.name());
     }
 

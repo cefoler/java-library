@@ -5,10 +5,13 @@ import com.celeste.annotation.Utility;
 import java.util.Properties;
 
 @Utility
-public class PropertiesBuilder {
+public final class PropertiesBuilder {
 
     private final Properties properties;
 
+    /**
+     * Creates a new Properties.
+     */
     public PropertiesBuilder() {
         this.properties = new Properties();
     }
@@ -16,8 +19,10 @@ public class PropertiesBuilder {
     /**
      * @param key Key of the value.
      * @param value Value that will be put on that key.
+     *
+     * @return PropertiesBuilder
      */
-    public PropertiesBuilder with(String key, String value) {
+    public PropertiesBuilder with(final String key, final String value) {
         properties.put(key, value);
         return this;
     }

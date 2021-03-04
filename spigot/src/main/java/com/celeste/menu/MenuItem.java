@@ -25,7 +25,12 @@ public class MenuItem {
     private ItemStack item;
     private ClickAction action;
 
-    public MenuItem withItem(ItemStack item) {
+    /**
+     * Sets the item of this MenuItem.
+     * @param item ItemStack
+     * @return MenuItem
+     */
+    public MenuItem withItem(final ItemStack item) {
         this.item = item;
         return this;
     }
@@ -34,8 +39,9 @@ public class MenuItem {
      * Executes the ClickAction
      *
      * @param action ClickAction for the item.
+     * @return MenuItem
      */
-    public MenuItem withAction(ClickAction action) {
+    public MenuItem withAction(final ClickAction action) {
         if (this.action == null) {
             this.action = action;
         } else {
@@ -49,8 +55,11 @@ public class MenuItem {
      * When the item is clicked, a sound is played.
      *
      * @param sound Sound
+     * @param v float
+     * @param v1 float
+     * @return MenuItem
      */
-    public MenuItem soundOnClick(Sound sound, float v, float v1) {
+    public MenuItem soundOnClick(final Sound sound, final float v, final float v1) {
         return withAction((holder, event) -> {
             Player whoClicked = (Player) event.getWhoClicked();
             whoClicked.playSound(whoClicked.getLocation(), sound, v, v1);
@@ -61,8 +70,9 @@ public class MenuItem {
      * When the item is clicked, messages are sent to the player.
      *
      * @param messages Message that will be sent
+     * @return MenuItem
      */
-    public MenuItem messagesOnClick(String... messages) {
+    public MenuItem messagesOnClick(final String... messages) {
         return withAction((holder, event) -> {
             Player whoClicked = (Player) event.getWhoClicked();
             whoClicked.sendMessage(messages);
@@ -71,6 +81,8 @@ public class MenuItem {
 
     /**
      * When the item is clicked, the menu is closed.
+     *
+     * @return MenuItem
      */
     public MenuItem closeOnClick() {
         return withAction((holder, event) -> {
@@ -79,18 +91,25 @@ public class MenuItem {
         });
     }
 
-    public MenuItem setPropertyOnClick(String key, Object value) {
-        return withAction((holder, event) -> {
-            holder.setProperty(key, value);
-        });
+    /**
+     * After the item is clicked, it sets a property into the holder.
+     *
+     * @param key Key
+     * @param value Value for the key
+     *
+     * @return MenuItem
+     */
+    public MenuItem setPropertyOnClick(final String key, final Object value) {
+        return withAction((holder, event) -> holder.setProperty(key, value));
     }
 
     /**
      * When clicked, opens a new Menu without properties
      *
      * @param menu Menu that will be opened
+     * @return MenuItem
      */
-    public MenuItem openMenuOnClick(Menu menu) {
+    public MenuItem openMenuOnClick(final Menu menu) {
         return openMenuOnClick(menu, ImmutableMap.of());
     }
 
@@ -99,8 +118,10 @@ public class MenuItem {
      *
      * @param menu Menu that will be opened
      * @param properties Immutable map of the properties.
+     *
+     * @return MenuItem
      */
-    public MenuItem openMenuOnClick(Menu menu, Map<String, Object> properties) {
+    public MenuItem openMenuOnClick(final Menu menu, final Map<String, Object> properties) {
         return withAction((holder, event) -> {
             Player whoClicked = (Player) event.getWhoClicked();
             whoClicked.closeInventory();
@@ -111,6 +132,8 @@ public class MenuItem {
 
     /**
      * When clicked, reopens the same Menu.
+     *
+     * @return MenuItem
      */
     public MenuItem reopenOnClick() {
         return withAction((holder, event) -> {

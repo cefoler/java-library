@@ -9,50 +9,75 @@ import java.util.List;
 
 @AllArgsConstructor
 
-/**
- * Will create a paginator for the Menu with the
- * specific List.
- *
- * @author luiza
- */
-public class Paginator<T> {
+public final class Paginator<T> {
 
     private int pageSize;
     private final List<T> source;
 
-    public void setPageSize(int pageSize) {
+    /**
+     * Sets the size of the page.
+     *
+     * @param pageSize int
+     */
+    public void setPageSize(final int pageSize) {
         this.pageSize = pageSize;
     }
 
+    /**
+     * @return int Page size
+     */
     public int size() {
         return source.size();
     }
 
-    public T get(int index) {
+    /**
+     * Gets item on that index.
+     *
+     * @param index int
+     * @return Item object
+     */
+    public T get(final int index) {
         return source.get(index);
     }
 
+    /**
+     * @return Int with size of the page
+     */
     public int count() {
         return (int) Math.ceil((double) size() / pageSize);
     }
 
-    public List<T> getPage(int index) {
+    /**
+     * Gets page on that index.
+     *
+     * @param index int
+     * @return List
+     */
+    public List<T> getPage(final int index) {
         int size = size();
 
-        if (source.isEmpty()) return Collections.emptyList();
+        if (source.isEmpty()) {
+            return Collections.emptyList();
+        }
 
-        if (size < pageSize) return Lists.newArrayList(source);
+        if (size < pageSize) {
+            return Lists.newArrayList(source);
+        }
 
-        if (index < 0 || index >= count()) throw new ArrayIndexOutOfBoundsException(
-              "Index must be between the range of 0 and " + (count() - 1) + ", given: " + index
-        );
+        if (index < 0 || index >= count()) {
+            throw new ArrayIndexOutOfBoundsException(
+                "Index must be between the range of 0 and " + (count() - 1) + ", given: " + index
+            );
+        }
 
         final List<T> page = new LinkedList<>();
 
         int base = index * pageSize;
         int until = base + pageSize;
 
-        if (until > size()) until = size;
+        if (until > size()) {
+            until = size;
+        }
 
         for (int i = base; i < until; i++) {
             page.add(get(i));
@@ -61,17 +86,24 @@ public class Paginator<T> {
         return page;
     }
 
-    public boolean hasPage(int currentIndex) {
-        return currentIndex >= 0 && currentIndex < count();
+    /**
+     * Checks if it contains that page.
+     *
+     * @param index int
+     * @return boolean If exists
+     */
+    public boolean hasPage(final int index) {
+        return index >= 0 && index < count();
     }
 
     @Override
     public String toString() {
-        return "Paginator{" +
-                "pageSize=" + pageSize +
-                ", src=" + source +
-                ", elements=" + source.size() +
-                ", count=" +  count() +
-                '}';
+        return "Paginator{"
+            + "pageSize=" + pageSize
+            + ", src=" + source
+            + ", elements=" + source.size()
+            + ", count=" +  count()
+            + '}';
     }
+
 }

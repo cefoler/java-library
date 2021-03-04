@@ -9,8 +9,20 @@ import org.bukkit.event.inventory.InventoryClickEvent;
  */
 public interface ClickAction {
 
+    /**
+     * Runs the ClickAction
+     *
+     * @param holder MenuHolder
+     * @param event InventoryClickEvent
+     */
     void run(MenuHolder holder, InventoryClickEvent event);
 
+    /**
+     * Lambda with the menu and event to execute whatever is needed by the developer.
+     *
+     * @param action ClickAction
+     * @return ClickAction
+     */
     default ClickAction and(ClickAction action) {
         return (menu, event) -> {
             run(menu, event);

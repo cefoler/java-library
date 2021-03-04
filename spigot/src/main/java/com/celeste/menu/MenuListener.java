@@ -12,30 +12,48 @@ import org.bukkit.inventory.Inventory;
  *
  * @author luiza
  */
-public class MenuListener implements Listener {
+public final class MenuListener implements Listener {
 
+    /**
+     * Registers menu InventoryClick event.
+     *
+     * @param event InventoryClickEvent
+     */
     @EventHandler(ignoreCancelled = true)
-    public void onInventoryClick(InventoryClickEvent event) {
+    public void onInventoryClick(final InventoryClickEvent event) {
         final Inventory inventory = event.getInventory();
 
-        if (inventory.getHolder() instanceof MenuHolder)
+        if (inventory.getHolder() instanceof MenuHolder) {
             ((MenuHolder) (inventory.getHolder())).handleClick(event);
+        }
     }
 
+    /**
+     * Registers menu InventoryCloseEvent event.
+     *
+     * @param event InventoryCloseEvent
+     */
     @EventHandler(ignoreCancelled = true)
-    public void onInventoryClose(InventoryCloseEvent event) {
+    public void onInventoryClose(final InventoryCloseEvent event) {
         final Inventory inventory = event.getInventory();
 
-        if (inventory.getHolder() instanceof MenuHolder)
+        if (inventory.getHolder() instanceof MenuHolder) {
             ((MenuHolder) (inventory.getHolder())).handleClose(event);
+        }
     }
 
+    /**
+     * Registers menu InventoryOpenEvent event.
+     *
+     * @param event InventoryOpenEvent
+     */
     @EventHandler(ignoreCancelled = true)
-    public void onInventoryOpen(InventoryOpenEvent event) {
+    public void onInventoryOpen(final InventoryOpenEvent event) {
         final Inventory inventory = event.getInventory();
 
-        if (inventory.getHolder() instanceof MenuHolder)
+        if (inventory.getHolder() instanceof MenuHolder) {
             ((MenuHolder) (inventory.getHolder())).handleOpen(event);
+        }
     }
 
 }

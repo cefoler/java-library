@@ -6,15 +6,23 @@ import org.jetbrains.annotations.NotNull;
 
 public abstract class EventWrapper extends Event {
 
-    private static final HandlerList handlerList = new HandlerList();
+    private static final HandlerList HANDLER_LIST = new HandlerList();
 
+    /**
+     * Static method to get the HandlerList
+     *
+     * @return HandlerList
+     */
     public static HandlerList getHandlerList() {
-        return handlerList;
+        return HANDLER_LIST;
     }
 
+    /**
+     * @return HandlerList
+     */
     @Override
     public @NotNull HandlerList getHandlers() {
-        return handlerList;
+        return HANDLER_LIST;
     }
 
 }

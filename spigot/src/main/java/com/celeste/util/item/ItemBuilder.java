@@ -7,12 +7,10 @@ import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.SkullMeta;
-import org.bukkit.material.MaterialData;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.function.Consumer;
 
 @Getter
 public class ItemBuilder implements Cloneable {
@@ -20,62 +18,133 @@ public class ItemBuilder implements Cloneable {
     private ItemStack itemStack;
     private ItemMeta itemMeta;
 
-    public ItemBuilder(Material material) {
+    /**
+     * Creates a new ItemBuilder with Material
+     *
+     * @param material Material of the Item
+     */
+    public ItemBuilder(final Material material) {
         this.itemStack = new ItemStack(material);
         this.itemMeta = itemStack.getItemMeta();
     }
 
-    public ItemBuilder(Material material, int amount, int data) {
+    /**
+     * Creates a new ItemBuilder with Material, Amount and Data
+     *
+     * @param material Material
+     * @param amount int
+     * @param data int
+     */
+    public ItemBuilder(final Material material, final int amount, final int data) {
         this.itemStack = new ItemStack(material, amount, (byte) data);
         this.itemMeta = itemStack.getItemMeta();
     }
 
-    public ItemBuilder(ItemStack otherItem) {
+    /**
+     * Sets the current Item into another item
+     *
+     * @param otherItem ItemStack
+     */
+    public ItemBuilder(final ItemStack otherItem) {
         this.itemStack = otherItem;
         this.itemMeta = otherItem.getItemMeta();
     }
 
-    public ItemBuilder(ItemStack itemStack, ItemMeta itemMeta) {
-        this.itemStack = itemStack;
-        this.itemMeta = itemMeta;
+    /**
+     * Creates a ItemBuilder with a ItemMeta different than the meta of
+     * the ItemStack provided
+     *
+     * @param item ItemStack
+     * @param meta ItemMeta
+     */
+    public ItemBuilder(final ItemStack item, final ItemMeta meta) {
+        this.itemStack = item;
+        this.itemMeta = meta;
     }
 
-    public ItemBuilder itemStack(ItemStack itemStack) {
-        this.itemStack = itemStack;
+    /**
+     * Sets the ItemStack of this ItemBuilder
+     *
+     * @param item ItemStack
+     * @return ItemBuilder
+     */
+    public ItemBuilder item(final ItemStack item) {
+        this.itemStack = item;
         return this;
     }
 
-    public ItemBuilder itemMeta(ItemMeta itemMeta) {
+    /**
+     * Sets the ItemMeta of the item
+     *
+     * @param itemMeta ItemMeta
+     * @return ItemBuilder
+     */
+    public ItemBuilder itemMeta(final ItemMeta itemMeta) {
         this.itemMeta = itemMeta;
         return this;
     }
 
-    public ItemBuilder material(Material material) {
+    /**
+     * Sets the material of the item
+     *
+     * @param material Material
+     * @return ItemBuilder
+     */
+    public ItemBuilder material(final Material material) {
         itemStack.setType(material);
         return this;
     }
 
-    public ItemBuilder name(String name) {
+    /**
+     * Sets the name of the item
+     *
+     * @param name String
+     * @return ItemBuilder
+     */
+    public ItemBuilder name(final String name) {
         itemMeta.setDisplayName(name);
         return this;
     }
 
-    public ItemBuilder amount(int amount) {
+    /**
+     * Sets the amount of the item
+     *
+     * @param amount int
+     * @return ItemBuilder
+     */
+    public ItemBuilder amount(final int amount) {
         itemStack.setAmount(amount);
         return this;
     }
 
-    public ItemBuilder lore(String... lore) {
+    /**
+     * Sets the lore
+     *
+     * @param lore String...
+     * @return ItemBuilder
+     */
+    public ItemBuilder lore(final String... lore) {
         itemMeta.setLore(Arrays.asList(lore));
         return this;
     }
 
-    public ItemBuilder lore(List<String> lore) {
+    /**
+     * Sets the lore
+     *
+     * @param lore List
+     * @return ItemBuilder
+     */
+    public ItemBuilder lore(final List<String> lore) {
         itemMeta.setLore(lore);
         return this;
     }
 
-    public ItemBuilder addLoreLine(String... line) {
+    /**
+     * Adds multiple lores.
+     * @param line String...
+     * @return ItemBuilder
+     */
+    public ItemBuilder addLoreLine(final String... line) {
         List<String> lore = itemMeta.getLore();
         if (lore == null) {
             lore = new ArrayList<>();
@@ -87,39 +156,49 @@ public class ItemBuilder implements Cloneable {
     }
 
 
-    public ItemBuilder durability(short durability) {
+    /**
+     * Sets durability of the item
+     *
+     * @param durability short
+     * @return ItemBuilder
+     */
+    public ItemBuilder durability(final short durability) {
         itemStack.setDurability(durability);
         return this;
     }
 
-    public ItemBuilder data(MaterialData materialData) {
-        itemStack.setData(materialData);
-        return this;
-    }
-
-    public ItemBuilder acceptItemStack(Consumer<ItemStack> consumer) {
-        consumer.accept(itemStack);
-        return this;
-    }
-
-    public ItemBuilder acceptItemMeta(Consumer<ItemMeta> consumer) {
-        consumer.accept(itemMeta);
-        return this;
-    }
-
-    public ItemBuilder enchantment(Enchantment enchantment, int level) {
+    /**
+     * Adds enchantment to the item.
+     *
+     * @param enchantment Enchantment
+     * @param level int
+     *
+     * @return ItemBuilder
+     */
+    public ItemBuilder enchantment(final Enchantment enchantment, final int level) {
         itemMeta.addEnchant(enchantment, level, true);
         return this;
     }
 
-    public ItemBuilder enchantments(List<String> enchantments) {
-        if (enchantments == null) return this;
+    /**
+     * Add multiple enchantments by a String formatted in:
+     * "ENCHANTMENT_NAME:LEVEL"
+     *
+     * @param enchantments List<String>
+     * @return ItemBuilder
+     */
+    public ItemBuilder enchantments(final List<String> enchantments) {
+        if (enchantments == null) {
+            return this;
+        }
 
         for (final String enchant : enchantments) {
             final String[] splitEnchant = enchant.split(":");
-            final Enchantment enchantment = Enchantment.getByName(splitEnchant[0]);
+            final Enchantment enchantment = Enchantments.getEnchant(splitEnchant[0]);
 
-            if (enchantment == null) continue;
+            if (enchantment == null) {
+                continue;
+            }
 
             final int level = Integer.parseInt(splitEnchant[1]);
             itemStack.addUnsafeEnchantment(enchantment, level);
@@ -128,27 +207,54 @@ public class ItemBuilder implements Cloneable {
         return this;
     }
 
-    public ItemBuilder addFlags(ItemFlag... flags) {
+    /**
+     * Adds flags into the Item
+     *
+     * @param flags ItemFlag
+     * @return ItemBuilder
+     */
+    public ItemBuilder addFlags(final ItemFlag... flags) {
         itemMeta.addItemFlags(flags);
         return this;
     }
 
+    /**
+     * Hide enchantments of the item
+     * @return ItemBuilder
+     */
     public ItemBuilder hideEnchantments() {
         addFlags(ItemFlag.HIDE_ENCHANTS);
         return this;
     }
 
-    public ItemBuilder skullOwner(String owner) {
-        SkullMeta skull = (SkullMeta) itemMeta;
+    /**
+     *
+     * @param owner String of player name
+     * @return ItemBuilder
+     */
+    public ItemBuilder skull(final String owner) {
+        final SkullMeta skull = (SkullMeta) itemMeta;
+
         itemStack.setDurability((short) 3);
         skull.setOwner(owner);
+
         return this;
     }
 
+    /**
+     * Clone the ItemBuilder
+     *
+     * @return ItemBuilder
+     */
     public ItemBuilder clone() {
         return new ItemBuilder(itemStack.clone(), itemMeta.clone());
     }
 
+    /**
+     * Builds the ItemBuilder into ItemStack.
+     *
+     * @return ItemStack
+     */
     public ItemStack build() {
         itemStack.setItemMeta(itemMeta);
         return itemStack;
