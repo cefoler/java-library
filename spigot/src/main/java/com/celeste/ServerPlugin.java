@@ -7,6 +7,9 @@ import org.bukkit.event.Listener;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 import com.celeste.menu.MenuListener;
+import org.jetbrains.annotations.NotNull;
+
+import java.util.Arrays;
 
 public abstract class ServerPlugin extends JavaPlugin {
 
@@ -15,12 +18,10 @@ public abstract class ServerPlugin extends JavaPlugin {
      *
      * @param listeners Listener classes
      */
-    public void registerListeners(Listener... listeners) {
+    public void registerListeners(@NotNull Listener... listeners) {
         final PluginManager manager = getServer().getPluginManager();
 
-        for (Listener listener : listeners) {
-            manager.registerEvents(listener, this);
-        }
+        Arrays.stream(listeners).forEach(listener -> manager.registerEvents(listener, this));
 
         /*
         Registers the listener for the MenuAPI
@@ -34,7 +35,7 @@ public abstract class ServerPlugin extends JavaPlugin {
      *
      * @param objects Command classes
      */
-    public void startCommandManager(final String language, final Object... objects) {
+    public void startCommandManager(@NotNull final String language, @NotNull final Object... objects) {
         final BukkitFrame frame = new BukkitFrame(this);
         final MessageHolder messageHolder = frame.getMessageHolder();
 
