@@ -11,9 +11,9 @@ public enum TimeMultiplier {
     MINUTES(60 * 1000, 'm'),
     HOURS(60 * 60 * 1000, 'h'),
     DAYS(24 * 60 * 60 * 1000, 'd'),
-    WEEKS(7 * 24 * 60 * 60 * 1000, 'w'),
-    MONTHS(30L * 24 * 60 * 60 * 1000, 'm'),
-    YEARS(365L * 24 * 60 * 60 * 1000, 'y');
+    WEEKS(7 * 24 * 60 * 60 * 1000, 'w');
+    // MONTHS(30L * 24 * 60 * 60 * 1000, 'm'),
+    // YEARS(365L * 24 * 60 * 60 * 1000, 'y');
 
     private final long multiplier;
     private final char diminutive;
