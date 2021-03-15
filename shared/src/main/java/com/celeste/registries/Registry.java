@@ -5,9 +5,8 @@ import lombok.RequiredArgsConstructor;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.Serializable;
-import java.util.Collection;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Getter
 @RequiredArgsConstructor
@@ -31,6 +30,10 @@ public abstract class Registry<T, U> implements Serializable, Cloneable {
         map.remove(key);
     }
 
+    public void replace(@NotNull final T key, @NotNull final U value) {
+        map.replace(key, value);
+    }
+
     @NotNull
     public U get(@NotNull final T key) {
         return map.get(key);
@@ -45,9 +48,27 @@ public abstract class Registry<T, U> implements Serializable, Cloneable {
         return map.keySet();
     }
 
+    public Set<Map.Entry<T, U>> getEntrySet() {
+        return map.entrySet();
+    }
+
+
     @NotNull
     public Collection<U> getAll() {
         return map.values();
+    }
+
+    /**
+     * Sort the map by the Comparator, returns a List
+     *
+     * @param comparator Comparator<? super U>
+     * @return List<U>
+     */
+    public List<U> sort(final Comparator<? super U> comparator) {
+        return getAll()
+            .stream()
+            .sorted(comparator)
+            .collect(Collectors.toList());
     }
 
     public int size() {
