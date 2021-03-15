@@ -3,6 +3,7 @@ package com.celeste.util.date;
 import com.celeste.annotation.Utility;
 
 import java.text.SimpleDateFormat;
+import java.util.TimeZone;
 
 @Utility
 public final class DateUtil {
@@ -18,6 +19,7 @@ public final class DateUtil {
      * @return String
      */
     public static String convertToString(final long timestamp) {
+        SIMPLE_DATE_FORMAT.setTimeZone(TimeZone.getDefault());
         return SIMPLE_DATE_FORMAT.format(timestamp);
     }
 

@@ -1,7 +1,8 @@
 package com.celeste.json;
 
 import com.celeste.annotation.Utility;
-import com.celeste.registries.LinkedRegistry;
+import com.celeste.registries.Registry;
+import com.celeste.registries.impl.LinkedRegistry;
 import com.google.gson.*;
 import com.google.gson.internal.Streams;
 import com.google.gson.reflect.TypeToken;
@@ -26,8 +27,8 @@ public class GsonTypeAdapterFactory<T> implements TypeAdapterFactory {
     private final Class<?> baseType;
     private final String typeFieldName;
 
-    private final LinkedRegistry<String, Class<?>> labelToSubtype = new LinkedRegistry<>();
-    private final LinkedRegistry<Class<?>, String> subtypeToLabel = new LinkedRegistry<>();
+    private final Registry<String, Class<?>> labelToSubtype = new LinkedRegistry<>();
+    private final Registry<Class<?>, String> subtypeToLabel = new LinkedRegistry<>();
 
     private final boolean maintainType;
 
@@ -82,7 +83,7 @@ public class GsonTypeAdapterFactory<T> implements TypeAdapterFactory {
      * @return TypeAdapter
      */
     public GsonTypeAdapterFactory<T> registerSubtype(@NotNull final Class<? extends T> subType, @NotNull final String label) {
-        if (subtypeToLabel.containsKey(subType) || labelToSubtype.containsKey(label)) {
+        if (subtypeToLabel.contains(subType) || labelToSubtype.contains(label)) {
             throw new IllegalArgumentException("Types and labels must be unique.");
         }
 
@@ -134,7 +135,7 @@ public class GsonTypeAdapterFactory<T> implements TypeAdapterFactory {
         final LinkedRegistry<String, TypeAdapter<?>> labelToDelegate = new LinkedRegistry<>();
         final LinkedRegistry<Class<?>, TypeAdapter<?>> subtypeToDelegate = new LinkedRegistry<>();
 
-        for (final Map.Entry<String, Class<?>> entry : labelToSubtype.getKeys()) {
+        for (final Map.Entry<String, Class<?>> entry : labelToSubtype.getMap().entrySet()) {
             final TypeAdapter<?> delegate = gson.getDelegateAdapter(this, TypeToken.get(entry.getValue()));
 
             labelToDelegate.register(entry.getKey(), delegate);
@@ -159,11 +160,7 @@ public class GsonTypeAdapterFactory<T> implements TypeAdapterFactory {
           }
 
           final String label = labelJsonElement.getAsString();
-          final TypeAdapter<U> delegate = (TypeAdapter<U>) labelToDelegate.getByValue(label);
-
-          if (delegate == null) {
-              throw new JsonParseException("Cannot deserialize " + baseType + " on SubType named " + label);
-          }
+          final TypeAdapter<U> delegate = (TypeAdapter<U>) labelToDelegate.get(label);
 
           return delegate.fromJsonTree(jsonElement);
         }
@@ -172,13 +169,8 @@ public class GsonTypeAdapterFactory<T> implements TypeAdapterFactory {
         public void write(final JsonWriter out, final U value) throws IOException {
           final Class<?> srcType = value.getClass();
 
-          final String label = subtypeToLabel.getByValue(srcType);
-          final TypeAdapter<U> delegate = (TypeAdapter<U>) subtypeToDelegate.getByValue(srcType);
-
-          if (delegate == null) {
-              throw new JsonParseException("Cannot serialize " + srcType.getName());
-          }
-
+          final String label = subtypeToLabel.get(srcType);
+          final TypeAdapter<U> delegate = (TypeAdapter<U>) subtypeToDelegate.get(srcType);
           final JsonObject jsonObject = delegate.toJsonTree(value).getAsJsonObject();
 
           if (maintainType) {
