@@ -42,7 +42,7 @@ public final class ItemSerialization {
 
     /**
      * Deserializes a String to Array of ItemStack.
-     * @param data
+     * @param data String
      * @return ItemStack[]
      */
     public static ItemStack[] deserialize(final String data) {
