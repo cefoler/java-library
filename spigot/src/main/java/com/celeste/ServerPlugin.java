@@ -1,5 +1,7 @@
 package com.celeste;
 
+import com.celeste.annotation.Command;
+import lombok.SneakyThrows;
 import me.saiintbrisson.bukkit.command.BukkitFrame;
 import me.saiintbrisson.minecraft.command.message.MessageHolder;
 import me.saiintbrisson.minecraft.command.message.MessageType;
@@ -8,6 +10,7 @@ import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 import com.celeste.menu.MenuListener;
 import org.jetbrains.annotations.NotNull;
+import org.reflections.Reflections;
 
 import java.util.Arrays;
 
@@ -32,10 +35,8 @@ public abstract class ServerPlugin extends JavaPlugin {
     /**
      * Starts the BukkitFrame and MessageHolder
      * With the default messages
-     *
-     * @param objects Command classes
      */
-    public void startCommandManager(@NotNull final String language, @NotNull final Object... objects) {
+    public void startCommandManager(@NotNull final String language) {
         final BukkitFrame frame = new BukkitFrame(this);
         final MessageHolder messageHolder = frame.getMessageHolder();
 
@@ -54,7 +55,10 @@ public abstract class ServerPlugin extends JavaPlugin {
             }
         }
 
-        frame.registerCommands(objects);
+        final Reflections reflections = new Reflections("com.celeste");
+        for (Class<?> clazz : reflections.getTypesAnnotatedWith(Command.class)) {
+            frame.registerCommands(clazz);
+        }
     }
 
 }

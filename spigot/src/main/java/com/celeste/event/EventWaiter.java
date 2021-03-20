@@ -1,63 +1,50 @@
 package com.celeste.event;
 
-import lombok.AllArgsConstructor;
+import com.google.gson.reflect.TypeToken;
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.SneakyThrows;
 import org.bukkit.Bukkit;
 import org.bukkit.event.*;
-import org.bukkit.plugin.EventExecutor;
 import org.bukkit.plugin.Plugin;
-import org.jetbrains.annotations.NotNull;
 
+import java.lang.reflect.Type;
 import java.util.Objects;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
 
-/**
- * This class is used to trigger when the specific Event is triggered by Bukkit.
- *
- * @param <E> Event class
- */
+@Getter(AccessLevel.PACKAGE)
 public final class EventWaiter<E extends Event> {
 
-    private final Class<E> clazz;
-    private Predicate<E> filter;
+    private final Class<E> event;
 
+    private Predicate<E> filter;
     private Consumer<E> action;
 
-    private boolean expireAfterExecute;
+    @Setter
     private int executions;
+    private boolean expireAfterExecute;
 
     private EventPriority priority;
-    private boolean ignoreCancelled;
+    private final boolean ignoreCancelled;
 
-    /**
-     * Constructor for the EventSubscription
-     *
-     * @param clazz Event class.
-     */
-    private EventWaiter(final Class<E> clazz) {
-        this.clazz = clazz;
+    @SneakyThrows
+    @SuppressWarnings("unchecked")
+    private EventWaiter() {
+        final TypeToken<? extends EventWaiter> token = TypeToken.get(getClass());
+        final Type type = token.getType();
+        this.event = (Class<E>) Class.forName(type.getTypeName());
+
         this.filter = Objects::nonNull;
         this.expireAfterExecute = false;
-        this.executions = -1;
+        this.executions = 0;
         this.priority = EventPriority.NORMAL;
-        this.ignoreCancelled = false;
-    }
-
-    /**
-     * Creates the EventWaiter with that Event class.
-     *
-     * @param clazz Event class
-     * @param <T> Event class
-     *
-     * @return Event class
-     */
-    public static <T extends Event> EventWaiter<T> of(final Class<T> clazz) {
-        return new EventWaiter<>(clazz);
+        this.ignoreCancelled = true;
     }
 
     /**
      * Filters the contents of the Event.
-     *
      * @param predicate Predicate of event
      * @return EventWaiter
      */
@@ -68,11 +55,10 @@ public final class EventWaiter<E extends Event> {
 
     /**
      * Expires after that number of executions
-     *
      * @param executions Integer
      * @return EventWaiter
      */
-    public EventWaiter<E> expireAfterExecute(final int executions) {
+    public EventWaiter<E> expire(final int executions) {
         this.expireAfterExecute = true;
         this.executions = executions;
         return this;
@@ -80,7 +66,6 @@ public final class EventWaiter<E extends Event> {
 
     /**
      * Sets the EventPriority of the EventWaiter
-     *
      * @param priority EventPriority
      * @return EventWaiter
      */
@@ -90,93 +75,42 @@ public final class EventWaiter<E extends Event> {
     }
 
     /**
-     * Boolean for ignoreCancelled of the Event.
-     *
-     * @param ignoreCancelled boolean
-     * @return EventWaiter
-     */
-    public EventWaiter<E> ignoreCancelled(final boolean ignoreCancelled) {
-        this.ignoreCancelled = ignoreCancelled;
-        return this;
-    }
-
-
-    /**
      * Handler for the EventWaiter
-     *
      * @param consumer Consumer of the event
      * @return EventWaiter
      */
     public EventWaiter<E> handler(final Consumer<E> consumer) {
-        if (action == null) {
-            action = consumer;
-        } else {
+        if (action != null) {
             action = action.andThen(consumer);
+            return this;
         }
 
+        action = consumer;
         return this;
     }
 
     /**
-     * Cancels the event.
-     *
-     * @return EventWaiter
+     * Registers EventWaiter as a listener.
+     * @param plugin Plugin
      */
-    public EventWaiter<E> cancel() {
-        return handler(e -> {
-            if (e instanceof Cancellable) {
-                ((Cancellable) e).setCancelled(true);
-            }
-        });
+    public void build(final Plugin plugin) {
+      final EventListener<E> executor = new EventListener<>(this);
+      Bukkit.getPluginManager().registerEvent(
+          event, executor, priority,
+          executor, plugin, ignoreCancelled
+      );
     }
 
     /**
-     * Registers EventWaiter as a listener.
-     *
-     * @param plugin Plugin
+     * Cancels the event.
+     * @return EventWaiter
      */
-    public void listen(final Plugin plugin) {
-        final EventListenerExecutor executor = new EventListenerExecutor<>(this);
-        Bukkit.getPluginManager().registerEvent(clazz, executor, priority, executor, plugin, ignoreCancelled);
-    }
-
-    @AllArgsConstructor
-    private static class EventListenerExecutor<I extends Event> implements Listener, EventExecutor {
-
-        private final EventWaiter<I> builder;
-
-        @Override
-        public void execute(@NotNull final Listener listener, @NotNull final Event eventOne) {
-            if (!builder.clazz.isInstance(eventOne)) {
-                return;
+    public EventWaiter<E> cancel() {
+        return handler(event -> {
+            if (event instanceof Cancellable) {
+                ((Cancellable) event).setCancelled(true);
             }
-
-            final I event = builder.clazz.cast(eventOne);
-            if (builder.filter.negate().test(event)) {
-                return;
-            }
-
-            final Consumer<I> action = builder.action;
-            if (action != null) {
-                action.accept(event);
-            }
-
-            if (builder.expireAfterExecute) {
-                if (builder.executions > 1) {
-                    builder.executions--;
-                } else {
-                    unregister();
-                }
-            }
-
-        }
-
-        public void unregister() {
-            for (HandlerList handlerList : HandlerList.getHandlerLists()) {
-                handlerList.unregister(this);
-            }
-        }
-
+        });
     }
 
 }

@@ -34,10 +34,8 @@ public final class ItemSerialization {
             return encodeLines(byteStream.toByteArray());
 
         } catch (IOException exception) {
-            System.out.println("Error while serializing an item. " + exception.getMessage());
+            throw new UnsupportedOperationException("Error while deserializing an item. " + exception.getMessage());
         }
-
-        return null;
     }
 
     /**
@@ -58,10 +56,8 @@ public final class ItemSerialization {
             return items;
 
         } catch (IOException | ClassNotFoundException exception) {
-            System.out.println("Error while deserializing an item. " + exception.getMessage());
+            throw new UnsupportedOperationException("Error while deserializing an item. " + exception.getMessage());
         }
-
-        return new ItemStack[0];
     }
 
 }

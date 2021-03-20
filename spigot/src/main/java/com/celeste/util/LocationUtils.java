@@ -28,7 +28,7 @@ public final class LocationUtils {
      * @return Location
      */
     public static Location deserialize(final String context) {
-        String[] stripped = context.split(";");
+        final String[] stripped = context.split(";");
         if (stripped.length != 6) {
             return null;
         }

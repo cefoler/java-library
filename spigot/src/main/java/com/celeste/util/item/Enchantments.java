@@ -80,7 +80,6 @@ public enum Enchantments {
      */
     public static Enchantment getEnchant(final String enchant) {
         final Enchantments type = getType(enchant);
-
         if (type == null) {
             return null;
         }
