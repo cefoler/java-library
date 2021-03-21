@@ -1,4 +1,4 @@
-# common
+# java-library
 Dependency for utility classes to help in Java development, this repository has multiple changes to documentation and the utils, for refactoring or changing the style of those APIs
 
 ## Modules
