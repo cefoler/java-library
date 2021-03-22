@@ -1,10 +1,10 @@
 package com.celeste;
 
-import com.celeste.annotation.Command;
-import lombok.SneakyThrows;
+import com.celeste.annotation.CommandHolder;
 import me.saiintbrisson.bukkit.command.BukkitFrame;
 import me.saiintbrisson.minecraft.command.message.MessageHolder;
 import me.saiintbrisson.minecraft.command.message.MessageType;
+import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -56,9 +56,14 @@ public abstract class ServerPlugin extends JavaPlugin {
         }
 
         final Reflections reflections = new Reflections("com.celeste");
-        for (Class<?> clazz : reflections.getTypesAnnotatedWith(Command.class)) {
+        for (Class<?> clazz : reflections.getTypesAnnotatedWith(CommandHolder.class)) {
             frame.registerCommands(clazz);
         }
+    }
+
+    public void load(@NotNull final String language, @NotNull Listener... listeners) {
+      startCommandManager(language);
+      registerListeners(listeners);
     }
 
 }

@@ -4,12 +4,17 @@ import com.celeste.annotation.Utility;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.NonNull;
 
-/**
- * @author Luiza Prestes, Deser
- */
 @Utility
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class GsonAdapter {
+
+    @Getter
+    private static final GsonAdapter instance = new GsonAdapter();
 
     private final Gson gson = new GsonBuilder()
         .enableComplexMapKeySerialization()
@@ -17,7 +22,6 @@ public class GsonAdapter {
 
     /**
      * @param context Object that will be turning to json.
-     *
      * @return String Json string.
      */
     public final String toJson(final Object context) {

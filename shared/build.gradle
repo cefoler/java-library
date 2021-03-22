@@ -14,9 +14,12 @@ dependencies {
     compileOnly 'org.projectlombok:lombok:1.18.18'
     annotationProcessor 'org.projectlombok:lombok:1.18.18'
 
-    compileOnly 'org.jetbrains:annotations:16.0.2'
-    annotationProcessor 'org.jetbrains:annotations:16.0.2'
+    compileOnly 'org.jetbrains:annotations:20.1.0'
+    annotationProcessor 'org.jetbrains:annotations:20.1.0'
 
-    implementation 'com.fasterxml.jackson.core:jackson-databind:2.12.0'
     implementation 'com.google.code.gson:gson:2.8.6'
+    implementation 'org.json:json:20201115'
+
+    implementation 'org.yaml:snakeyaml:1.28'
+
 }
