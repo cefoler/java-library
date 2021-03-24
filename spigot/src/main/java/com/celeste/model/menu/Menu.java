@@ -1,4 +1,4 @@
-package com.celeste.menu;
+package com.celeste.model.menu;
 
 import com.google.common.collect.ImmutableMap;
 import lombok.Getter;
@@ -61,7 +61,7 @@ public class Menu {
      * @param player Player that will render the menu
      * @param holder MenuHolder
      */
-    protected void onRender(final Player player, final MenuHolder holder) { }
+    public void onRender(final Player player, final MenuHolder holder) {}
 
     /**
      * Event when the menu is opened
@@ -69,7 +69,7 @@ public class Menu {
      * @param event InventoryOpenEvent for the Menu
      * @param holder MenuHolder
      */
-    protected void onOpen(final InventoryOpenEvent event, final MenuHolder holder) { }
+    public void onOpen(final InventoryOpenEvent event, final MenuHolder holder) {}
 
     /**
      * Event when the menu is opened
@@ -77,7 +77,7 @@ public class Menu {
      * @param event InventoryCloseEvent for the Menu
      * @param holder MenuHolder
      */
-    protected void onClose(final InventoryCloseEvent event, final MenuHolder holder) { }
+    public void onClose(final InventoryCloseEvent event, final MenuHolder holder) {}
 
     /**
      *

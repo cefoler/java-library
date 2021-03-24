@@ -4,11 +4,10 @@ import com.celeste.annotation.CommandHolder;
 import me.saiintbrisson.bukkit.command.BukkitFrame;
 import me.saiintbrisson.minecraft.command.message.MessageHolder;
 import me.saiintbrisson.minecraft.command.message.MessageType;
-import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
-import com.celeste.menu.MenuListener;
+import com.celeste.view.listener.MenuListener;
 import org.jetbrains.annotations.NotNull;
 import org.reflections.Reflections;
 

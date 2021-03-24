@@ -15,6 +15,12 @@ public final class GiantItemCreator {
   @Getter
   private static final GiantItemCreator instance = new GiantItemCreator();
 
+  /**
+   * Creates a Giant item
+   *
+   * @param location Location
+   * @param item ItemStack
+   */
   public void create(final Location location, final ItemStack item) {
     final Giant giant = location.getWorld().spawn(location, Giant.class);
 

@@ -14,8 +14,8 @@ repositories {
 
 dependencies {
     compileOnly 'net.md-5:bungeecord-api:1.16-R0.4'
-    implementation 'com.github.SaiintBrisson.command-framework:bungee:1.1.0'
+    implementation 'com.github.SaiintBrisson.command-framework:bungee:1.2.0'
 
-    compileOnly 'org.projectlombok:lombok:1.18.10'
-    annotationProcessor 'org.projectlombok:lombok:1.18.10'
+    compileOnly 'org.projectlombok:lombok:1.18.18'
+    annotationProcessor 'org.projectlombok:lombok:1.18.18'
 }

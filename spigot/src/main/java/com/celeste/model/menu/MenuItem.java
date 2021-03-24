@@ -1,10 +1,9 @@
-package com.celeste.menu;
+package com.celeste.model.menu;
 
-import com.celeste.menu.action.ClickAction;
+import com.celeste.model.menu.action.ClickAction;
 import com.google.common.collect.ImmutableMap;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
-import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
@@ -44,39 +43,11 @@ public class MenuItem {
     public MenuItem withAction(final ClickAction action) {
         if (this.action == null) {
             this.action = action;
-        } else {
-            this.action = this.action.and(action);
+            return this;
         }
 
+        this.action = this.action.and(action);
         return this;
-    }
-
-    /**
-     * When the item is clicked, a sound is played.
-     *
-     * @param sound Sound
-     * @param v float
-     * @param v1 float
-     * @return MenuItem
-     */
-    public MenuItem soundOnClick(final Sound sound, final float v, final float v1) {
-        return withAction((holder, event) -> {
-            Player whoClicked = (Player) event.getWhoClicked();
-            whoClicked.playSound(whoClicked.getLocation(), sound, v, v1);
-        });
-    }
-
-    /**
-     * When the item is clicked, messages are sent to the player.
-     *
-     * @param messages Message that will be sent
-     * @return MenuItem
-     */
-    public MenuItem messagesOnClick(final String... messages) {
-        return withAction((holder, event) -> {
-            Player whoClicked = (Player) event.getWhoClicked();
-            whoClicked.sendMessage(messages);
-        });
     }
 
     /**
@@ -84,7 +55,7 @@ public class MenuItem {
      *
      * @return MenuItem
      */
-    public MenuItem closeOnClick() {
+    public MenuItem close() {
         return withAction((holder, event) -> {
             Player whoClicked = (Player) event.getWhoClicked();
             whoClicked.closeInventory();
@@ -99,7 +70,7 @@ public class MenuItem {
      *
      * @return MenuItem
      */
-    public MenuItem setPropertyOnClick(final String key, final Object value) {
+    public MenuItem setProperty(final String key, final Object value) {
         return withAction((holder, event) -> holder.setProperty(key, value));
     }
 
@@ -109,8 +80,8 @@ public class MenuItem {
      * @param menu Menu that will be opened
      * @return MenuItem
      */
-    public MenuItem openMenuOnClick(final Menu menu) {
-        return openMenuOnClick(menu, ImmutableMap.of());
+    public MenuItem open(final Menu menu) {
+        return open(menu, ImmutableMap.of());
     }
 
     /**
@@ -121,7 +92,7 @@ public class MenuItem {
      *
      * @return MenuItem
      */
-    public MenuItem openMenuOnClick(final Menu menu, final Map<String, Object> properties) {
+    public MenuItem open(final Menu menu, final Map<String, Object> properties) {
         return withAction((holder, event) -> {
             Player whoClicked = (Player) event.getWhoClicked();
             whoClicked.closeInventory();
@@ -135,9 +106,9 @@ public class MenuItem {
      *
      * @return MenuItem
      */
-    public MenuItem reopenOnClick() {
+    public MenuItem reopen() {
         return withAction((holder, event) -> {
-            Player whoClicked = (Player) event.getWhoClicked();
+            final Player whoClicked = (Player) event.getWhoClicked();
             whoClicked.closeInventory();
 
             holder.setItems(holder.getMenu().getItems().clone());

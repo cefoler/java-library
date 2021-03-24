@@ -1,5 +1,6 @@
-package com.celeste.menu;
+package com.celeste.model.menu;
 
+import com.celeste.exception.InvalidPropertyException;
 import lombok.Getter;
 import lombok.Setter;
 import org.bukkit.Bukkit;
@@ -20,10 +21,10 @@ public final class MenuHolder implements InventoryHolder {
     private final Menu menu;
     private final Map<String, Object> propertiesMap;
 
+    private Inventory inventory;
+
     @Setter
     private MenuItem[] items;
-
-    private Inventory inventory;
 
     /**
      * Menu holder constructor.
@@ -49,7 +50,6 @@ public final class MenuHolder implements InventoryHolder {
         final MenuItem menuItem = new MenuItem(slot).withItem(item);
 
         items[slot] = menuItem;
-
         return menuItem;
     }
 
@@ -62,39 +62,33 @@ public final class MenuHolder implements InventoryHolder {
         menu.onRender(player, this);
 
         final Inventory inventory = Bukkit.createInventory(this, menu.getSize(), menu.getTitle());
+        this.inventory = inventory;
 
         for (MenuItem item : items) {
-            if (item == null) {
-                continue;
-            }
-
+            if (item == null) continue;
             inventory.setItem(item.getSlot(), item.getItem());
         }
 
         player.openInventory(inventory);
     }
 
-    protected void handleClick(final InventoryClickEvent event) {
+    public void handleClick(final InventoryClickEvent event) {
         event.setCancelled(true);
 
         final int slot = event.getSlot();
-        if (slot < 0) {
-            return;
-        }
+        if (slot < 0) return;
 
         final MenuItem item = items[slot];
-        if (item == null || item.getAction() == null) {
-            return;
-        }
+        if (item == null || item.getAction() == null) return;
 
         item.getAction().run(this, event);
     }
 
-    protected void handleOpen(final InventoryOpenEvent event) {
+    public void handleOpen(final InventoryOpenEvent event) {
         menu.onOpen(event, this);
     }
 
-    protected void handleClose(final InventoryCloseEvent event) {
+    public void handleClose(final InventoryCloseEvent event) {
         menu.onClose(event, this);
     }
 
@@ -105,7 +99,11 @@ public final class MenuHolder implements InventoryHolder {
      * @param <T> Property class
      * @return Class of the property
      */
+    @SuppressWarnings("unchecked")
     public <T> T getProperty(final String key) {
+        if (propertiesMap.get(key) == null)
+          throw new InvalidPropertyException("Get property returned null");
+
         return (T) propertiesMap.get(key);
     }
 

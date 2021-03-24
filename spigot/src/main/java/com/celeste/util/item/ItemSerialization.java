@@ -13,8 +13,6 @@ import static org.yaml.snakeyaml.external.biz.base64Coder.Base64Coder.encodeLine
 
 public final class ItemSerialization {
 
-    private ItemSerialization() {}
-
     /**
      * Serializes items into String
      *

@@ -4,7 +4,7 @@ import net.md_5.bungee.api.chat.TextComponent;
 
 import java.util.List;
 
-public class StringUtils {
+public class StringUtil {
 
     public TextComponent format(List<String> msg) {
         final TextComponent component = new TextComponent();

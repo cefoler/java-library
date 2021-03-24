@@ -3,9 +3,7 @@ package com.celeste.util;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 
-public final class LocationUtils {
-
-    private LocationUtils() {}
+public final class LocationUtil {
 
     /**
      * Serializes a location into String.
@@ -29,9 +27,7 @@ public final class LocationUtils {
      */
     public static Location deserialize(final String context) {
         final String[] stripped = context.split(";");
-        if (stripped.length != 6) {
-            return null;
-        }
+        if (stripped.length != 6) return null;
 
         return new Location(
             Bukkit.getWorld(stripped[0]),

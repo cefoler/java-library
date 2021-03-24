@@ -79,7 +79,7 @@ public class ItemBuilder implements Cloneable {
      * @param itemMeta ItemMeta
      * @return ItemBuilder
      */
-    public ItemBuilder itemMeta(final ItemMeta itemMeta) {
+    public ItemBuilder meta(final ItemMeta itemMeta) {
         this.itemMeta = itemMeta;
         return this;
     }
@@ -146,9 +146,7 @@ public class ItemBuilder implements Cloneable {
      */
     public ItemBuilder addLoreLine(final String... line) {
         List<String> lore = itemMeta.getLore();
-        if (lore == null) {
-            lore = new ArrayList<>();
-        }
+        if (lore == null) lore = new ArrayList<>();
 
         lore.addAll(Arrays.asList(line));
         itemMeta.setLore(lore);
@@ -188,9 +186,7 @@ public class ItemBuilder implements Cloneable {
      * @return ItemBuilder
      */
     public ItemBuilder enchantments(final List<String> enchantments) {
-        if (enchantments == null) {
-            return this;
-        }
+        if (enchantments == null) return this;
 
         for (final String enchant : enchantments) {
             final String[] splitEnchant = enchant.split(":");
@@ -213,7 +209,7 @@ public class ItemBuilder implements Cloneable {
      * @param flags ItemFlag
      * @return ItemBuilder
      */
-    public ItemBuilder addFlags(final ItemFlag... flags) {
+    public ItemBuilder flags(final ItemFlag... flags) {
         itemMeta.addItemFlags(flags);
         return this;
     }
@@ -223,7 +219,7 @@ public class ItemBuilder implements Cloneable {
      * @return ItemBuilder
      */
     public ItemBuilder hideEnchantments() {
-        addFlags(ItemFlag.HIDE_ENCHANTS);
+        flags(ItemFlag.HIDE_ENCHANTS);
         return this;
     }
 

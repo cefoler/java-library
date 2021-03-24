@@ -1,4 +1,4 @@
-package com.celeste.event;
+package com.celeste.view.event;
 
 import org.bukkit.entity.Player;
 import org.bukkit.event.entity.EntityEvent;
@@ -12,12 +12,12 @@ public final class EventFilters {
      * Checks if the entity has metadata.
      *
      * @param <E> Predicate
-     * @param metadataKey Key for the metadata
+     * @param key Key for the metadata
      *
      * @return Predicate
      */
-    public static <E extends EntityEvent> Predicate<E> entityHasMetadata(final String metadataKey) {
-        return e -> e.getEntity().hasMetadata(metadataKey);
+    public static <E extends EntityEvent> Predicate<E> hasMetadata(final String key) {
+        return e -> e.getEntity().hasMetadata(key);
     }
 
     /**

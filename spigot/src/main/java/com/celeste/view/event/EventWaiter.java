@@ -1,4 +1,4 @@
-package com.celeste.event;
+package com.celeste.view.event;
 
 import com.google.gson.reflect.TypeToken;
 import lombok.AccessLevel;
@@ -107,9 +107,7 @@ public final class EventWaiter<E extends Event> {
      */
     public EventWaiter<E> cancel() {
         return handler(event -> {
-            if (event instanceof Cancellable) {
-                ((Cancellable) event).setCancelled(true);
-            }
+            if (event instanceof Cancellable) ((Cancellable) event).setCancelled(true);
         });
     }
 

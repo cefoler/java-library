@@ -1,27 +1,20 @@
-package com.celeste.menu.paginator;
+package com.celeste.model;
 
 import com.google.common.collect.Lists;
 import lombok.AllArgsConstructor;
+import lombok.Setter;
 
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 
 @AllArgsConstructor
-
 public final class Paginator<T> {
 
+    @Setter
     private int pageSize;
-    private final List<T> source;
 
-    /**
-     * Sets the size of the page.
-     *
-     * @param pageSize int
-     */
-    public void setPageSize(final int pageSize) {
-        this.pageSize = pageSize;
-    }
+    private final List<T> source;
 
     /**
      * @return int Page size
@@ -56,14 +49,8 @@ public final class Paginator<T> {
     public List<T> getPage(final int index) {
         int size = size();
 
-        if (source.isEmpty()) {
-            return Collections.emptyList();
-        }
-
-        if (size < pageSize) {
-            return Lists.newArrayList(source);
-        }
-
+        if (source.isEmpty()) return Collections.emptyList();
+        if (size < pageSize) return Lists.newArrayList(source);
         if (index < 0 || index >= count()) {
             throw new ArrayIndexOutOfBoundsException(
                 "Index must be between the range of 0 and " + (count() - 1) + ", given: " + index
@@ -75,9 +62,7 @@ public final class Paginator<T> {
         int base = index * pageSize;
         int until = base + pageSize;
 
-        if (until > size()) {
-            until = size;
-        }
+        if (until > size()) until = size;
 
         for (int i = base; i < until; i++) {
             page.add(get(i));
@@ -94,16 +79,6 @@ public final class Paginator<T> {
      */
     public boolean hasPage(final int index) {
         return index >= 0 && index < count();
-    }
-
-    @Override
-    public String toString() {
-        return "Paginator{"
-            + "pageSize=" + pageSize
-            + ", src=" + source
-            + ", elements=" + source.size()
-            + ", count=" +  count()
-            + '}';
     }
 
 }

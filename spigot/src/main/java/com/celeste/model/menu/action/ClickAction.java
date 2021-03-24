@@ -1,6 +1,6 @@
-package com.celeste.menu.action;
+package com.celeste.model.menu.action;
 
-import com.celeste.menu.MenuHolder;
+import com.celeste.model.menu.MenuHolder;
 import org.bukkit.event.inventory.InventoryClickEvent;
 
 /**

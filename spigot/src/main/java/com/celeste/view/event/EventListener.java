@@ -1,4 +1,4 @@
-package com.celeste.event;
+package com.celeste.view.event;
 
 import lombok.AllArgsConstructor;
 import org.bukkit.event.Event;
@@ -10,25 +10,19 @@ import org.jetbrains.annotations.NotNull;
 import java.util.function.Consumer;
 
 @AllArgsConstructor
-public final class EventListener<E extends Event> implements Listener, org.bukkit.plugin.EventExecutor {
+public final class EventListener<E extends Event> implements Listener, EventExecutor {
 
     private final EventWaiter<E> builder;
 
     @Override
     public void execute(@NotNull final Listener listener, @NotNull final Event eventOne) {
-        if (!builder.getEvent().isInstance(eventOne)) {
-           return;
-        }
+        if (!builder.getEvent().isInstance(eventOne)) return;
 
         final E event = builder.getEvent().cast(eventOne);
-        if (builder.getFilter().negate().test(event)) {
-           return;
-        }
+        if (builder.getFilter().negate().test(event)) return;
 
         final Consumer<E> action = builder.getAction();
-        if (action != null) {
-           action.accept(event);
-        }
+        if (action != null) action.accept(event);
 
         if (builder.isExpireAfterExecute()) {
            if (builder.getExecutions() == 0) unregister();
