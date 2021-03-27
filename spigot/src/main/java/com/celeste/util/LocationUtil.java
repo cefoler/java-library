@@ -2,41 +2,64 @@ package com.celeste.util;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
+import org.jetbrains.annotations.NotNull;
+
+import java.util.StringJoiner;
 
 public final class LocationUtil {
 
-    /**
-     * Serializes a location into String.
-     *
-     * @param location Location
-     * @return String
-     */
-    public static String serialize(final Location location) {
-        return location.getWorld().getName()
-            + ";" + location.getX()
-            + ";" + location.getY()
-            + ";" + location.getZ()
-            + ";" + location.getYaw()
-            + ";" + location.getPitch();
+  private LocationUtil() {}
+
+  /**
+   * Serializes a location into a String
+   * @param location Location
+   * @param yawAndPitch boolean
+   *
+   * @return String
+   */
+  public static String serialize(@NotNull final Location location, final boolean yawAndPitch) {
+    final StringJoiner joiner = new StringJoiner(":");
+
+    joiner.add(location.getWorld().getName());
+    joiner.add(String.valueOf(location.getX()));
+    joiner.add(String.valueOf(location.getY()));
+    joiner.add(String.valueOf(location.getZ()));
+    joiner.add(String.valueOf(location.getY()));
+
+    if (yawAndPitch) {
+      joiner.add(String.valueOf(location.getYaw()));
+      joiner.add(String.valueOf(location.getPitch()));
     }
 
-    /**
-     * Deserializes a String that was serialized by this util.
-     * @param context String
-     * @return Location
-     */
-    public static Location deserialize(final String context) {
-        final String[] stripped = context.split(";");
-        if (stripped.length != 6) return null;
+    return joiner.toString().substring(0, joiner.length() - 1);
+  }
 
-        return new Location(
-            Bukkit.getWorld(stripped[0]),
-            Double.parseDouble(stripped[1]),
-            Double.parseDouble(stripped[2]),
-            Double.parseDouble(stripped[3]),
-            Float.parseFloat(stripped[4]),
-            Float.parseFloat(stripped[5])
-        );
+  /**
+   * Deserializes a location
+   * @param serializedLocation String
+   *
+   * @return Location
+   */
+  public static Location deserialize(@NotNull final String serializedLocation) {
+    final String[] location = serializedLocation.split(":");
+
+    if (location.length == 4) {
+      return new Location(Bukkit.getWorld(location[0]),
+          Double.parseDouble(location[1]),
+          Double.parseDouble(location[2]),
+          Double.parseDouble(location[3]));
     }
+
+    if (location.length == 6) {
+      return new Location(Bukkit.getWorld(location[0]),
+          Double.parseDouble(location[1]),
+          Double.parseDouble(location[2]),
+          Double.parseDouble(location[3]),
+          Float.parseFloat(location[4]),
+          Float.parseFloat(location[5]));
+    }
+
+    throw new IllegalArgumentException("This string cannot be deserialized");
+  }
 
 }

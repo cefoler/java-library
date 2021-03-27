@@ -6,7 +6,9 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.SneakyThrows;
 import org.bukkit.Bukkit;
-import org.bukkit.event.*;
+import org.bukkit.event.Cancellable;
+import org.bukkit.event.Event;
+import org.bukkit.event.EventPriority;
 import org.bukkit.plugin.Plugin;
 
 import java.lang.reflect.Type;
@@ -29,18 +31,20 @@ public final class EventWaiter<E extends Event> {
     private EventPriority priority;
     private final boolean ignoreCancelled;
 
-    @SneakyThrows
-    @SuppressWarnings("unchecked")
-    private EventWaiter() {
-        final TypeToken<? extends EventWaiter> token = TypeToken.get(getClass());
-        final Type type = token.getType();
-        this.event = (Class<E>) Class.forName(type.getTypeName());
+    /**
+     * Event waiter constructor
+     */
+    @SneakyThrows @SuppressWarnings("unchecked")
+    public EventWaiter() {
+      final TypeToken<? extends EventWaiter> token = TypeToken.get(getClass());
+      final Type type = token.getType();
+      this.event = (Class<E>) Class.forName(type.getTypeName());
 
-        this.filter = Objects::nonNull;
-        this.expireAfterExecute = false;
-        this.executions = 0;
-        this.priority = EventPriority.NORMAL;
-        this.ignoreCancelled = true;
+      this.filter = Objects::nonNull;
+      this.expireAfterExecute = false;
+      this.executions = 0;
+      this.priority = EventPriority.NORMAL;
+      this.ignoreCancelled = true;
     }
 
     /**
@@ -107,7 +111,9 @@ public final class EventWaiter<E extends Event> {
      */
     public EventWaiter<E> cancel() {
         return handler(event -> {
-            if (event instanceof Cancellable) ((Cancellable) event).setCancelled(true);
+            if (event instanceof Cancellable) {
+                ((Cancellable) event).setCancelled(true);
+            }
         });
     }
 

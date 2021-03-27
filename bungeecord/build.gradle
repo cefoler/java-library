@@ -1,21 +1,11 @@
 plugins {
-    id 'java'
     id "com.github.johnrengelman.shadow" version "6.1.0"
 }
 
-group 'com.celeste'
-version '1.0-SNAPSHOT'
-
-repositories {
-    mavenCentral()
-
-    maven { url "https://oss.sonatype.org/content/repositories/snapshots" }
-}
-
 dependencies {
+    /*
+    Bungeecord
+     */
     compileOnly 'net.md-5:bungeecord-api:1.16-R0.4'
     implementation 'com.github.SaiintBrisson.command-framework:bungee:1.2.0'
-
-    compileOnly 'org.projectlombok:lombok:1.18.18'
-    annotationProcessor 'org.projectlombok:lombok:1.18.18'
 }

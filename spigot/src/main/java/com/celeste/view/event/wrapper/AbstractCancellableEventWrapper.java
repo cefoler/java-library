@@ -4,9 +4,9 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import org.bukkit.event.Cancellable;
 
-@EqualsAndHashCode(callSuper = true)
 @Data
-public abstract class AbstractCancellableAbstractEventWrapper extends AbstractEventWrapper implements Cancellable {
+@EqualsAndHashCode(callSuper = true)
+public abstract class AbstractCancellableEventWrapper extends AbstractEventWrapper implements Cancellable {
 
     private boolean cancelled;
 

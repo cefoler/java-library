@@ -16,16 +16,24 @@ public final class EventListener<E extends Event> implements Listener, EventExec
 
     @Override
     public void execute(@NotNull final Listener listener, @NotNull final Event eventOne) {
-        if (!builder.getEvent().isInstance(eventOne)) return;
+        if (!builder.getEvent().isInstance(eventOne)) {
+            return;
+        }
 
         final E event = builder.getEvent().cast(eventOne);
-        if (builder.getFilter().negate().test(event)) return;
+        if (builder.getFilter().negate().test(event)) {
+            return;
+        }
 
         final Consumer<E> action = builder.getAction();
-        if (action != null) action.accept(event);
+        if (action != null) {
+            action.accept(event);
+        }
 
         if (builder.isExpireAfterExecute()) {
-           if (builder.getExecutions() == 0) unregister();
+           if (builder.getExecutions() == 0) {
+               unregister();
+           }
 
            builder.setExecutions(builder.getExecutions() - 1);
         }

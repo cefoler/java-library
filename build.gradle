@@ -1,31 +1,23 @@
-plugins {
-    id 'java'
-}
-
-group 'com.celeste'
-version '1.0-SNAPSHOT'
-
 subprojects {
-    afterEvaluate {
-        apply plugin: 'java'
+    apply plugin: 'java'
 
-        repositories {
-            mavenLocal()
-            mavenCentral()
+    group 'com.celeste'
+    version '1.0-SNAPSHOT'
 
-            maven { url 'https://jitpack.io' }
-        }
+    repositories {
+        mavenLocal()
+        mavenCentral()
 
+        maven { url 'https://jitpack.io' }
+        maven { url "https://oss.sonatype.org/content/repositories/snapshots" }
     }
 
-    tasks.withType(JavaCompile) {
-        options.encoding = 'UTF-8'
-    }
+    dependencies {
+        compileOnly 'org.projectlombok:lombok:1.18.18'
+        annotationProcessor 'org.projectlombok:lombok:1.18.18'
 
-    tasks.withType(Jar) {
-        destinationDirectory.set(file("$rootDir/target/"))
-
-        println(destinationDirectory)
+        compileOnly 'org.jetbrains:annotations:20.1.0'
+        annotationProcessor 'org.jetbrains:annotations:20.1.0'
     }
 
 }

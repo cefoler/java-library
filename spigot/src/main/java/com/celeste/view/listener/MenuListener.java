@@ -8,11 +8,6 @@ import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.inventory.InventoryOpenEvent;
 import org.bukkit.inventory.Inventory;
 
-/**
- * The listener for the Menu events.
- *
- * @author luiza
- */
 public final class MenuListener implements Listener {
 
     /**
