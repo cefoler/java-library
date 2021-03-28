@@ -1,6 +1,6 @@
-package com.celeste.registries.impl;
+package com.celeste.model.registry.impl;
 
-import com.celeste.registries.Registry;
+import com.celeste.model.registry.Registry;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Comparator;
@@ -11,14 +11,14 @@ import java.util.TreeMap;
 public final class TreeRegistry<T, U> extends Registry<T, U> {
 
   /**
-   * Creates a new TreeRegistry
+   * Creates a new TreeAbstractRegistry
    */
   public TreeRegistry() {
     super(new TreeMap<>());
   }
 
   /**
-   * Creates a new TreeRegistry with the specific Comparator
+   * Creates a new TreeAbstractRegistry with the specific Comparator
    *
    * @param comparator Comparator
    */
@@ -27,7 +27,7 @@ public final class TreeRegistry<T, U> extends Registry<T, U> {
   }
 
   /**
-   * Creates a new TreeRegistry with the specific SortedMap
+   * Creates a new TreeAbstractRegistry with the specific SortedMap
    *
    * @param sorted SortedMap
    */
@@ -36,7 +36,7 @@ public final class TreeRegistry<T, U> extends Registry<T, U> {
   }
 
   /**
-   * Creates a new TreeRegistry from another map
+   * Creates a new TreeAbstractRegistry from another map
    *
    * @param map Map
    */

@@ -1,8 +1,10 @@
-package com.celeste.registries;
+package com.celeste.model.registry;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import lombok.SneakyThrows;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.io.Serializable;
 import java.util.*;
@@ -68,7 +70,7 @@ public abstract class Registry<T, U> implements Serializable, Cloneable {
      * @param key T
      * @return Object U
      */
-    @NotNull
+    @Nullable
     public U get(@NotNull final T key) {
         return map.get(key);
     }
@@ -84,18 +86,19 @@ public abstract class Registry<T, U> implements Serializable, Cloneable {
     }
 
     /**
+     * @return Map entry set
+     */
+    @NotNull
+    public Set<Map.Entry<T, U>> getEntrySet() {
+        return map.entrySet();
+    }
+
+    /**
      * @return Map key set
      */
     @NotNull
     public Set<T> getKeys() {
         return map.keySet();
-    }
-
-    /**
-     * @return Map entry set
-     */
-    public Set<Map.Entry<T, U>> getEntrySet() {
-        return map.entrySet();
     }
 
     /**
@@ -113,6 +116,7 @@ public abstract class Registry<T, U> implements Serializable, Cloneable {
      * @param comparator Comparator
      * @return List
      */
+    @NotNull
     public List<U> sort(final Comparator<? super U> comparator) {
         return getAll()
             .stream()
@@ -148,6 +152,15 @@ public abstract class Registry<T, U> implements Serializable, Cloneable {
     @NotNull
     public Map<T, U> getMap() {
         return map;
+    }
+
+    /**
+     * Clones the registry
+     * @return Registry
+     */
+    @Override @NotNull @SneakyThrows @SuppressWarnings("unchecked")
+    public Registry<T, U> clone() {
+        return (Registry<T, U>) super.clone();
     }
 
 }

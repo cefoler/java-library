@@ -1,6 +1,6 @@
-package com.celeste.registries.impl;
+package com.celeste.model.registry.impl;
 
-import com.celeste.registries.Registry;
+import com.celeste.model.registry.Registry;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Map;
@@ -9,14 +9,14 @@ import java.util.concurrent.ConcurrentHashMap;
 public final class ConcurrentRegistry<T, U> extends Registry<T, U> {
 
   /**
-   * Creates ConcurrentRegistry
+   * Creates ConcurrentAbstractRegistry
    */
   public ConcurrentRegistry() {
     super(new ConcurrentHashMap<>());
   }
 
   /**
-   * Creates ConcurrentRegistry with specific size
+   * Creates ConcurrentAbstractRegistry with specific size
    *
    * @param initialSize int
    */
@@ -25,7 +25,7 @@ public final class ConcurrentRegistry<T, U> extends Registry<T, U> {
   }
 
   /**
-   * Creates ConcurrentRegistry with specific size and density
+   * Creates ConcurrentAbstractRegistry with specific size and density
    *
    * @param initialSize int
    * @param density float
@@ -35,7 +35,7 @@ public final class ConcurrentRegistry<T, U> extends Registry<T, U> {
   }
 
   /**
-   * Creates ConcurrentRegistry with specific size, density and threads
+   * Creates ConcurrentAbstractRegistry with specific size, density and threads
    *
    * @param initialSize int
    * @param density float
@@ -46,7 +46,7 @@ public final class ConcurrentRegistry<T, U> extends Registry<T, U> {
   }
 
   /**
-   * Creates ConcurrentRegistry from another map
+   * Creates ConcurrentAbstractRegistry from another map
    *
    * @param map Map<T, U>
    */

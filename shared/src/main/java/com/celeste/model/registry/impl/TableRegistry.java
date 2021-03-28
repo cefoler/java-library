@@ -1,6 +1,6 @@
-package com.celeste.registries.impl;
+package com.celeste.model.registry.impl;
 
-import com.celeste.registries.Registry;
+import com.celeste.model.registry.Registry;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Hashtable;
@@ -9,14 +9,14 @@ import java.util.Map;
 public final class TableRegistry<T, U> extends Registry<T, U> {
 
   /**
-   * Creates a new TableRegistry
+   * Creates a new TableAbstractRegistry
    */
   public TableRegistry() {
     super(new Hashtable<>());
   }
 
   /**
-   * Creates a new TableRegistry with specific initialSize
+   * Creates a new TableAbstractRegistry with specific initialSize
    *
    * @param initialSize int
    */
@@ -25,7 +25,7 @@ public final class TableRegistry<T, U> extends Registry<T, U> {
   }
 
   /**
-   * Creates a new TableRegistry with specific initial size and density
+   * Creates a new TableAbstractRegistry with specific initial size and density
    *
    * @param initialSize int
    * @param density float
@@ -35,7 +35,7 @@ public final class TableRegistry<T, U> extends Registry<T, U> {
   }
 
   /**
-   * Creates a new TableRegistry from another map
+   * Creates a new TableAbstractRegistry from another map
    *
    * @param map Map<T, U>
    */

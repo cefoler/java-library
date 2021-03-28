@@ -1,6 +1,6 @@
-package com.celeste.registries.impl;
+package com.celeste.model.registry.impl;
 
-import com.celeste.registries.Registry;
+import com.celeste.model.registry.Registry;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.LinkedHashMap;
@@ -10,14 +10,14 @@ import java.util.concurrent.ConcurrentHashMap;
 public final class LinkedRegistry<T, U> extends Registry<T, U> {
 
   /**
-   * Creates a LinkedRegistry
+   * Creates a LinkedAbstractRegistry
    */
   public LinkedRegistry() {
     super(new LinkedHashMap<>());
   }
 
   /**
-   * Creates a LinkedRegistry with specific size
+   * Creates a LinkedAbstractRegistry with specific size
    *
    * @param initialSize int
    */
@@ -26,7 +26,7 @@ public final class LinkedRegistry<T, U> extends Registry<T, U> {
   }
 
   /**
-   * Creates a LinkedRegistry with specific size and density
+   * Creates a LinkedAbstractRegistry with specific size and density
    *
    * @param initialSize int
    * @param density float
@@ -36,7 +36,7 @@ public final class LinkedRegistry<T, U> extends Registry<T, U> {
   }
 
   /**
-   * Creates a LinkedRegistry with specific size, density and access order
+   * Creates a LinkedAbstractRegistry with specific size, density and access order
    *
    * @param initialSize int
    * @param density float
@@ -47,7 +47,7 @@ public final class LinkedRegistry<T, U> extends Registry<T, U> {
   }
 
   /**
-   * Creates a LinkedRegistry from a map
+   * Creates a LinkedAbstractRegistry from a map
    *
    * @param map Map<T, U>
    */
