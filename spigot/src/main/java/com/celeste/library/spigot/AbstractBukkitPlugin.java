@@ -3,7 +3,6 @@ package com.celeste.library.spigot;
 import com.celeste.library.spigot.annotation.CommandHolder;
 import com.celeste.library.spigot.exception.InvalidCommandException;
 import com.celeste.library.spigot.exception.InvalidListenerException;
-import com.celeste.library.spigot.view.listener.MenuListener;
 import lombok.Getter;
 import me.saiintbrisson.bukkit.command.BukkitFrame;
 import me.saiintbrisson.minecraft.command.message.MessageHolder;
@@ -34,13 +33,13 @@ public abstract class AbstractBukkitPlugin extends JavaPlugin {
   public <T extends AbstractBukkitPlugin> void registerListeners(@NotNull final Class<T> plugin, @NotNull final T instance) {
     try {
       for (final Class<? extends Listener> clazz : new Reflections("").getSubTypesOf(Listener.class)) {
-        final Constructor<? extends Listener> listenerConstructor = (Constructor<? extends Listener>) clazz.getConstructors()[0];
+        final Constructor<? extends Listener> constructor = (Constructor<? extends Listener>) clazz.getConstructors()[0];
 
-        final Listener listener = listenerConstructor.getParameterCount() == 0
-            ? listenerConstructor.newInstance()
-            : Arrays.asList(listenerConstructor.getParameterTypes()).contains(plugin)
-            ? listenerConstructor.newInstance(instance)
-            : null;
+        final Listener listener = constructor.getParameterCount() != 0
+            ? Arrays.asList(constructor.getParameterTypes()).contains(plugin)
+            ? constructor.newInstance(instance)
+            : null
+            : constructor.newInstance();
 
         if (listener == null) continue;
 
@@ -57,23 +56,23 @@ public abstract class AbstractBukkitPlugin extends JavaPlugin {
    * With the default messages
    */
   public <T extends AbstractBukkitPlugin> void registerCommands(@NotNull final Class<T> plugin, @NotNull final T instance) {
-    final BukkitFrame frame = new BukkitFrame(this);
-    final MessageHolder holder = frame.getMessageHolder();
-
-    holder.setMessage(ERROR, "§cA error occurred.");
-    holder.setMessage(INCORRECT_TARGET, "§cOnly players can execute this command..");
-    holder.setMessage(INCORRECT_USAGE, "§cWrong use! The correct is: /{usage}");
-    holder.setMessage(NO_PERMISSION, "§cYou don't have enough permissions.");
-
     try {
-      for (final Class<?> clazz : new Reflections("").getTypesAnnotatedWith(CommandHolder.class)) {
-        final Constructor<?> commandConstructor = clazz.getConstructors()[0];
+      final BukkitFrame frame = new BukkitFrame(this);
+      final MessageHolder holder = frame.getMessageHolder();
 
-        final Object command = commandConstructor.getParameterCount() == 0
-            ? commandConstructor.newInstance()
-            : Arrays.asList(commandConstructor.getParameterTypes()).contains(plugin)
-            ? commandConstructor.newInstance(instance)
-            : null;
+      holder.setMessage(ERROR, "§cA error occurred.");
+      holder.setMessage(INCORRECT_TARGET, "§cOnly players can execute this command..");
+      holder.setMessage(INCORRECT_USAGE, "§cWrong use! The correct is: /{usage}");
+      holder.setMessage(NO_PERMISSION, "§cYou don't have enough permissions.");
+
+      for (final Class<?> clazz : new Reflections("").getTypesAnnotatedWith(CommandHolder.class)) {
+        final Constructor<?> constructor = clazz.getConstructors()[0];
+
+        final Object command = constructor.getParameterCount() != 0
+            ? Arrays.asList(constructor.getParameterTypes()).contains(plugin)
+            ? constructor.newInstance(instance)
+            : null
+            : constructor.newInstance();
 
         if (command == null) continue;
 
