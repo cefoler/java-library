@@ -363,9 +363,9 @@ public final class ItemBuilder implements Cloneable {
    * @return ItemBuilder
    */
   @NotNull
-  public ItemBuilder skull(@NotNull final OfflinePlayer owner) {
+  public ItemBuilder skull(@NotNull final String owner) {
     final SkullMeta meta = (SkullMeta) this.meta;
-    meta.setOwner(owner.getName());
+    meta.setOwner(owner);
 
     return this;
   }
