@@ -3,6 +3,7 @@ package com.celeste.library.spigot;
 import com.celeste.library.spigot.annotation.CommandHolder;
 import com.celeste.library.spigot.exception.InvalidCommandException;
 import com.celeste.library.spigot.exception.InvalidListenerException;
+import com.celeste.library.spigot.view.listener.MenuListener;
 import lombok.Getter;
 import me.saiintbrisson.bukkit.command.BukkitFrame;
 import me.saiintbrisson.minecraft.command.message.MessageHolder;
@@ -30,13 +31,10 @@ public abstract class AbstractBukkitPlugin extends JavaPlugin {
   }
 
   public <T extends AbstractBukkitPlugin> void registerListeners(@NotNull final Class<T> plugin, @NotNull final T instance) {
+    manager.registerEvents(new MenuListener(), this);
     try {
       for (final Class<? extends Listener> clazz : new Reflections("").getSubTypesOf(Listener.class)) {
-        if (clazz == Class.forName("com.celeste.library.spigot.view.listener.MenuListener")) {
-          manager.registerEvents(clazz.newInstance(), this);
-          continue;
-        }
-
+        if (clazz == Class.forName("com.celeste.library.spigot.view.listener.MenuListener")) continue;
         final Constructor<? extends Listener> listenerConstructor = (Constructor<? extends Listener>) clazz.getConstructors()[0];
 
         final Listener listener = listenerConstructor.getParameterCount() == 0
