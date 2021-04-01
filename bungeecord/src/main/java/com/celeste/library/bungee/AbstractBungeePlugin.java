@@ -13,6 +13,7 @@ import org.jetbrains.annotations.NotNull;
 import org.reflections.Reflections;
 
 import java.lang.reflect.Constructor;
+import java.util.Arrays;
 
 import static me.saiintbrisson.minecraft.command.message.MessageType.*;
 import static me.saiintbrisson.minecraft.command.message.MessageType.NO_PERMISSION;
@@ -33,7 +34,11 @@ public abstract class AbstractBungeePlugin extends Plugin {
 
         final Listener listener = listenerConstructor.getParameterCount() == 0
             ? listenerConstructor.newInstance()
-            : listenerConstructor.newInstance(instance);
+            : Arrays.asList(listenerConstructor.getParameterTypes()).contains(plugin)
+            ? listenerConstructor.newInstance(instance)
+            : null;
+
+        if (listener == null) continue;
 
         manager.registerListener(instance, listener);
       }
@@ -62,7 +67,11 @@ public abstract class AbstractBungeePlugin extends Plugin {
 
         final Object command = commandConstructor.getParameterCount() == 0
             ? commandConstructor.newInstance()
-            : commandConstructor.newInstance(instance);
+            : Arrays.asList(commandConstructor.getParameterTypes()).contains(plugin)
+            ? commandConstructor.newInstance(instance)
+            : null;
+
+        if (command == null) continue;
 
         frame.registerCommands(command);
       }
