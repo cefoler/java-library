@@ -35,6 +35,7 @@ public abstract class AbstractBukkitPlugin extends JavaPlugin {
     try {
       for (final Class<? extends Listener> clazz : new Reflections("").getSubTypesOf(Listener.class)) {
         if (clazz == Class.forName("com.celeste.library.spigot.view.listener.MenuListener")) continue;
+        if (clazz == Class.forName("com.celeste.library.spigot.view.event.EventListener")) continue;
         final Constructor<? extends Listener> listenerConstructor = (Constructor<? extends Listener>) clazz.getConstructors()[0];
 
         final Listener listener = listenerConstructor.getParameterCount() == 0
