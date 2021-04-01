@@ -1,6 +1,7 @@
 package com.celeste.library.spigot.view.listener;
 
 import com.celeste.library.spigot.model.menu.MenuHolder;
+import lombok.NoArgsConstructor;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
@@ -8,6 +9,7 @@ import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.inventory.InventoryOpenEvent;
 import org.bukkit.inventory.Inventory;
 
+@NoArgsConstructor
 public final class MenuListener implements Listener {
 
     /**
