@@ -16,6 +16,7 @@ import org.jetbrains.annotations.NotNull;
 import org.reflections.Reflections;
 
 import java.lang.reflect.Constructor;
+import java.util.Arrays;
 
 import static me.saiintbrisson.minecraft.command.message.MessageType.*;
 
@@ -31,16 +32,17 @@ public abstract class AbstractBukkitPlugin extends JavaPlugin {
   }
 
   public <T extends AbstractBukkitPlugin> void registerListeners(@NotNull final Class<T> plugin, @NotNull final T instance) {
-    manager.registerEvents(new MenuListener(), this);
     try {
       for (final Class<? extends Listener> clazz : new Reflections("").getSubTypesOf(Listener.class)) {
-        if (clazz == Class.forName("com.celeste.library.spigot.view.listener.MenuListener")) continue;
-        if (clazz == Class.forName("com.celeste.library.spigot.view.event.EventListener")) continue;
         final Constructor<? extends Listener> listenerConstructor = (Constructor<? extends Listener>) clazz.getConstructors()[0];
 
         final Listener listener = listenerConstructor.getParameterCount() == 0
             ? listenerConstructor.newInstance()
-            : listenerConstructor.newInstance(instance);
+            : Arrays.asList(listenerConstructor.getParameterTypes()).contains(plugin)
+            ? listenerConstructor.newInstance(instance)
+            : null;
+
+        if (listener == null) continue;
 
         manager.registerEvents(listener, instance);
       }
@@ -69,7 +71,11 @@ public abstract class AbstractBukkitPlugin extends JavaPlugin {
 
         final Object command = commandConstructor.getParameterCount() == 0
             ? commandConstructor.newInstance()
-            : commandConstructor.newInstance(instance);
+            : Arrays.asList(commandConstructor.getParameterTypes()).contains(plugin)
+            ? commandConstructor.newInstance(instance)
+            : null;
+
+        if (command == null) continue;
 
         frame.registerCommands(command);
       }
