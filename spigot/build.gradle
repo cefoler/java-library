@@ -7,8 +7,18 @@ repositories {
 }
 
 dependencies {
+    /*
+    SPIGOT DEPENDENCY
+    */
     compileOnly 'org.spigotmc:spigot-api:1.8.8-R0.1-SNAPSHOT'
+
+    /*
+    SPIGOT FRAMEWORK
+    */
     implementation 'com.github.SaiintBrisson.command-framework:bukkit:1.2.0'
 
-    implementation group: 'org.reflections', name: 'reflections', version: '0.9.12'
+    /*
+    FRAMEWORK
+    */
+    implementation 'org.reflections:reflections:0.9.12'
 }

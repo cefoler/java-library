@@ -4,8 +4,17 @@ plugins {
 
 dependencies {
     /*
-    Bungeecord
-     */
+    BUNGEECORD DEPENDENCY
+    */
     compileOnly 'net.md-5:bungeecord-api:1.16-R0.4'
+
+    /*
+    BUNGEECORD FRAMEWORK
+    */
     implementation 'com.github.SaiintBrisson.command-framework:bungee:1.2.0'
+
+    /*
+    FRAMEWORK
+    */
+    implementation 'org.reflections:reflections:0.9.12'
 }

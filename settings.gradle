@@ -1,4 +1,4 @@
-rootProject.name = 'common'
+rootProject.name = 'java-library'
 include 'spigot'
 include 'bungeecord'
 include 'shared'
