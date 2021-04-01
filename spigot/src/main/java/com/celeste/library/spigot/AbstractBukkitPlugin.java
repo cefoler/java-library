@@ -14,6 +14,8 @@ import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.NotNull;
 import org.reflections.Reflections;
 
+import java.lang.reflect.Constructor;
+
 import static me.saiintbrisson.minecraft.command.message.MessageType.*;
 
 @Getter
@@ -30,7 +32,12 @@ public abstract class AbstractBukkitPlugin extends JavaPlugin {
   public <T extends AbstractBukkitPlugin> void registerListeners(@NotNull final Class<T> plugin, @NotNull final T instance) {
     try {
       for (final Class<? extends Listener> clazz : new Reflections("").getSubTypesOf(Listener.class)) {
-        final Listener listener = clazz.getConstructor(plugin).newInstance(instance);
+        final Constructor<? extends Listener> listenerConstructor = (Constructor<? extends Listener>) clazz.getConstructors()[0];
+
+        final Listener listener = listenerConstructor.getParameterCount() == 0
+            ? listenerConstructor.newInstance()
+            : listenerConstructor.newInstance(instance);
+
         manager.registerEvents(listener, instance);
       }
     } catch (Throwable throwable) {
@@ -54,7 +61,13 @@ public abstract class AbstractBukkitPlugin extends JavaPlugin {
 
     try {
       for (final Class<?> clazz : new Reflections("").getTypesAnnotatedWith(CommandHolder.class)) {
-        frame.registerCommands(clazz.getConstructor(plugin).newInstance(instance));
+        final Constructor<?> commandConstructor = clazz.getConstructors()[0];
+
+        final Object command = commandConstructor.getParameterCount() == 0
+            ? commandConstructor.newInstance()
+            : commandConstructor.newInstance(instance);
+
+        frame.registerCommands(command);
       }
     } catch (Throwable throwable) {
       throw new InvalidCommandException("Unable to register command: ", throwable);
