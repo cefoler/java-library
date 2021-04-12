@@ -20,7 +20,7 @@ import static com.celeste.library.spigot.util.ReflectionUtil.*;
 @Getter
 public final class ActionBarUtil {
 
-  private static final ActionBarUtil instance = new ActionBarUtil();
+  public static final ActionBarUtil instance = new ActionBarUtil();
 
   private final Constructor<?> ppocCon;
   private final Method method;
