@@ -70,7 +70,7 @@ public final class ActionBarUtil {
   }
 
   @SneakyThrows
-  public final void sendAll(final String path, @NotNull final String message) {
+  public final void sendAll(@NotNull final String message) {
     if (isEqualsOrMoreRecent(16)) {
       final Object chatBase = method.invoke(null, "{\"text\":\"" + message + "\"}");
 
