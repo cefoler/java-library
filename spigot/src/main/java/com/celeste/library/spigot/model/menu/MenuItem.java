@@ -116,4 +116,8 @@ public class MenuItem {
         });
     }
 
+    public MenuItem cancel() {
+      return withAction((holder, event) -> event.setCancelled(true));
+    }
+
 }
