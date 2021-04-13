@@ -12,8 +12,6 @@ public final class EventFilters {
 
   private static final EventController CONTROLLER = new EventController();
 
-  private EventFilters() {}
-
   /**
    * Checks if it is the same block
    *

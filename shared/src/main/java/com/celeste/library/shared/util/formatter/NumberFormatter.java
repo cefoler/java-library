@@ -19,7 +19,7 @@ public final class NumberFormatter {
     float tmp;
     while ((tmp = value / 1000) >= 1) {
       value = tmp;
-      ++index;
+      index++;
     }
 
     final DecimalFormat decimalFormat = new DecimalFormat("#.##");

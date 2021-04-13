@@ -20,9 +20,9 @@ import static com.celeste.library.spigot.util.ReflectionUtil.*;
 @Getter
 public final class ActionBarUtil {
 
-  public static final ActionBarUtil instance = new ActionBarUtil();
+  public static final ActionBarUtil INSTANCE = new ActionBarUtil();
 
-  private final Constructor<?> ppocCon;
+  private final Constructor<?> constructor;
   private final Method method;
 
   private final Object type;
@@ -48,8 +48,10 @@ public final class ActionBarUtil {
     }
 
     if (isEqualsOrMoreRecent(16)) {
-      ppocCon = ppocClass.getConstructor(icbcClass, cmtClass, UUID.class);
-    } else ppocCon = ppocClass.getConstructor(icbcClass, cmtClass);
+      constructor = ppocClass.getConstructor(icbcClass, cmtClass, UUID.class);
+    } else {
+        constructor = ppocClass.getConstructor(icbcClass, cmtClass);
+    }
   }
 
   @SneakyThrows
@@ -59,13 +61,14 @@ public final class ActionBarUtil {
     final Player player = (Player) sender;
     if (isEqualsOrMoreRecent(16)) {
       final Object chatBase = method.invoke(null, "{\"text\":\"" + message + "\"}");
-      final Object packet = ppocCon.newInstance(chatBase, type, player.getUniqueId());
+      final Object packet = constructor.newInstance(chatBase, type, player.getUniqueId());
       sendPacket(player, packet);
       return;
     }
 
     final Object chatBase = method.invoke(null, "{\"text\":\"" + message + "\"}");
-    final Object packet = ppocCon.newInstance(chatBase, type);
+    final Object packet = constructor.newInstance(chatBase, type);
+
     sendPacket(player, packet);
   }
 
@@ -75,7 +78,7 @@ public final class ActionBarUtil {
       final Object chatBase = method.invoke(null, "{\"text\":\"" + message + "\"}");
 
       for (final Player player : Bukkit.getOnlinePlayers()) {
-        final Object packet = ppocCon.newInstance(chatBase, type, player.getUniqueId());
+        final Object packet = constructor.newInstance(chatBase, type, player.getUniqueId());
         sendPacket(player, packet);
       }
 
@@ -83,7 +86,7 @@ public final class ActionBarUtil {
     }
 
     final Object chatBase = method.invoke(null, "{\"text\":\"" + message + "\"}");
-    final Object packet = ppocCon.newInstance(chatBase, type);
+    final Object packet = constructor.newInstance(chatBase, type);
 
     Bukkit.getOnlinePlayers().forEach(player -> sendPacket(player, packet));
   }

@@ -1,23 +1,21 @@
 package com.celeste.library.spigot.model.menu;
 
 import com.celeste.library.spigot.model.menu.action.ClickAction;
-import com.google.common.collect.ImmutableMap;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
-import java.util.Map;
+import java.util.ArrayList;
+import java.util.Properties;
 
 /**
  * Class for items of a Menu, that can execute
  * ClickActions and events.
- *
- * @author luiza
  */
 @Getter
 @RequiredArgsConstructor
-public class MenuItem {
+public final class MenuItem {
 
     private final int slot;
 
@@ -29,7 +27,7 @@ public class MenuItem {
      * @param item ItemStack
      * @return MenuItem
      */
-    public MenuItem withItem(final ItemStack item) {
+    public MenuItem item(final ItemStack item) {
         this.item = item;
         return this;
     }
@@ -40,7 +38,7 @@ public class MenuItem {
      * @param action ClickAction for the item.
      * @return MenuItem
      */
-    public MenuItem withAction(final ClickAction action) {
+    public MenuItem action(final ClickAction action) {
         if (this.action == null) {
             this.action = action;
             return this;
@@ -56,7 +54,7 @@ public class MenuItem {
      * @return MenuItem
      */
     public MenuItem close() {
-        return withAction((holder, event) -> {
+        return action((holder, event) -> {
             Player whoClicked = (Player) event.getWhoClicked();
             whoClicked.closeInventory();
         });
@@ -71,7 +69,7 @@ public class MenuItem {
      * @return MenuItem
      */
     public MenuItem setProperty(final String key, final Object value) {
-        return withAction((holder, event) -> holder.setProperty(key, value));
+        return action((holder, event) -> holder.setProperty(key, value));
     }
 
     /**
@@ -81,7 +79,7 @@ public class MenuItem {
      * @return MenuItem
      */
     public MenuItem open(final Menu menu) {
-        return open(menu, ImmutableMap.of());
+        return open(menu, new Properties());
     }
 
     /**
@@ -92,9 +90,9 @@ public class MenuItem {
      *
      * @return MenuItem
      */
-    public MenuItem open(final Menu menu, final Map<String, Object> properties) {
-        return withAction((holder, event) -> {
-            Player whoClicked = (Player) event.getWhoClicked();
+    public MenuItem open(final Menu menu, final Properties properties) {
+        return action((holder, event) -> {
+            final Player whoClicked = (Player) event.getWhoClicked();
             whoClicked.closeInventory();
 
             menu.show(whoClicked, properties);
@@ -102,22 +100,20 @@ public class MenuItem {
     }
 
     /**
-     * When clicked, reopens the same Menu.
-     *
+     * When clicked, clears and updates the inventory
      * @return MenuItem
      */
     public MenuItem reopen() {
-        return withAction((holder, event) -> {
-            final Player whoClicked = (Player) event.getWhoClicked();
-            whoClicked.closeInventory();
+        return action((holder, event) -> {
+            final ArrayList<MenuItem> items = holder.getInventory().getItems();
 
-            holder.setItems(holder.getMenu().getItems().clone());
-            holder.show(whoClicked);
+            holder.getInventory().getMenu().clear();
+            holder.getInventory().setItems(items);
         });
     }
 
     public MenuItem cancel() {
-      return withAction((holder, event) -> event.setCancelled(true));
+      return action((holder, event) -> event.setCancelled(true));
     }
 
 }

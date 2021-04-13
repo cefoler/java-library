@@ -1,13 +1,13 @@
 package com.celeste.library.spigot.model.menu;
 
-import com.google.common.collect.ImmutableMap;
 import lombok.Getter;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.inventory.InventoryOpenEvent;
 import org.bukkit.inventory.ItemStack;
 
-import java.util.Map;
+import java.util.ArrayList;
+import java.util.Properties;
 
 /**
  * The Menu class should be extended on the class that
@@ -16,16 +16,14 @@ import java.util.Map;
  * When extended, the constructor will create a super with Title and Size
  * For modifications on the inventory, you should create the onRender,
  * onOpen and onClose on the class extended by Menu.
- *
- * @author luiza
  */
 @Getter
-public class Menu {
+public abstract class Menu {
 
     private final String title;
     private final int size;
 
-    private final MenuItem[] items;
+    private final ArrayList<MenuItem> items;
 
     /**
      * Creates the Menu with the title and size specified.
@@ -36,7 +34,7 @@ public class Menu {
     public Menu(final String title, final int size) {
         this.title = title;
         this.size = size;
-        this.items = new MenuItem[size];
+        this.items = new ArrayList<>(size);
     }
 
     /**
@@ -48,9 +46,8 @@ public class Menu {
      * @return MenuItem
      */
     public final MenuItem slot(final int slot, final ItemStack item) {
-        final MenuItem menuItem = new MenuItem(slot).withItem(item);
-
-        items[slot] = menuItem;
+        final MenuItem menuItem = new MenuItem(slot).item(item);
+        items.set(slot, menuItem);
 
         return menuItem;
     }
@@ -61,7 +58,7 @@ public class Menu {
      * @param player Player that will render the menu
      * @param holder MenuHolder
      */
-    public void onRender(final Player player, final MenuHolder holder) {}
+    public abstract void onRender(final Player player, final MenuHolder holder);
 
     /**
      * Event when the menu is opened
@@ -69,7 +66,7 @@ public class Menu {
      * @param event InventoryOpenEvent for the Menu
      * @param holder MenuHolder
      */
-    public void onOpen(final InventoryOpenEvent event, final MenuHolder holder) {}
+    public abstract void onOpen(final InventoryOpenEvent event, final MenuHolder holder);
 
     /**
      * Event when the menu is opened
@@ -77,10 +74,9 @@ public class Menu {
      * @param event InventoryCloseEvent for the Menu
      * @param holder MenuHolder
      */
-    public void onClose(final InventoryCloseEvent event, final MenuHolder holder) {}
+    public abstract void onClose(final InventoryCloseEvent event, final MenuHolder holder);
 
     /**
-     *
      * Shows the player the Menu, this method doesn't contains
      * Any properties.
      *
@@ -88,7 +84,7 @@ public class Menu {
      * @return MenuHolder
      */
     public final MenuHolder show(final Player player) {
-        return show(player, ImmutableMap.of());
+        return show(player, new Properties());
     }
 
     /**
@@ -99,7 +95,7 @@ public class Menu {
      *
      * @return MenuHolder
      */
-    public final MenuHolder show(final Player player, final Map<String, Object> properties) {
+    public final MenuHolder show(final Player player, final Properties properties) {
         final MenuHolder holder = new MenuHolder(this, properties);
         holder.show(player);
 

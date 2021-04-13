@@ -16,20 +16,55 @@ import org.reflections.Reflections;
 
 import java.lang.reflect.Constructor;
 import java.util.Arrays;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
 
 import static me.saiintbrisson.minecraft.command.message.MessageType.*;
 
+/**
+ * The AbstractBukkitPlugin is the main implementation
+ * of a JavaPlugin, it automatically registers listeners
+ * and commands made by the command-framework
+ */
 @Getter
 public abstract class AbstractBukkitPlugin extends JavaPlugin {
 
   private final PluginManager manager;
   private final ServicesManager service;
 
+  private final ExecutorService executor;
+  private final ScheduledExecutorService scheduledExecutor;
+
   public AbstractBukkitPlugin() {
+    getDataFolder().mkdirs();
+
     this.manager = Bukkit.getServer().getPluginManager();
     this.service = Bukkit.getServer().getServicesManager();
+
+    this.executor = Executors.newCachedThreadPool();
+    this.scheduledExecutor = Executors.newSingleThreadScheduledExecutor();
   }
 
+  /**
+   * This method registers the listeners and commands in a unique method.
+   * <p>Basically just remove one line of code</p>
+   * @param plugin Class of the plugin
+   * @param instance T
+   * @param <T> Instance of your plugin class
+   */
+  public <T extends AbstractBukkitPlugin> void register(@NotNull final Class<T> plugin, @NotNull final T instance) {
+    registerListeners(plugin, instance);
+    registerCommands(plugin, instance);
+  }
+
+  /**
+   * Registers all listeners that implements the {@link Listener}
+   * @param plugin Class of the plugin
+   * @param instance T
+   * @param <T> Instance of your plugin class
+   */
+  @SuppressWarnings("unchecked")
   public <T extends AbstractBukkitPlugin> void registerListeners(@NotNull final Class<T> plugin, @NotNull final T instance) {
     try {
       for (final Class<? extends Listener> clazz : new Reflections("").getSubTypesOf(Listener.class)) {
@@ -42,7 +77,6 @@ public abstract class AbstractBukkitPlugin extends JavaPlugin {
             : constructor.newInstance();
 
         if (listener == null) continue;
-
         manager.registerEvents(listener, instance);
       }
     } catch (Throwable throwable) {
@@ -52,8 +86,12 @@ public abstract class AbstractBukkitPlugin extends JavaPlugin {
   }
 
   /**
-   * Starts the BukkitFrame and MessageHolder
-   * With the default messages
+   * Registers all commands that contains a {@link CommandHolder}
+   * annotation at the top of the class.
+   *
+   * @param plugin Class of the plugin
+   * @param instance T
+   * @param <T> Instance of your plugin class
    */
   public <T extends AbstractBukkitPlugin> void registerCommands(@NotNull final Class<T> plugin, @NotNull final T instance) {
     try {
@@ -61,7 +99,7 @@ public abstract class AbstractBukkitPlugin extends JavaPlugin {
       final MessageHolder holder = frame.getMessageHolder();
 
       holder.setMessage(ERROR, "§cA error occurred.");
-      holder.setMessage(INCORRECT_TARGET, "§cOnly players can execute this command..");
+      holder.setMessage(INCORRECT_TARGET, "§cOnly {target} can execute this command..");
       holder.setMessage(INCORRECT_USAGE, "§cWrong use! The correct is: /{usage}");
       holder.setMessage(NO_PERMISSION, "§cYou don't have enough permissions.");
 
@@ -75,7 +113,6 @@ public abstract class AbstractBukkitPlugin extends JavaPlugin {
             : constructor.newInstance();
 
         if (command == null) continue;
-
         frame.registerCommands(command);
       }
     } catch (Throwable throwable) {

@@ -13,9 +13,7 @@ public final class EventController {
    * @return boolean
    */
   public boolean isSameChunk(@NotNull final Location from, @NotNull final Location to) {
-    if (!isSameWorld(from, to)) {
-      return false;
-    }
+    if (!isSameWorld(from, to)) return false;
 
     final int fromX = from.getBlockX();
     final int fromZ = from.getBlockZ();
@@ -33,9 +31,7 @@ public final class EventController {
    * @return boolean
    */
   public boolean isSameBlock(@NotNull final Location from, @NotNull final Location to) {
-    if (!isSameWorld(from, to)) {
-      return false;
-    }
+    if (!isSameWorld(from, to)) return false;
 
     final int fromBlockX = from.getBlockX();
     final int fromBlockY = from.getBlockY();

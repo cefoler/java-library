@@ -1,5 +1,6 @@
 package com.celeste.library.shared.util.date;
 
+import com.celeste.library.shared.util.RegexPattern;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import org.jetbrains.annotations.NotNull;
@@ -12,7 +13,7 @@ import java.util.concurrent.TimeUnit;
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public final class DateUtil {
 
-  private static final SimpleDateFormat SIMPLE_DATE_FORMAT = new SimpleDateFormat("MM/dd/yyyy hh:mm");
+  private static final SimpleDateFormat SIMPLE_DATE_FORMAT = new SimpleDateFormat("MM/dd/yyyy HH:mm");
 
   /**
    * Converts the timestamp into a String of the date.
@@ -46,17 +47,14 @@ public final class DateUtil {
     long totalTime = 0;
 
     for (final String date : dates) {
-      final int time = Integer.parseInt(date.split("[A-Z|a-z]")[0]);
-      final String prefix = date.split("[0-9]")[0];
+      final int time = Integer.parseInt(date.split(RegexPattern.REMOVE_LETTERS)[0]);
+      final String prefix = date.split(RegexPattern.REMOVE_NUMBERS)[0];
 
       final TimeMultiplier type = TimeMultiplier.getType(prefix);
       totalTime += type.getMultiplier() * time;
     }
 
-    if (totalTime == 0) {
-      return totalTime;
-    }
-
+    if (totalTime == 0) return totalTime;
     throw new NullPointerException("Dates is empty");
   }
 
@@ -70,12 +68,9 @@ public final class DateUtil {
     final long differenceTime = System.currentTimeMillis() - time;
 
     final long days = TimeUnit.MILLISECONDS.toDays(differenceTime);
-    final long hours = TimeUnit.MILLISECONDS.toHours(differenceTime)
-        - TimeUnit.MILLISECONDS.toDays(differenceTime) * 24;
-    final long minutes = TimeUnit.MILLISECONDS.toMinutes(differenceTime)
-        - TimeUnit.MILLISECONDS.toHours(differenceTime) * 60;
-    final long seconds = TimeUnit.MILLISECONDS.toSeconds(differenceTime)
-        - TimeUnit.MILLISECONDS.toMinutes(differenceTime) * 60;
+    final long hours = TimeUnit.MILLISECONDS.toHours(differenceTime) - TimeUnit.MILLISECONDS.toDays(differenceTime) * 24;
+    final long minutes = TimeUnit.MILLISECONDS.toMinutes(differenceTime) - TimeUnit.MILLISECONDS.toHours(differenceTime) * 60;
+    final long seconds = TimeUnit.MILLISECONDS.toSeconds(differenceTime) - TimeUnit.MILLISECONDS.toMinutes(differenceTime) * 60;
 
     final StringBuilder builder = new StringBuilder();
 

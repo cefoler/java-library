@@ -1,7 +1,6 @@
 package com.celeste.library.shared.util.formatter;
 
 import lombok.AccessLevel;
-import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.jetbrains.annotations.NotNull;
 
@@ -13,19 +12,16 @@ public final class RomanNumberFormatter {
 
   public static String format(int number) {
     for (int i = 0; i < numbers.length; i++) {
-      if (number >= numbers[i]) {
-        return symbols[i] + format(number - numbers[i]);
-      }
+      if (number >= numbers[i]) return symbols[i] + format(number - numbers[i]);
     }
 
     return "";
   }
 
-  public static int unFormat(@NotNull final String number) {
+  public static int unformat(@NotNull final String number) {
     for (int i = 0; i < symbols.length; i++) {
       if (!number.startsWith(symbols[i])) continue;
-
-      return numbers[i] + unFormat(number.replaceFirst(symbols[i], ""));
+      return numbers[i] + unformat(number.replaceFirst(symbols[i], ""));
     }
 
     return 0;
