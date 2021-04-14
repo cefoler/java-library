@@ -6,7 +6,7 @@ import lombok.RequiredArgsConstructor;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
-import java.util.ArrayList;
+import java.util.List;
 import java.util.Properties;
 
 /**
@@ -105,7 +105,7 @@ public final class MenuItem {
      */
     public MenuItem reopen() {
         return action((holder, event) -> {
-            final ArrayList<MenuItem> items = holder.getMenuInventory().getItems();
+            final List<MenuItem> items = holder.getMenuInventory().getItems();
 
             holder.getMenuInventory().getMenu().clear();
             holder.getMenuInventory().setItems(items);
