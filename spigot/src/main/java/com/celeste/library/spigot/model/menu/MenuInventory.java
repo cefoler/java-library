@@ -4,13 +4,13 @@ import lombok.Builder;
 import lombok.Data;
 import org.bukkit.inventory.Inventory;
 
-import java.util.ArrayList;
+import java.util.List;
 
 @Data
 @Builder
 public final class MenuInventory {
 
     private final Inventory menu;
-    private ArrayList<MenuItem> items;
+    private List<MenuItem> items;
 
 }

@@ -65,12 +65,12 @@ public final class MenuHolder implements InventoryHolder {
             // TODO: Update title and all things from the menu instead of just opening another Menu
         }
 
-        menu.onRender(player, this);
         for (MenuItem item : menuInventory.getItems()) {
-            if (item == null) continue;
-            menuInventory.getMenu().setItem(item.getSlot(), item.getItem());
+          if (item == null) continue;
+          menuInventory.getMenu().setItem(item.getSlot(), item.getItem());
         }
 
+        menu.onRender(player, this);
         player.openInventory(menuInventory.getMenu());
     }
 
