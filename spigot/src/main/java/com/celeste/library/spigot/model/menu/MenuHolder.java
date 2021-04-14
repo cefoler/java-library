@@ -23,7 +23,7 @@ public final class MenuHolder implements InventoryHolder {
     private final Menu menu;
     private final Properties properties;
 
-    private final Inventory inventory;
+    private Inventory inventory;
 
     @Setter
     private MenuItem[] items;
@@ -37,7 +37,6 @@ public final class MenuHolder implements InventoryHolder {
     public MenuHolder(final Menu menu, final Properties properties) {
         this.menu = menu;
         this.properties = properties;
-        this.inventory = Bukkit.createInventory(this, menu.getSize(), menu.getTitle());
         this.items = new MenuItem[menu.getSize()];
     }
 
@@ -62,17 +61,19 @@ public final class MenuHolder implements InventoryHolder {
      * @param player Player that will open the inventory
      */
     public void show(final Player player) {
+        menu.onRender(player, this);
+
         if (player.getOpenInventory() != player.getInventory()) {
             // TODO: Update title and all things from the menu instead of just opening another Menu
         }
+
+        this.inventory = Bukkit.createInventory(this, menu.getSize(), menu.getTitle());
 
         for (MenuItem item : items) {
           if (item == null) continue;
           inventory.setItem(item.getSlot(), item.getItem());
         }
 
-
-        menu.onRender(player, this);
         player.openInventory(inventory);
     }
 
