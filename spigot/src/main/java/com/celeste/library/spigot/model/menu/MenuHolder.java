@@ -13,6 +13,7 @@ import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.ArrayList;
 import java.util.Properties;
 
 @Getter
@@ -33,6 +34,10 @@ public final class MenuHolder implements InventoryHolder {
     public MenuHolder(final Menu menu, final Properties properties) {
         this.menu = menu;
         this.properties = properties;
+        this.menuInventory = MenuInventory.builder()
+            .items(new ArrayList<>())
+            .menu(Bukkit.createInventory(this, menu.getSize(), menu.getTitle()))
+            .build();
     }
 
     /**
@@ -61,18 +66,12 @@ public final class MenuHolder implements InventoryHolder {
         }
 
         menu.onRender(player, this);
-
-        final MenuInventory inventory = MenuInventory.builder()
-                .menu(Bukkit.createInventory(this, menu.getSize(), menu.getTitle()))
-                .build();
-        this.menuInventory = inventory;
-
-        for (MenuItem item : inventory.getItems()) {
+        for (MenuItem item : menuInventory.getItems()) {
             if (item == null) continue;
-            inventory.getMenu().setItem(item.getSlot(), item.getItem());
+            menuInventory.getMenu().setItem(item.getSlot(), item.getItem());
         }
 
-        player.openInventory(inventory.getMenu());
+        player.openInventory(menuInventory.getMenu());
     }
 
 //    public void updateTitle(final String title, final Player player) {
