@@ -37,4 +37,22 @@ public final class StringUtil {
     return joiner.toString();
   }
 
+  /**
+   * Join the arguments from the array, it begins in the
+   * startArg provided.
+   * @param args String[]
+   * @param startArg int
+   * @param format String
+   *
+   * @return String
+   */
+  public static String joinWithArg(final String[] args, final int startArg, final String format) {
+    final StringJoiner joiner = new StringJoiner(format);
+    for (int i = startArg; i < args.length; i++) {
+      joiner.add(args[i]);
+    }
+
+    return joiner.toString();
+  }
+
 }
