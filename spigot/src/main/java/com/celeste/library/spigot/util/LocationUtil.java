@@ -8,8 +8,6 @@ import java.util.StringJoiner;
 
 public final class LocationUtil {
 
-  private LocationUtil() {}
-
   /**
    * Serializes a location into a String
    * @param location Location
@@ -18,7 +16,7 @@ public final class LocationUtil {
    * @return String
    */
   public static String serialize(@NotNull final Location location, final boolean yawAndPitch) {
-    final StringJoiner joiner = new StringJoiner(":");
+    final StringJoiner joiner = new StringJoiner(";");
 
     joiner.add(location.getWorld().getName());
     joiner.add(String.valueOf(location.getX()));
@@ -41,22 +39,25 @@ public final class LocationUtil {
    * @return Location
    */
   public static Location deserialize(@NotNull final String serializedLocation) {
-    final String[] location = serializedLocation.split(":");
-
+    final String[] location = serializedLocation.split(";");
     if (location.length == 4) {
-      return new Location(Bukkit.getWorld(location[0]),
+      return new Location(
+          Bukkit.getWorld(location[0]),
           Double.parseDouble(location[1]),
           Double.parseDouble(location[2]),
-          Double.parseDouble(location[3]));
+          Double.parseDouble(location[3])
+      );
     }
 
     if (location.length == 6) {
-      return new Location(Bukkit.getWorld(location[0]),
+      return new Location(
+          Bukkit.getWorld(location[0]),
           Double.parseDouble(location[1]),
           Double.parseDouble(location[2]),
           Double.parseDouble(location[3]),
           Float.parseFloat(location[4]),
-          Float.parseFloat(location[5]));
+          Float.parseFloat(location[5])
+      );
     }
 
     throw new IllegalArgumentException("This string cannot be deserialized");

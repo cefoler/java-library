@@ -8,8 +8,10 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.inventory.InventoryOpenEvent;
+import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.Properties;
 
@@ -20,7 +22,7 @@ public final class MenuHolder implements InventoryHolder {
     private final Properties properties;
 
     @Setter
-    private MenuInventory inventory;
+    private MenuInventory menuInventory;
 
     /**
      * Menu holder constructor.
@@ -44,7 +46,7 @@ public final class MenuHolder implements InventoryHolder {
     public MenuItem slot(final int slot, final ItemStack item) {
         final MenuItem menuItem = new MenuItem(slot).item(item);
 
-        inventory.getItems().set(slot, menuItem);
+        menuInventory.getItems().set(slot, menuItem);
         return menuItem;
     }
 
@@ -63,7 +65,7 @@ public final class MenuHolder implements InventoryHolder {
         final MenuInventory inventory = MenuInventory.builder()
                 .menu(Bukkit.createInventory(this, menu.getSize(), menu.getTitle()))
                 .build();
-        this.inventory = inventory;
+        this.menuInventory = inventory;
 
         for (MenuItem item : inventory.getItems()) {
             if (item == null) continue;
@@ -106,7 +108,7 @@ public final class MenuHolder implements InventoryHolder {
         final int slot = event.getSlot();
         if (slot < 0) return;
 
-        final MenuItem item = inventory.getItems().get(slot);
+        final MenuItem item = menuInventory.getItems().get(slot);
         if (item == null || item.getAction() == null) return;
 
         item.getAction().run(this, event);
@@ -151,6 +153,11 @@ public final class MenuHolder implements InventoryHolder {
      */
     public boolean hasProperty(final String key) {
         return properties.containsKey(key);
+    }
+
+    @Override @NotNull
+    public Inventory getInventory() {
+      return menuInventory.getMenu();
     }
 
 }
