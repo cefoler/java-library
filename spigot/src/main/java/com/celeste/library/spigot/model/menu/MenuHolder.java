@@ -35,7 +35,7 @@ public final class MenuHolder implements InventoryHolder {
         this.menu = menu;
         this.properties = properties;
         this.menuInventory = MenuInventory.builder()
-            .items(new ArrayList<>())
+            .items(new ArrayList<>(menu.getSize()))
             .menu(Bukkit.createInventory(this, menu.getSize(), menu.getTitle()))
             .build();
     }
