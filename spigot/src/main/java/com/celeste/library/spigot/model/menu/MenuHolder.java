@@ -14,6 +14,7 @@ import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Properties;
 
 @Getter
@@ -22,8 +23,10 @@ public final class MenuHolder implements InventoryHolder {
     private final Menu menu;
     private final Properties properties;
 
+    private final Inventory inventory;
+
     @Setter
-    private MenuInventory menuInventory;
+    private MenuItem[] items;
 
     /**
      * Menu holder constructor.
@@ -34,10 +37,7 @@ public final class MenuHolder implements InventoryHolder {
     public MenuHolder(final Menu menu, final Properties properties) {
         this.menu = menu;
         this.properties = properties;
-        this.menuInventory = MenuInventory.builder()
-            .items(new ArrayList<>(menu.getSize()))
-            .menu(Bukkit.createInventory(this, menu.getSize(), menu.getTitle()))
-            .build();
+        this.inventory = Bukkit.createInventory(this, menu.getSize(), menu.getTitle());
     }
 
     /**
@@ -51,7 +51,7 @@ public final class MenuHolder implements InventoryHolder {
     public MenuItem slot(final int slot, final ItemStack item) {
         final MenuItem menuItem = new MenuItem(slot).item(item);
 
-        menuInventory.getItems().set(slot, menuItem);
+        items[slot] = menuItem;
         return menuItem;
     }
 
@@ -65,13 +65,14 @@ public final class MenuHolder implements InventoryHolder {
             // TODO: Update title and all things from the menu instead of just opening another Menu
         }
 
-        for (MenuItem item : menuInventory.getItems()) {
+        for (MenuItem item : items) {
           if (item == null) continue;
-          menuInventory.getMenu().setItem(item.getSlot(), item.getItem());
+          inventory.setItem(item.getSlot(), item.getItem());
         }
 
+
         menu.onRender(player, this);
-        player.openInventory(menuInventory.getMenu());
+        player.openInventory(inventory);
     }
 
 //    public void updateTitle(final String title, final Player player) {
@@ -107,7 +108,7 @@ public final class MenuHolder implements InventoryHolder {
         final int slot = event.getSlot();
         if (slot < 0) return;
 
-        final MenuItem item = menuInventory.getItems().get(slot);
+        final MenuItem item = items[slot];
         if (item == null || item.getAction() == null) return;
 
         item.getAction().run(this, event);
@@ -118,7 +119,7 @@ public final class MenuHolder implements InventoryHolder {
     }
 
     public void handleClose(final InventoryCloseEvent event) {
-        menu.onClose(event, this);
+      menu.onClose(event, this);
     }
 
     /**
@@ -152,11 +153,6 @@ public final class MenuHolder implements InventoryHolder {
      */
     public boolean hasProperty(final String key) {
         return properties.containsKey(key);
-    }
-
-    @Override @NotNull
-    public Inventory getInventory() {
-      return menuInventory.getMenu();
     }
 
 }

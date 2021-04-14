@@ -105,10 +105,8 @@ public final class MenuItem {
      */
     public MenuItem reopen() {
         return action((holder, event) -> {
-            final List<MenuItem> items = holder.getMenuInventory().getItems();
-
-            holder.getMenuInventory().getMenu().clear();
-            holder.getMenuInventory().setItems(items);
+            holder.getInventory().clear();
+            holder.setItems(holder.getItems());
         });
     }
 

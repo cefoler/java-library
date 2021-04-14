@@ -19,7 +19,7 @@ public final class PropertiesBuilder {
      *
      * @return PropertiesBuilder
      */
-    public PropertiesBuilder with(final String key, final String value) {
+    public PropertiesBuilder with(final String key, final Object value) {
         properties.put(key, value);
         return this;
     }
