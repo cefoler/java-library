@@ -50,6 +50,16 @@ public final class ItemBuilder implements Cloneable {
   }
 
   /**
+   * Creates a new ItemBuilder with that Material and amount
+   * @param material Material
+   * @param amount int
+   */
+  public ItemBuilder(@NotNull final Material material, final int amount, final int data) {
+    this.itemStack = new ItemStack(material, amount, (short) data);
+    this.meta = itemStack.getItemMeta();
+  }
+
+  /**
    * Creates a new ItemBuilder with ItemStack
    * @param itemStack ItemStack
    */
