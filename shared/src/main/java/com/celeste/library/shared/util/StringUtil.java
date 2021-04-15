@@ -48,11 +48,23 @@ public final class StringUtil {
    */
   public static String joinWithArg(final String[] args, final int startArg, final String format) {
     final StringJoiner joiner = new StringJoiner(format);
-    for (int i = startArg; i <= args.length; i++) {
+    for (int i = startArg; i < args.length; i++) {
       joiner.add(args[i]);
     }
 
     return joiner.toString();
+  }
+
+  /**
+   * Returns a String removing a size of arguments
+   * from the original String
+   * @param str String
+   * @param size Integer
+   *
+   * @return String
+   */
+  public static String remove(final String str, final int size) {
+    return str.substring(0, str.length() - size);
   }
 
 }
