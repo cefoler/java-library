@@ -332,9 +332,8 @@ public final class ItemBuilder implements Cloneable {
    */
   @NotNull @SneakyThrows
   public ItemBuilder skull(@NotNull final String url, @NotNull final UUID uuid) {
-    if (!(meta instanceof SkullMeta)) {
-      return this;
-    }
+    if (!(meta instanceof SkullMeta)) return this;
+    itemStack.setItemMeta(meta);
 
     final SkullMeta skullMeta = (SkullMeta) meta;
     final String texture = "http://textures.minecraft.net/texture/" + url;
@@ -363,6 +362,7 @@ public final class ItemBuilder implements Cloneable {
     final Field profileField = ReflectionUtil.getDcField(meta.getClass(), "profile");
     profileField.set(skullMeta, profile);
 
+    meta = skullMeta;
     return this;
   }
 
