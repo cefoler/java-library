@@ -40,4 +40,11 @@ public enum TimeMultiplier {
         .orElseThrow(() -> new IllegalArgumentException("Argument " + prefix + " isn't valid"));
   }
 
+  public static TimeMultiplier getType(final char prefix) {
+    return Arrays.stream(values())
+        .filter(type -> type.getPrefixes().contains(Character.toString(prefix)))
+        .findFirst()
+        .orElseThrow(() -> new IllegalArgumentException("Argument " + prefix + " isn't valid"));
+  }
+
 }

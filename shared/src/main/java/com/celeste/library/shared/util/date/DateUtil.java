@@ -59,6 +59,25 @@ public final class DateUtil {
   }
 
   /**
+   * Converts date (1d, 1s, 1m) into long.
+   *
+   * @return Long
+   */
+  public static long convert(@NotNull final String date) {
+    long time = 0;
+
+    final String[] split = date.split(" ");
+    for (String arg : split) {
+      char prefix = arg.charAt(arg.length() - 1);
+      int timeInt = Integer.parseInt(arg.replace(Character.toString(prefix), ""));
+
+      time += TimeMultiplier.getType(prefix).getMultiplier() * timeInt;
+    }
+
+    return time;
+  }
+
+  /**
    * Formats the time to the format 7 days, 7 seconds, etc.
    * @param time long
    * @return String
