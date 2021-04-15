@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -25,7 +26,7 @@ public enum TimeMultiplier {
 
   TimeMultiplier(final long multiplier, @NotNull final String... prefixes) {
     this.multiplier = multiplier;
-    this.prefixes = ImmutableList.copyOf(prefixes);
+    this.prefixes = Arrays.asList(prefixes);
   }
 
   /**
@@ -42,7 +43,7 @@ public enum TimeMultiplier {
 
   public static TimeMultiplier getType(final char prefix) {
     return Arrays.stream(values())
-        .filter(type -> type.getPrefixes().contains(Character.toString(prefix)))
+        .filter(type -> type.getPrefixes().contains(Character.toString(prefix).toUpperCase()))
         .findFirst()
         .orElseThrow(() -> new IllegalArgumentException("Argument " + prefix + " isn't valid"));
   }
