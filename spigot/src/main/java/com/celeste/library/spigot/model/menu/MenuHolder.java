@@ -1,6 +1,7 @@
 package com.celeste.library.spigot.model.menu;
 
 import com.celeste.library.spigot.exception.InvalidPropertyException;
+import com.celeste.library.spigot.model.menu.action.ClickAction;
 import lombok.Getter;
 import lombok.Setter;
 import org.bukkit.Bukkit;
@@ -53,6 +54,18 @@ public final class MenuHolder implements InventoryHolder {
 
         items[slot] = menuItem;
         return menuItem;
+    }
+
+    /**
+     * Reopens the Menu again with the new items
+     * set in the holder
+     */
+    public void reopen() {
+      inventory.clear();
+      for (MenuItem item : getItems()) {
+        if (item == null || item.getItem() == null) return;
+        inventory.setItem(item.getSlot(), item.getItem());
+      }
     }
 
     /**

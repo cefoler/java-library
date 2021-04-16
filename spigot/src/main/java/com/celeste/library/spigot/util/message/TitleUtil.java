@@ -16,7 +16,7 @@ import static com.celeste.library.spigot.util.ReflectionUtil.sendPacket;
 @Getter
 public final class TitleUtil {
 
-  public static final TitleUtil instance = new TitleUtil();
+  public static final TitleUtil INSTANCE = new TitleUtil();
 
   private final Constructor<?> ppotTimeCon;
   private final Constructor<?> ppotTextCon;
