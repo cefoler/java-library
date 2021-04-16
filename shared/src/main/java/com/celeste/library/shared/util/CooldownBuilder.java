@@ -28,7 +28,7 @@ public class CooldownBuilder<T> {
    * @param value T
    * @param time long
    */
-  private void register(final T value, final long time) {
+  public void register(final T value, final long time) {
     cooldown.register(value, time);
   }
 
@@ -36,7 +36,7 @@ public class CooldownBuilder<T> {
    * Removes the Object from the Cooldown
    * @param value T
    */
-  private void remove(final T value) {
+  public void remove(final T value) {
     cooldown.remove(value);
   }
 
@@ -46,7 +46,7 @@ public class CooldownBuilder<T> {
    *
    * @return Boolean
    */
-  private boolean contains(final T value) {
+  public boolean contains(final T value) {
     return cooldown.contains(value);
   }
 
@@ -57,7 +57,7 @@ public class CooldownBuilder<T> {
    *
    * @return Boolean
    */
-  private boolean isActive(final T value) {
+  public boolean isActive(final T value) {
     if (!cooldown.contains(value)) return false;
     if (cooldown.get(value) >= System.currentTimeMillis()) return true;
 
