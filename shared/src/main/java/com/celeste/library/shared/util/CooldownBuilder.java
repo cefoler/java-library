@@ -4,6 +4,9 @@ import com.celeste.library.shared.model.registry.Registry;
 import com.celeste.library.shared.model.registry.impl.LinkedRegistry;
 import sun.rmi.server.UnicastServerRef2;
 
+import java.util.List;
+import java.util.Set;
+
 /**
  * Creates a new CooldownBuilder that registers
  * the Object and the time in Long.
@@ -48,6 +51,10 @@ public class CooldownBuilder<T> {
    */
   public boolean contains(final T value) {
     return cooldown.contains(value);
+  }
+
+  public Set<T> getKeys() {
+    return cooldown.getKeys();
   }
 
   /**
