@@ -66,31 +66,22 @@ public final class MenuHolder implements InventoryHolder {
         if (item == null || item.getItem() == null) return;
         inventory.setItem(item.getSlot(), item.getItem());
       }
+
+      // TODO: Update title via packets
     }
 
     /**
-     * Creates the inventory and sets all items.
-     *
-     * @param player Player that will open the inventory
+     * Reopens the Menu again with the new items
+     * and a new title set in the holder
      */
-    public void show(final Player player) {
-        menu.onRender(player, this);
-
-        if (player.getOpenInventory() != player.getInventory()) {
-            // TODO: Update title and all things from the menu instead of just opening another Menu
-        }
-
-        this.inventory = Bukkit.createInventory(this, menu.getSize(), menu.getTitle());
-
-        for (MenuItem item : items) {
-          if (item == null) continue;
-          inventory.setItem(item.getSlot(), item.getItem());
-        }
-
-        player.openInventory(inventory);
+    public void reopenAndUpdateTitle(final String title) {
+      inventory.clear();
+      for (MenuItem item : getItems()) {
+        if (item == null || item.getItem() == null) return;
+        inventory.setItem(item.getSlot(), item.getItem());
+      }
     }
-
-//    public void updateTitle(final String title, final Player player) {
+  //    public void updateTitle(final String title, final Player player) {
 //        try {
 //            PacketContainer packet = new PacketContainer(PacketType.Play.Server.OPEN_WINDOW);
 //            packet.getChatComponents().write(0, WrappedChatComponent.fromText(title));
@@ -116,6 +107,25 @@ public final class MenuHolder implements InventoryHolder {
 //            exception.printStackTrace();
 //        }
 //    }
+
+
+    /**
+     * Creates the inventory and sets all items.
+     *
+     * @param player Player that will open the inventory
+     */
+    public void show(final Player player) {
+        menu.onRender(player, this);
+
+        this.inventory = Bukkit.createInventory(this, menu.getSize(), menu.getTitle());
+
+        for (MenuItem item : items) {
+          if (item == null) continue;
+          inventory.setItem(item.getSlot(), item.getItem());
+        }
+
+        player.openInventory(inventory);
+    }
 
     public void handleClick(final InventoryClickEvent event) {
         event.setCancelled(true);
