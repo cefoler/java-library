@@ -1,7 +1,6 @@
 package com.celeste.library.spigot.model.menu;
 
 import com.celeste.library.spigot.exception.InvalidPropertyException;
-import com.celeste.library.spigot.model.menu.action.ClickAction;
 import lombok.Getter;
 import lombok.Setter;
 import org.bukkit.Bukkit;
@@ -12,16 +11,13 @@ import org.bukkit.event.inventory.InventoryOpenEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
-import org.jetbrains.annotations.NotNull;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Properties;
 
 @Getter
 public final class MenuHolder implements InventoryHolder {
 
-    private final Menu menu;
+    private Menu menu;
     private final Properties properties;
 
     private Inventory inventory;
@@ -86,9 +82,12 @@ public final class MenuHolder implements InventoryHolder {
      * Reopens the Menu provided with the items,
      * title and slot without flicking (Via packets)
      */
-    public void show(final Menu menu) {
+    public void show(final Menu menu, final Player player) {
       inventory.clear();
-      for (MenuItem item : menu.getItems()) {
+      this.menu = menu;
+
+      menu.onRender(player, this);
+      for (MenuItem item : getItems()) {
         if (item == null || item.getItem() == null) return;
         inventory.setItem(item.getSlot(), item.getItem());
       }

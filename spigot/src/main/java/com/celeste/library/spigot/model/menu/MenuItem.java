@@ -98,7 +98,7 @@ public final class MenuItem {
             // Adds the new properties into the holder
             properties.forEach((key, value) -> holder.setProperty(key.toString(), value));
             // Updates the menu and show to the player
-            holder.show(menu);
+            holder.show(menu, (Player) event.getWhoClicked());
         });
     }
 
