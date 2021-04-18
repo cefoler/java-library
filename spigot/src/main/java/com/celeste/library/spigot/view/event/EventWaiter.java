@@ -1,5 +1,6 @@
 package com.celeste.library.spigot.view.event;
 
+import com.celeste.library.spigot.view.event.wrapper.AbstractEventWrapper;
 import com.google.gson.reflect.TypeToken;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -17,7 +18,7 @@ import java.util.function.Consumer;
 import java.util.function.Predicate;
 
 @Getter(AccessLevel.PACKAGE)
-public final class EventWaiter<E extends Event> {
+public final class EventWaiter<E extends AbstractEventWrapper> {
 
     private final Class<E> event;
 

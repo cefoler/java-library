@@ -16,7 +16,7 @@ import java.util.Set;
  *
  * @param <T> Object
  */
-public class CooldownBuilder<T> {
+public final class CooldownBuilder<T> {
 
   private final Registry<T, Long> cooldown;
 
