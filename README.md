@@ -11,5 +11,5 @@ Utility classes for Java development such as DateUtil, TimeMultiplier, Propertie
 ### spigot
 Utility classes for Spigot development such as EventWaiter, EventFilter and MenuAPI.
 
-### bungeeCord
+### bungeecord
 Utility classes for Bungeecord development such as StringUtils
