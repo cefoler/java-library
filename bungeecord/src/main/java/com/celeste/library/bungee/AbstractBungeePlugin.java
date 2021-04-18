@@ -27,6 +27,19 @@ public abstract class AbstractBungeePlugin extends Plugin {
     this.manager = getProxy().getPluginManager();
   }
 
+  /**
+   * This method registers the listeners and commands in a unique method.
+   * <p>Basically just remove one line of code</p>
+   * @param plugin Class of the plugin
+   * @param instance T
+   * @param <T> Instance of your plugin class
+   */
+  public <T extends AbstractBungeePlugin> void register(@NotNull final Class<T> plugin, @NotNull final T instance) {
+    registerListeners(plugin, instance);
+    registerCommands(plugin, instance);
+  }
+
+  @SuppressWarnings("unchecked")
   public <T extends AbstractBungeePlugin> void registerListeners(@NotNull final Class<T> plugin, @NotNull final T instance) {
     try {
       for (final Class<? extends Listener> clazz : new Reflections("").getSubTypesOf(Listener.class)) {
@@ -39,7 +52,6 @@ public abstract class AbstractBungeePlugin extends Plugin {
             : constructor.newInstance();
 
         if (listener == null) continue;
-
         manager.registerListener(instance, listener);
       }
     } catch (Throwable throwable) {
@@ -58,7 +70,7 @@ public abstract class AbstractBungeePlugin extends Plugin {
       final MessageHolder holder = frame.getMessageHolder();
 
       holder.setMessage(ERROR, "§cA error occurred.");
-      holder.setMessage(INCORRECT_TARGET, "§cOnly players can execute this command..");
+      holder.setMessage(INCORRECT_TARGET, "§cOnly {target} can execute this command..");
       holder.setMessage(INCORRECT_USAGE, "§cWrong use! The correct is: /{usage}");
       holder.setMessage(NO_PERMISSION, "§cYou don't have enough permissions.");
 
@@ -72,7 +84,6 @@ public abstract class AbstractBungeePlugin extends Plugin {
             : constructor.newInstance();
 
         if (command == null) continue;
-
         frame.registerCommands(command);
       }
     } catch (Throwable throwable) {

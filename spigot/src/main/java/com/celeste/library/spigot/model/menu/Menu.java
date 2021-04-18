@@ -13,9 +13,9 @@ import java.util.Properties;
  * The Menu class should be extended on the class that
  * will create the Menu
  *
- * When extended, the constructor will create a super with Title and Size
+ * <p>When extended, the constructor will create a super with Title and Size
  * For modifications on the inventory, you should create the onRender,
- * onOpen and onClose on the class extended by Menu.
+ * onOpen and onClose on the class extended by Menu.</p>
  */
 @Getter
 public abstract class Menu {

@@ -2,6 +2,7 @@ package com.celeste.library.shared.util;
 
 import com.celeste.library.shared.model.registry.Registry;
 import com.celeste.library.shared.model.registry.impl.LinkedRegistry;
+import com.celeste.library.shared.model.registry.impl.TreeRegistry;
 
 import java.util.Set;
 
@@ -19,7 +20,7 @@ public final class CooldownBuilder<T> {
   private final Registry<T, Long> cooldown;
 
   public CooldownBuilder() {
-    this.cooldown = new LinkedRegistry<>();
+    this.cooldown = new TreeRegistry<>();
   }
 
   /**

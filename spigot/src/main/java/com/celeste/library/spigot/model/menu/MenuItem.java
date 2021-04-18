@@ -4,14 +4,17 @@ import com.celeste.library.spigot.model.menu.action.ClickAction;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
-import java.util.List;
 import java.util.Properties;
 
 /**
- * Class for items of a Menu, that can execute
- * ClickActions and events.
+ * The MenuItem is the object where the
+ * Item, Slot and Action will be storaged.
+ *
+ * <p>This class also has default methods to close,
+ * reopen and set property after the item has been clicked.</p>
  */
 @Getter
 @RequiredArgsConstructor
@@ -33,7 +36,7 @@ public final class MenuItem {
     }
 
     /**
-     * Executes the ClickAction
+     * Executes the ClickAction provided
      *
      * @param action ClickAction for the item.
      * @return MenuItem
@@ -55,8 +58,8 @@ public final class MenuItem {
      */
     public MenuItem close() {
         return action((holder, event) -> {
-            Player whoClicked = (Player) event.getWhoClicked();
-            whoClicked.closeInventory();
+            final Player player = (Player) event.getWhoClicked();
+            player.closeInventory();
         });
     }
 
@@ -92,10 +95,10 @@ public final class MenuItem {
      */
     public MenuItem open(final Menu menu, final Properties properties) {
         return action((holder, event) -> {
-            final Player whoClicked = (Player) event.getWhoClicked();
-            whoClicked.closeInventory();
-
-            menu.show(whoClicked, properties);
+            // Adds the new properties into the holder
+            properties.forEach((key, value) -> holder.setProperty(key.toString(), value));
+            // Updates the menu and show to the player
+            holder.show(menu);
         });
     }
 
@@ -105,8 +108,12 @@ public final class MenuItem {
      */
     public MenuItem reopen() {
         return action((holder, event) -> {
-            holder.getInventory().clear();
-            holder.setItems(holder.getItems());
+          final Inventory inventory = holder.getInventory();
+          holder.getInventory().clear();
+
+          for (MenuItem holderItem : holder.getItems()) {
+            inventory.setItem(holderItem.getSlot(), holderItem.getItem());
+          }
         });
     }
 

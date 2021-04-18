@@ -10,8 +10,6 @@ import java.util.Objects;
 
 public final class ItemGiantCreator {
 
-  private ItemGiantCreator() {}
-
   /**
    * Creates a Giant item
    * @param location Location
@@ -27,8 +25,7 @@ public final class ItemGiantCreator {
     giant.setCustomNameVisible(false);
     giant.setCanPickupItems(false);
     giant.setRemoveWhenFarAway(false);
-
-    // remove AI from mob
+    // TODO: Remove AI from mob
   }
 
 }

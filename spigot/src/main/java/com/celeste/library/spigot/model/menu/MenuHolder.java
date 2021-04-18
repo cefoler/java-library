@@ -66,48 +66,35 @@ public final class MenuHolder implements InventoryHolder {
         if (item == null || item.getItem() == null) return;
         inventory.setItem(item.getSlot(), item.getItem());
       }
-
-      // TODO: Update title via packets
     }
 
     /**
      * Reopens the Menu again with the new items
      * and a new title set in the holder
      */
-    public void reopenAndUpdateTitle(final String title) {
+    public void reopen(final String title) {
       inventory.clear();
       for (MenuItem item : getItems()) {
         if (item == null || item.getItem() == null) return;
         inventory.setItem(item.getSlot(), item.getItem());
       }
-    }
-  //    public void updateTitle(final String title, final Player player) {
-//        try {
-//            PacketContainer packet = new PacketContainer(PacketType.Play.Server.OPEN_WINDOW);
-//            packet.getChatComponents().write(0, WrappedChatComponent.fromText(title));
-//            Method getHandle = MinecraftReflection.getCraftPlayerClass().getMethod("getHandle");
-//            Object entityPlayer = getHandle.invoke(player);
-//            Field activeContainerField = entityPlayer.getClass().getField("activeContainer");
-//            Object activeContainer = activeContainerField.get(entityPlayer);
-//            Field windowIdField = activeContainer.getClass().getField("windowId");
-//            int id = windowIdField.getInt(activeContainer);
-//            packet.getStrings().write(0, "minecraft:chest");
-//            packet.getIntegers().write(0, id);
-//            packet.getIntegers().write(1, rows * 9);
-//            ProtocolLibrary.getProtocolManager().sendServerPacket(p, packet);
-//
-//            int i = 0;
-//            for (ItemStack item : player.getInventory().getContents()) {
-//                player.getInventory().setItem(i, item);
-//                i += 1;
-//            }
-//
-//            player.updateInventory();
-//        } catch (Exception exception) {
-//            exception.printStackTrace();
-//        }
-//    }
 
+      // TODO: Change via packets the title
+    }
+
+    /**
+     * Reopens the Menu provided with the items,
+     * title and slot without flicking (Via packets)
+     */
+    public void show(final Menu menu) {
+      inventory.clear();
+      for (MenuItem item : menu.getItems()) {
+        if (item == null || item.getItem() == null) return;
+        inventory.setItem(item.getSlot(), item.getItem());
+      }
+
+      // TODO: Change via packets the title and size of the menu
+    }
 
     /**
      * Creates the inventory and sets all items.
@@ -116,7 +103,6 @@ public final class MenuHolder implements InventoryHolder {
      */
     public void show(final Player player) {
         menu.onRender(player, this);
-
         this.inventory = Bukkit.createInventory(this, menu.getSize(), menu.getTitle());
 
         for (MenuItem item : items) {

@@ -6,7 +6,6 @@ import com.google.common.collect.ImmutableList;
 import lombok.SneakyThrows;
 import org.bukkit.Color;
 import org.bukkit.Material;
-import org.bukkit.OfflinePlayer;
 import org.bukkit.block.BlockState;
 import org.bukkit.block.CreatureSpawner;
 import org.bukkit.enchantments.Enchantment;
@@ -50,7 +49,9 @@ public final class ItemBuilder implements Cloneable {
   }
 
   /**
-   * Creates a new ItemBuilder with that Material and amount
+   * Creates a new ItemBuilder with that Material, amount and data
+   *
+   * <p>This is only used in legacy versions.</p>
    * @param material Material
    * @param amount int
    */

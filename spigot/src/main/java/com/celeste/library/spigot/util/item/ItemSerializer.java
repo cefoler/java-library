@@ -12,8 +12,6 @@ import java.io.IOException;
 
 public final class ItemSerializer {
 
-  private ItemSerializer() {}
-
   /**
    * Serializes those items into bytes
    * @param items Itemstack...
@@ -28,7 +26,6 @@ public final class ItemSerializer {
         BukkitObjectOutputStream objectOutput = new BukkitObjectOutputStream(arrayOutput)
     ) {
       objectOutput.writeInt(items.length);
-
       for (final ItemStack item : items) {
         objectOutput.writeObject(item);
       }
@@ -53,7 +50,6 @@ public final class ItemSerializer {
         BukkitObjectInputStream objectInput = new BukkitObjectInputStream(arrayInput)
     ) {
       final ItemStack[] items = new ItemStack[objectInput.readInt()];
-
       for (int i = 0; i < items.length; i++) {
         items[i] = (ItemStack) objectInput.readObject();
       }

@@ -4,8 +4,12 @@ import com.celeste.library.spigot.model.menu.MenuHolder;
 import org.bukkit.event.inventory.InventoryClickEvent;
 
 /**
- * The ClickAction receives two parameters of MenuHolder and InventoryClickEvent
- * Inside the lambda, you can execute whatever needed.
+ * The ClickAction is executed when the MenuItem
+ * with this action is clicked.
+ *
+ * <p>While creating the ClickAction, it provides the
+ * holder and the InventoryClickEvent for the player to use
+ * as needed</p>
  */
 public interface ClickAction {
 
