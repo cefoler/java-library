@@ -22,7 +22,6 @@ public final class LocationUtil {
     joiner.add(String.valueOf(location.getX()));
     joiner.add(String.valueOf(location.getY()));
     joiner.add(String.valueOf(location.getZ()));
-    joiner.add(String.valueOf(location.getY()));
 
     if (yawAndPitch) {
       joiner.add(String.valueOf(location.getYaw()));
