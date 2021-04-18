@@ -1,6 +1,5 @@
 package com.celeste.library.spigot.view.event;
 
-import com.celeste.library.spigot.view.event.wrapper.AbstractEventWrapper;
 import com.google.gson.reflect.TypeToken;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -18,7 +17,7 @@ import java.util.function.Consumer;
 import java.util.function.Predicate;
 
 @Getter(AccessLevel.PACKAGE)
-public final class EventWaiter<E extends AbstractEventWrapper> {
+public final class EventWaiter<E extends Event> {
 
     private final Class<E> event;
 
@@ -100,10 +99,7 @@ public final class EventWaiter<E extends AbstractEventWrapper> {
      */
     public void build(final Plugin plugin) {
       final EventListener<E> executor = new EventListener<>(this);
-      Bukkit.getPluginManager().registerEvent(
-          event, executor, priority,
-          executor, plugin, ignoreCancelled
-      );
+      Bukkit.getPluginManager().registerEvent(event, executor, priority, executor, plugin, ignoreCancelled);
     }
 
     /**
@@ -112,9 +108,7 @@ public final class EventWaiter<E extends AbstractEventWrapper> {
      */
     public EventWaiter<E> cancel() {
         return handler(event -> {
-            if (event instanceof Cancellable) {
-                ((Cancellable) event).setCancelled(true);
-            }
+            if (event instanceof Cancellable) ((Cancellable) event).setCancelled(true);
         });
     }
 
