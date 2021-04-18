@@ -84,10 +84,12 @@ public final class MenuHolder implements InventoryHolder {
      */
     public void show(final Menu menu, final Player player) {
       inventory.clear();
+
       this.menu = menu;
+      this.items = new MenuItem[menu.getSize()];
 
       menu.onRender(player, this);
-      for (MenuItem item : getItems()) {
+      for (MenuItem item : items) {
         if (item == null || item.getItem() == null) return;
         inventory.setItem(item.getSlot(), item.getItem());
       }
