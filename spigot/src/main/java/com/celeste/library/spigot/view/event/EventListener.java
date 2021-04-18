@@ -1,5 +1,6 @@
 package com.celeste.library.spigot.view.event;
 
+import com.celeste.library.spigot.view.event.wrapper.AbstractEventWrapper;
 import lombok.AllArgsConstructor;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
@@ -10,7 +11,7 @@ import org.jetbrains.annotations.NotNull;
 import java.util.function.Consumer;
 
 @AllArgsConstructor
-public final class EventListener<E extends Event> implements Listener, EventExecutor {
+public final class EventListener<E extends AbstractEventWrapper> implements Listener, EventExecutor {
 
     private final EventWaiter<E> builder;
 
