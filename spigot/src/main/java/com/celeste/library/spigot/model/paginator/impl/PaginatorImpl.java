@@ -14,7 +14,7 @@ public class PaginatorImpl<T> extends PaginatorContent<T> implements Paginator<T
 
   public PaginatorImpl(final Integer[] shape, final List<T> source) {
     super(shape, source);
-    this.currentPage = 0;
+    this.currentPage = 1;
   }
 
   /**

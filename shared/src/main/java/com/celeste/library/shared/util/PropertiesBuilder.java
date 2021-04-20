@@ -16,19 +16,12 @@ public final class PropertiesBuilder extends Properties {
   }
 
   /**
-   * @return Returns Properties from the Builder.
-   */
-  public Properties wrap() {
-    return this;
-  }
-
-  /**
    * Checks it the property exists.
    *
    * @param key Key to get the value
    * @return boolean If exists
    */
-  public boolean has(final String key) {
+  public boolean contains(final String key) {
     return containsKey(key);
   }
 

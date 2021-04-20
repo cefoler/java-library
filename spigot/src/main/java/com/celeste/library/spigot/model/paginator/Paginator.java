@@ -60,7 +60,7 @@ public interface Paginator<T> {
   Paginator<T> first();
 
   /**
-   * Goes to the first page of the paginator
+   * Goes to the page provided of the paginator
    * @return Paginator
    */
   Paginator<T> page(int index);
