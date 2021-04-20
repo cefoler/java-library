@@ -58,6 +58,7 @@ public final class MenuHolder implements InventoryHolder {
      */
     public void reopen() {
       inventory.clear();
+
       for (MenuItem item : getItems()) {
         if (item == null || item.getItem() == null) return;
         inventory.setItem(item.getSlot(), item.getItem());
@@ -66,7 +67,7 @@ public final class MenuHolder implements InventoryHolder {
 
     /**
      * Reopens the Menu again with the new items
-     * and a new title set in the holder
+     * and a new title provided
      */
     public void reopen(final String title) {
       inventory.clear();
@@ -85,14 +86,16 @@ public final class MenuHolder implements InventoryHolder {
     public void show(final Menu menu, final Player player) {
       inventory.clear();
 
+      menu.onRender(player, this);
+      for (MenuItem item : menu.getItems()) {
+        if (item == null || item.getItem() == null) return;
+
+        inventory.setItem(item.getSlot(), item.getItem());
+        slot(item.getSlot(), item.getItem());
+      }
+
       this.menu = menu;
       this.items = new MenuItem[menu.getSize()];
-
-      menu.onRender(player, this);
-      for (MenuItem item : items) {
-        if (item == null || item.getItem() == null) return;
-        inventory.setItem(item.getSlot(), item.getItem());
-      }
 
       // TODO: Change via packets the title and size of the menu
     }
@@ -148,7 +151,7 @@ public final class MenuHolder implements InventoryHolder {
     }
 
     /**
-     * Sets the properties with that Key on the ImmutableMap.
+     * Sets the properties with that Key on the Properties.
      *
      * @param key Key for the value
      * @param value Property object

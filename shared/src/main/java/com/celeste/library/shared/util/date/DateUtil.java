@@ -13,7 +13,7 @@ import java.util.concurrent.TimeUnit;
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public final class DateUtil {
 
-  private static final SimpleDateFormat SIMPLE_DATE_FORMAT = new SimpleDateFormat("MM/dd/yyyy HH:mm");
+  private static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("MM/dd/yyyy HH:mm");
 
   /**
    * Converts the timestamp into a String of the date.
@@ -23,8 +23,8 @@ public final class DateUtil {
    */
   @NotNull
   public static String convertToString(final long time) {
-    SIMPLE_DATE_FORMAT.setTimeZone(TimeZone.getDefault());
-    return SIMPLE_DATE_FORMAT.format(time);
+    DATE_FORMAT.setTimeZone(TimeZone.getDefault());
+    return DATE_FORMAT.format(time);
   }
 
   /**

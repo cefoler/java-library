@@ -21,7 +21,6 @@ public final class MenuListener implements Listener {
     @EventHandler(ignoreCancelled = true)
     public void onInventoryClick(final InventoryClickEvent event) {
         final Inventory inventory = event.getInventory();
-
         if (inventory.getHolder() instanceof MenuHolder) {
             ((MenuHolder) (inventory.getHolder())).handleClick(event);
         }
