@@ -1,5 +1,5 @@
 rootProject.name = 'java-library'
+include 'core'
 include 'spigot'
 include 'bungeecord'
-include 'shared'
 
