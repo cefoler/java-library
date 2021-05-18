@@ -2,16 +2,16 @@ package com.celeste.library.spigot.exception;
 
 public class MenuException extends RuntimeException {
 
-    public MenuException(final String message) {
-        super(message);
-    }
+  public MenuException(final String message) {
+    super(message);
+  }
 
-    public MenuException(final String message, final Throwable cause) {
-        super(message, cause);
-    }
+  public MenuException(final String message, final Throwable cause) {
+    super(message, cause);
+  }
 
-    public MenuException(final Throwable cause) {
-        super(cause);
-    }
+  public MenuException(final Throwable cause) {
+    super(cause);
+  }
 
 }

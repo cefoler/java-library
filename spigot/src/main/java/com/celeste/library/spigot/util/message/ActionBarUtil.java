@@ -1,21 +1,20 @@
 package com.celeste.library.spigot.util.message;
 
+import static com.celeste.library.spigot.util.ReflectionNms.getNMS;
+import static com.celeste.library.spigot.util.ReflectionNms.isEqualsOrMoreRecent;
+import static com.celeste.library.spigot.util.ReflectionNms.sendPacket;
+
+import java.lang.reflect.Constructor;
+import java.lang.reflect.Method;
+import java.util.UUID;
 import lombok.Getter;
 import lombok.SneakyThrows;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-import org.jetbrains.annotations.NotNull;
-
-import java.lang.reflect.Constructor;
-import java.lang.reflect.Method;
-import java.util.UUID;
-
-import static com.celeste.library.spigot.util.ReflectionUtil.*;
 
 /**
- * Utility to send ActionBar to
- * a single or multiple players.
+ * Utility to send ActionBar to a single or multiple players.
  */
 @Getter
 public final class ActionBarUtil {
@@ -35,14 +34,14 @@ public final class ActionBarUtil {
 
     if (isEqualsOrMoreRecent(12)) {
       cmtClass = getNMS("ChatMessageType");
-      type = cmtClass.getEnumConstants() [2];
+      type = cmtClass.getEnumConstants()[2];
     } else {
       cmtClass = byte.class;
       type = (byte) 2;
     }
 
     if (icbcClass.getDeclaredClasses().length > 0) {
-      method = icbcClass.getDeclaredClasses() [0].getMethod("a", String.class);
+      method = icbcClass.getDeclaredClasses()[0].getMethod("a", String.class);
     } else {
       method = getNMS("ChatSerializer").getMethod("a", String.class);
     }
@@ -50,13 +49,15 @@ public final class ActionBarUtil {
     if (isEqualsOrMoreRecent(16)) {
       constructor = ppocClass.getConstructor(icbcClass, cmtClass, UUID.class);
     } else {
-        constructor = ppocClass.getConstructor(icbcClass, cmtClass);
+      constructor = ppocClass.getConstructor(icbcClass, cmtClass);
     }
   }
 
   @SneakyThrows
-  public final void send(final CommandSender sender, @NotNull final String message) {
-    if (!(sender instanceof Player)) return;
+  public final void send(final CommandSender sender, final String message) {
+    if (!(sender instanceof Player)) {
+      return;
+    }
 
     final Player player = (Player) sender;
     if (isEqualsOrMoreRecent(16)) {

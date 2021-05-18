@@ -47,7 +47,7 @@ public final class LinkedRegistry<T, U> extends AbstractRegistry<T, U> {
   /**
    * Creates a LinkedAbstractRegistry from a map
    *
-   * @param map Map<T, U>
+   * @param map Map
    */
   public LinkedRegistry(final Map<T, U> map) {
     super(new LinkedHashMap<>(map));

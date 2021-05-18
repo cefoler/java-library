@@ -1,32 +1,32 @@
 package com.celeste.library.spigot.util;
 
-import lombok.SneakyThrows;
-import org.bukkit.Bukkit;
-import org.bukkit.command.CommandSender;
-import org.jetbrains.annotations.NotNull;
-
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Arrays;
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
+import lombok.SneakyThrows;
+import org.bukkit.Bukkit;
+import org.bukkit.command.CommandSender;
 
-@SuppressWarnings("unused")
-public final class ReflectionUtil {
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
+public final class ReflectionNms {
 
-  private static final String VERSION = Bukkit.getServer().getClass().getPackage().getName().split("\\.")[3];
+  private static final String VERSION = Bukkit.getServer().getClass().getPackage().getName()
+      .split("\\.")[3];
   private static final String PATH_NMS = "net.minecraft.server." + VERSION + ".";
   private static final String PATH_OBC = "org.bukkit.craftbukkit." + VERSION + ".";
 
-  private ReflectionUtil() {}
-
   /**
    * Sends a packet to the CommandSender
+   *
    * @param sender CommandSender Player who should receive the packet
    * @param packet Object An object that can be converted to packets
    */
   @SneakyThrows
-  public static void sendPacket(@NotNull final CommandSender sender, @NotNull final Object packet) {
+  public static void sendPacket(final CommandSender sender, final Object packet) {
     final Method getHandle = getMethod(sender.getClass(), "getHandle");
     final Object handle = invoke(getHandle, sender);
 
@@ -39,7 +39,6 @@ public final class ReflectionUtil {
 
   /**
    * @param nms Name of the NMS class
-   *
    * @return An NMS class
    * @throws ClassNotFoundException If class was not found
    */
@@ -50,7 +49,6 @@ public final class ReflectionUtil {
 
   /**
    * @param obc Name of the OBC class
-   *
    * @return An OBC class
    * @throws ClassNotFoundException If class was not found
    */
@@ -61,7 +59,6 @@ public final class ReflectionUtil {
 
   /**
    * @param path Packages and the class name
-   *
    * @return Class found from the path
    * @throws ClassNotFoundException If class was not found
    */
@@ -72,7 +69,6 @@ public final class ReflectionUtil {
 
   /**
    * @param field A global variable
-   *
    * @return Class Field class
    */
   @NotNull
@@ -82,7 +78,6 @@ public final class ReflectionUtil {
 
   /**
    * @param path Packages and the class name
-   *
    * @return All public sub-classes
    * @throws ClassNotFoundException If class was not found
    */
@@ -94,18 +89,17 @@ public final class ReflectionUtil {
   /**
    * @param path Packages and the class name
    * @param size Number of the array you want to get
-   *
    * @return A public sub-class
    * @throws ClassNotFoundException If class was not found
    */
   @NotNull
-  public static Class<?> getClasses(@NotNull final String path, final int size) throws ClassNotFoundException {
+  public static Class<?> getClasses(@NotNull final String path, final int size)
+      throws ClassNotFoundException {
     return getClazz(path).getClasses()[size];
   }
 
   /**
    * @param clazz A class
-   *
    * @return All public sub-classes
    */
   @NotNull
@@ -115,8 +109,7 @@ public final class ReflectionUtil {
 
   /**
    * @param clazz A class
-   * @param size Number of the array you want to get
-   *
+   * @param size  Number of the array you want to get
    * @return A public sub-class
    */
   @NotNull
@@ -126,7 +119,6 @@ public final class ReflectionUtil {
 
   /**
    * @param path Packages and the class name
-   *
    * @return All private sub-classes
    * @throws ClassNotFoundException If class was not found
    */
@@ -138,18 +130,17 @@ public final class ReflectionUtil {
   /**
    * @param path Packages and the class name
    * @param size Number of the array you want to get
-   *
    * @return A private sub-class
    * @throws ClassNotFoundException If class was not found
    */
   @NotNull
-  public static Class<?> getDcClasses(@NotNull final String path, final int size) throws ClassNotFoundException {
+  public static Class<?> getDcClasses(@NotNull final String path, final int size)
+      throws ClassNotFoundException {
     return getClazz(path).getDeclaredClasses()[size];
   }
 
   /**
    * @param clazz A class
-   *
    * @return All private sub-classes
    */
   @NotNull
@@ -159,8 +150,7 @@ public final class ReflectionUtil {
 
   /**
    * @param clazz A class
-   * @param size Number of the array you want to get
-   *
+   * @param size  Number of the array you want to get
    * @return A private sub-class
    */
   @NotNull
@@ -169,40 +159,42 @@ public final class ReflectionUtil {
   }
 
   /**
-   * @param path Packages and the class name
+   * @param path           Packages and the class name
    * @param parameterClass Class of the parameters
-   *
    * @return A public constructor
    * @throws ClassNotFoundException If class was not found
-   * @throws NoSuchMethodException Throws when method doesn't exists
+   * @throws NoSuchMethodException  Throws when method doesn't exists
    */
   @NotNull
-  public static Constructor<?> getConstructor(@NotNull final String path, @NotNull final Class<?>... parameterClass)
+  public static Constructor<?> getConstructor(@NotNull final String path,
+      @NotNull final Class<?>... parameterClass)
       throws ClassNotFoundException, NoSuchMethodException {
     return getClazz(path).getConstructor(parameterClass);
   }
 
   /**
-   * @param clazz A class
+   * @param clazz          A class
    * @param parameterClass Class of the parameters
    * @return A public constructor
    * @throws NoSuchMethodException If the method is not found
    */
   @NotNull
-  public static Constructor<?> getConstructor(@NotNull final Class<?> clazz, @NotNull final Class<?>... parameterClass)
+  public static Constructor<?> getConstructor(@NotNull final Class<?> clazz,
+      @NotNull final Class<?>... parameterClass)
       throws NoSuchMethodException {
     return clazz.getConstructor(parameterClass);
   }
 
   /**
-   * @param path Packages and the class name
+   * @param path           Packages and the class name
    * @param parameterClass Class of the parameters
    * @return A private constructor
    * @throws ClassNotFoundException If class was not found
-   * @throws NoSuchMethodException If the method is not found
+   * @throws NoSuchMethodException  If the method is not found
    */
   @NotNull
-  public static Constructor<?> getDcConstructor(@NotNull final String path, @NotNull final Class<?>... parameterClass)
+  public static Constructor<?> getDcConstructor(@NotNull final String path,
+      @NotNull final Class<?>... parameterClass)
       throws ClassNotFoundException, NoSuchMethodException {
     final Constructor<?> constructor = getClazz(path).getDeclaredConstructor(parameterClass);
     constructor.setAccessible(true);
@@ -210,13 +202,14 @@ public final class ReflectionUtil {
   }
 
   /**
-   * @param clazz A class
+   * @param clazz          A class
    * @param parameterClass Class of the parameters
    * @return A private constructor
    * @throws NoSuchMethodException If the method is not found
    */
   @NotNull
-  public static Constructor<?> getDcConstructor(@NotNull final Class<?> clazz, @NotNull final Class<?>... parameterClass)
+  public static Constructor<?> getDcConstructor(@NotNull final Class<?> clazz,
+      @NotNull final Class<?>... parameterClass)
       throws NoSuchMethodException {
     final Constructor<?> constructor = clazz.getDeclaredConstructor(parameterClass);
     constructor.setAccessible(true);
@@ -229,7 +222,8 @@ public final class ReflectionUtil {
    * @throws ClassNotFoundException If class was not found
    */
   @NotNull
-  public static Constructor<?>[] getConstructors(@NotNull final String path) throws ClassNotFoundException {
+  public static Constructor<?>[] getConstructors(@NotNull final String path)
+      throws ClassNotFoundException {
     return getClazz(path).getConstructors();
   }
 
@@ -240,7 +234,8 @@ public final class ReflectionUtil {
    * @throws ClassNotFoundException If class was not found
    */
   @NotNull
-  public static Constructor<?> getConstructors(@NotNull final String path, final int size) throws ClassNotFoundException {
+  public static Constructor<?> getConstructors(@NotNull final String path, final int size)
+      throws ClassNotFoundException {
     return getClazz(path).getConstructors()[size];
   }
 
@@ -255,7 +250,7 @@ public final class ReflectionUtil {
 
   /**
    * @param clazz A class
-   * @param size Number of the array you want to get
+   * @param size  Number of the array you want to get
    * @return A public constructor
    */
   @NotNull
@@ -269,7 +264,8 @@ public final class ReflectionUtil {
    * @throws ClassNotFoundException If class was not found
    */
   @NotNull
-  public static Constructor<?>[] getDcConstructors(@NotNull final String path) throws ClassNotFoundException {
+  public static Constructor<?>[] getDcConstructors(@NotNull final String path)
+      throws ClassNotFoundException {
     return Arrays.stream(getClazz(path).getDeclaredConstructors())
         .peek(constructor -> constructor.setAccessible(true))
         .toArray(Constructor[]::new);
@@ -282,7 +278,8 @@ public final class ReflectionUtil {
    * @throws ClassNotFoundException If class was not found
    */
   @NotNull
-  public static Constructor<?> getDcConstructors(@NotNull final String path, final int size) throws ClassNotFoundException {
+  public static Constructor<?> getDcConstructors(@NotNull final String path, final int size)
+      throws ClassNotFoundException {
     final Constructor<?> constructor = getClazz(path).getDeclaredConstructors()[size];
     constructor.setAccessible(true);
     return constructor;
@@ -301,7 +298,7 @@ public final class ReflectionUtil {
 
   /**
    * @param clazz A class
-   * @param size Number of the array you want to get
+   * @param size  Number of the array you want to get
    * @return A private constructor
    */
   @NotNull
@@ -312,42 +309,45 @@ public final class ReflectionUtil {
   }
 
   /**
-   * @param path Packages and the class name
-   * @param methodName Method name
+   * @param path           Packages and the class name
+   * @param methodName     Method name
    * @param parameterClass Class of the parameters
    * @return A public method
    * @throws ClassNotFoundException If class was not found
-   * @throws NoSuchMethodException If the method is not found
+   * @throws NoSuchMethodException  If the method is not found
    */
   @NotNull
-  public static Method getMethod(@NotNull final String path, @NotNull final String methodName, @NotNull final Class<?>... parameterClass)
+  public static Method getMethod(@NotNull final String path, @NotNull final String methodName,
+      @NotNull final Class<?>... parameterClass)
       throws ClassNotFoundException, NoSuchMethodException {
     return getClazz(path).getMethod(methodName, parameterClass);
   }
 
   /**
-   * @param clazz A class
-   * @param methodName Method name
+   * @param clazz          A class
+   * @param methodName     Method name
    * @param parameterClass Class of the parameters
    * @return A public method
    * @throws NoSuchMethodException If the method is not found
    */
   @NotNull
-  public static Method getMethod(@NotNull final Class<?> clazz, @NotNull final String methodName, @NotNull final Class<?>... parameterClass)
+  public static Method getMethod(@NotNull final Class<?> clazz, @NotNull final String methodName,
+      @NotNull final Class<?>... parameterClass)
       throws NoSuchMethodException {
     return clazz.getMethod(methodName, parameterClass);
   }
 
   /**
-   * @param path Packages and the class name
-   * @param methodName Method name
+   * @param path           Packages and the class name
+   * @param methodName     Method name
    * @param parameterClass Class of the parameters
    * @return A private method
    * @throws ClassNotFoundException If class was not found
-   * @throws NoSuchMethodException If the method is not found
+   * @throws NoSuchMethodException  If the method is not found
    */
   @NotNull
-  public static Method getDcMethod(@NotNull final String path, @NotNull final String methodName, @NotNull final Class<?>... parameterClass)
+  public static Method getDcMethod(@NotNull final String path, @NotNull final String methodName,
+      @NotNull final Class<?>... parameterClass)
       throws ClassNotFoundException, NoSuchMethodException {
     final Method method = getClazz(path).getDeclaredMethod(methodName, parameterClass);
     method.setAccessible(true);
@@ -355,14 +355,15 @@ public final class ReflectionUtil {
   }
 
   /**
-   * @param clazz A class
-   * @param methodName Method name
+   * @param clazz          A class
+   * @param methodName     Method name
    * @param parameterClass Class of the parameters
    * @return A private method
    * @throws NoSuchMethodException If the method is not found
    */
   @NotNull
-  public static Method getDcMethod(@NotNull final Class<?> clazz, @NotNull final String methodName, @NotNull final Class<?>... parameterClass)
+  public static Method getDcMethod(@NotNull final Class<?> clazz, @NotNull final String methodName,
+      @NotNull final Class<?>... parameterClass)
       throws NoSuchMethodException {
     final Method method = clazz.getDeclaredMethod(methodName, parameterClass);
     method.setAccessible(true);
@@ -386,7 +387,8 @@ public final class ReflectionUtil {
    * @throws ClassNotFoundException If class was not found
    */
   @NotNull
-  public static Method getMethods(@NotNull final String path, final int size) throws ClassNotFoundException {
+  public static Method getMethods(@NotNull final String path, final int size)
+      throws ClassNotFoundException {
     return getClazz(path).getMethods()[size];
   }
 
@@ -401,7 +403,7 @@ public final class ReflectionUtil {
 
   /**
    * @param clazz A class
-   * @param size Number of the array you want to get
+   * @param size  Number of the array you want to get
    * @return A public method
    */
   @NotNull
@@ -428,7 +430,8 @@ public final class ReflectionUtil {
    * @throws ClassNotFoundException If class was not found
    */
   @NotNull
-  public static Method getDcMethods(@NotNull final String path, final int size) throws ClassNotFoundException {
+  public static Method getDcMethods(@NotNull final String path, final int size)
+      throws ClassNotFoundException {
     final Method method = getClazz(path).getDeclaredMethods()[size];
     method.setAccessible(true);
     return method;
@@ -447,7 +450,7 @@ public final class ReflectionUtil {
 
   /**
    * @param clazz A class
-   * @param size Number of the array you want to get
+   * @param size  Number of the array you want to get
    * @return A private method
    */
   @NotNull
@@ -458,11 +461,11 @@ public final class ReflectionUtil {
   }
 
   /**
-   * @param path Packages and the class name
+   * @param path         Packages and the class name
    * @param variableName Variable name
    * @return A public global variable
    * @throws ClassNotFoundException If class was not found
-   * @throws NoSuchFieldException If doesn't have a field of a specified name
+   * @throws NoSuchFieldException   If doesn't have a field of a specified name
    */
   @NotNull
   public static Field getField(@NotNull final String path, @NotNull final String variableName)
@@ -471,7 +474,7 @@ public final class ReflectionUtil {
   }
 
   /**
-   * @param clazz A class
+   * @param clazz        A class
    * @param variableName Variable name
    * @return A public global variable
    * @throws NoSuchFieldException If doesn't have a field of a specified name
@@ -483,11 +486,11 @@ public final class ReflectionUtil {
   }
 
   /**
-   * @param path Packages and the class name
+   * @param path         Packages and the class name
    * @param variableName Variable name
    * @return A private global variable
    * @throws ClassNotFoundException If class was not found
-   * @throws NoSuchFieldException If doesn't have a field of a specified name
+   * @throws NoSuchFieldException   If doesn't have a field of a specified name
    */
   @NotNull
   public static Field getDcField(@NotNull final String path, @NotNull final String variableName)
@@ -498,7 +501,7 @@ public final class ReflectionUtil {
   }
 
   /**
-   * @param clazz A class
+   * @param clazz        A class
    * @param variableName Variable name
    * @return A private global variable
    * @throws NoSuchFieldException If doesn't have a field of a specified name
@@ -528,7 +531,8 @@ public final class ReflectionUtil {
    * @throws ClassNotFoundException If class was not found
    */
   @NotNull
-  public static Field getFields(@NotNull final String path, final int size) throws ClassNotFoundException {
+  public static Field getFields(@NotNull final String path, final int size)
+      throws ClassNotFoundException {
     return getClazz(path).getFields()[size];
   }
 
@@ -543,7 +547,7 @@ public final class ReflectionUtil {
 
   /**
    * @param clazz A class
-   * @param size Number of the array you want to get
+   * @param size  Number of the array you want to get
    * @return A public global variable
    */
   @NotNull
@@ -570,7 +574,8 @@ public final class ReflectionUtil {
    * @throws ClassNotFoundException If class was not found
    */
   @NotNull
-  public static Field getDcFields(@NotNull final String path, final int size) throws ClassNotFoundException {
+  public static Field getDcFields(@NotNull final String path, final int size)
+      throws ClassNotFoundException {
     final Field field = getClazz(path).getDeclaredFields()[size];
     field.setAccessible(true);
     return field;
@@ -589,7 +594,7 @@ public final class ReflectionUtil {
 
   /**
    * @param clazz A class
-   * @param size Number of the array you want to get
+   * @param size  Number of the array you want to get
    * @return A private global variable
    */
   @NotNull
@@ -602,9 +607,12 @@ public final class ReflectionUtil {
   /**
    * @param constructor A constructor of a class
    * @return An instance of this class
-   * @throws IllegalAccessException If you try to access a private or protected class without enabling
-   * @throws InvocationTargetException If when invoking the method, the method does not exist or has incorrect parameters
-   * @throws InstantiationException If you instantiate an abstract class or an interface or there is no constructor in that class
+   * @throws IllegalAccessException    If you try to access a private or protected class without
+   *                                   enabling
+   * @throws InvocationTargetException If when invoking the method, the method does not exist or has
+   *                                   incorrect parameters
+   * @throws InstantiationException    If you instantiate an abstract class or an interface or there
+   *                                   is no constructor in that class
    */
   @NotNull
   public static Object instance(@NotNull final Constructor<?> constructor)
@@ -614,38 +622,47 @@ public final class ReflectionUtil {
 
   /**
    * @param constructor A constructor of a class
-   * @param args Constructor parameters
+   * @param args        Constructor parameters
    * @return An instance of this class
-   * @throws IllegalAccessException If you try to access a private or protected class without enabling
-   * @throws InvocationTargetException If when invoking the method, the method does not exist or has incorrect parameters
-   * @throws InstantiationException If you instantiate an abstract class or an interface or there is no constructor in that class
+   * @throws IllegalAccessException    If you try to access a private or protected class without
+   *                                   enabling
+   * @throws InvocationTargetException If when invoking the method, the method does not exist or has
+   *                                   incorrect parameters
+   * @throws InstantiationException    If you instantiate an abstract class or an interface or there
+   *                                   is no constructor in that class
    */
   @NotNull
-  public static Object instance(@NotNull final Constructor<?> constructor, @NotNull final Object... args)
+  public static Object instance(@NotNull final Constructor<?> constructor,
+      @NotNull final Object... args)
       throws IllegalAccessException, InvocationTargetException, InstantiationException {
     return constructor.newInstance(args);
   }
 
   /**
-   * @param method Method that will be invoked
+   * @param method   Method that will be invoked
    * @param instance An instance of the class of this method
-   * @param args Method parameters
+   * @param args     Method parameters
    * @return Result of the method invoked
-   * @throws InvocationTargetException If when invoking the method, the method does not exist or has incorrect parameters
-   * @throws IllegalAccessException If you try to access a private or protected class without enabling
+   * @throws InvocationTargetException If when invoking the method, the method does not exist or has
+   *                                   incorrect parameters
+   * @throws IllegalAccessException    If you try to access a private or protected class without
+   *                                   enabling
    */
   @NotNull
-  public static Object invoke(@NotNull final Method method, @NotNull final Object instance, @NotNull final Object... args)
+  public static Object invoke(@NotNull final Method method, @NotNull final Object instance,
+      @NotNull final Object... args)
       throws InvocationTargetException, IllegalAccessException {
     return method.invoke(instance, args);
   }
 
   /**
    * @param method Method that will be invoked
-   * @param args Method parameters
+   * @param args   Method parameters
    * @return Result of the method invoked
-   * @throws InvocationTargetException If when invoking the method, the method does not exist or has incorrect parameters
-   * @throws IllegalAccessException If you try to access a private or protected class without enabling
+   * @throws InvocationTargetException If when invoking the method, the method does not exist or has
+   *                                   incorrect parameters
+   * @throws IllegalAccessException    If you try to access a private or protected class without
+   *                                   enabling
    */
   @NotNull
   public static Object invokeStatic(@NotNull final Method method, @NotNull final Object... args)
@@ -654,20 +671,23 @@ public final class ReflectionUtil {
   }
 
   /**
-   * @param field A global variable
+   * @param field    A global variable
    * @param instance An instance of the field class
    * @return An instance of the field class
-   * @throws IllegalAccessException If you try to access a private or protected class without enabling
+   * @throws IllegalAccessException If you try to access a private or protected class without
+   *                                enabling
    */
   @NotNull
-  public static Object get(@NotNull final Field field, @NotNull final Object instance) throws IllegalAccessException {
+  public static Object get(@NotNull final Field field, @NotNull final Object instance)
+      throws IllegalAccessException {
     return field.get(instance);
   }
 
   /**
    * @param field A global variable
    * @return An instance of the field class
-   * @throws IllegalAccessException If you try to access a private or protected class without enabling
+   * @throws IllegalAccessException If you try to access a private or protected class without
+   *                                enabling
    */
   @NotNull
   public static Object getStatic(@NotNull final Field field) throws IllegalAccessException {

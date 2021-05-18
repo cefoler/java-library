@@ -1,8 +1,18 @@
 package com.celeste.library.spigot.util.item;
 
-import com.celeste.library.spigot.util.ReflectionUtil;
+import com.celeste.library.spigot.util.ReflectionNms;
 import com.celeste.library.spigot.util.item.type.EnchantmentType;
 import com.google.common.collect.ImmutableList;
+import java.lang.reflect.Constructor;
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Base64;
+import java.util.List;
+import java.util.Map.Entry;
+import java.util.UUID;
+import java.util.regex.Pattern;
 import lombok.SneakyThrows;
 import org.bukkit.Color;
 import org.bukkit.Material;
@@ -12,17 +22,13 @@ import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.EntityType;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.*;
+import org.bukkit.inventory.meta.BlockStateMeta;
+import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.inventory.meta.LeatherArmorMeta;
+import org.bukkit.inventory.meta.PotionMeta;
+import org.bukkit.inventory.meta.SkullMeta;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
-import org.jetbrains.annotations.NotNull;
-
-import java.lang.reflect.Constructor;
-import java.lang.reflect.Field;
-import java.lang.reflect.Method;
-import java.util.*;
-import java.util.Map.Entry;
-import java.util.regex.Pattern;
 
 public final class ItemBuilder implements Cloneable {
 
@@ -31,19 +37,21 @@ public final class ItemBuilder implements Cloneable {
 
   /**
    * Creates a new ItemBuilder with that Material.
+   *
    * @param material Material
    */
-  public ItemBuilder(@NotNull final Material material) {
+  public ItemBuilder(final Material material) {
     this.itemStack = new ItemStack(material);
     this.meta = itemStack.getItemMeta();
   }
 
   /**
    * Creates a new ItemBuilder with that Material and amount
+   *
    * @param material Material
-   * @param amount int
+   * @param amount   int
    */
-  public ItemBuilder(@NotNull final Material material, final int amount) {
+  public ItemBuilder(final Material material, final int amount) {
     this.itemStack = new ItemStack(material, amount);
     this.meta = itemStack.getItemMeta();
   }
@@ -52,42 +60,42 @@ public final class ItemBuilder implements Cloneable {
    * Creates a new ItemBuilder with that Material, amount and data
    *
    * <p>This is only used in legacy versions.</p>
+   *
    * @param material Material
-   * @param amount int
+   * @param amount   int
    */
-  public ItemBuilder(@NotNull final Material material, final int amount, final int data) {
+  public ItemBuilder(final Material material, final int amount, final int data) {
     this.itemStack = new ItemStack(material, amount, (short) data);
     this.meta = itemStack.getItemMeta();
   }
 
   /**
    * Creates a new ItemBuilder with ItemStack
+   *
    * @param itemStack ItemStack
    */
-  public ItemBuilder(@NotNull final ItemStack itemStack) {
+  public ItemBuilder(final ItemStack itemStack) {
     this.itemStack = itemStack;
     this.meta = itemStack.getItemMeta();
   }
 
   /**
    * Sets the ItemBuilder material to that Material
-   * @param material Material
    *
+   * @param material Material
    * @return ItemBuilder
    */
-  @NotNull
-  public ItemBuilder material(@NotNull final Material material) {
+  public ItemBuilder material(final Material material) {
     itemStack.setType(material);
     return this;
   }
 
   /**
    * Sets the ItemBuilder amount to that Integer
-   * @param amount int
    *
+   * @param amount int
    * @return ItemBuilder
    */
-  @NotNull
   public ItemBuilder amount(final int amount) {
     itemStack.setAmount(amount);
     return this;
@@ -95,12 +103,11 @@ public final class ItemBuilder implements Cloneable {
 
   /**
    * Sets the ItemBuilder name to that String
-   * @param name String
    *
+   * @param name String
    * @return ItemBuilder
    */
-  @NotNull
-  public ItemBuilder name(@NotNull final String name) {
+  public ItemBuilder name(final String name) {
     if (!name.equals("")) {
       meta.setDisplayName(name);
     }
@@ -110,46 +117,42 @@ public final class ItemBuilder implements Cloneable {
 
   /**
    * Sets the ItemBuilder lore to that String
-   * @param lore String...
    *
+   * @param lore String...
    * @return ItemBuilder
    */
-  @NotNull
-  public ItemBuilder lore(@NotNull final String... lore) {
+  public ItemBuilder lore(final String... lore) {
     return lore(ImmutableList.copyOf(lore));
   }
 
   /**
    * Sets the ItemBuilder lore to that List
-   * @param lore List
    *
+   * @param lore List
    * @return ItemBuilder
    */
-  @NotNull
-  public ItemBuilder lore(@NotNull final List<String> lore) {
+  public ItemBuilder lore(final List<String> lore) {
     meta.setLore(lore);
     return this;
   }
 
   /**
    * Add lore from that String
-   * @param lore String...
    *
+   * @param lore String...
    * @return ItemBuilder
    */
-  @NotNull
-  public ItemBuilder addLore(@NotNull final String... lore) {
+  public ItemBuilder addLore(final String... lore) {
     return addLore(ImmutableList.copyOf(lore));
   }
 
   /**
    * Add lore from that List
-   * @param lore List
    *
+   * @param lore List
    * @return ItemBuilder
    */
-  @NotNull
-  public ItemBuilder addLore(@NotNull final List<String> lore) {
+  public ItemBuilder addLore(final List<String> lore) {
     final List<String> newLore = meta.getLore() == null ? new ArrayList<>() : meta.getLore();
 
     newLore.addAll(lore);
@@ -160,11 +163,10 @@ public final class ItemBuilder implements Cloneable {
 
   /**
    * Removes that line of the lore
-   * @param index int
    *
+   * @param index int
    * @return ItemBuilder
    */
-  @NotNull
   public ItemBuilder removeLore(final int index) {
     final List<String> newLore = meta.getLore();
     if (newLore == null) {
@@ -179,13 +181,12 @@ public final class ItemBuilder implements Cloneable {
 
   /**
    * Replaces that line of lore
-   * @param lore String
-   * @param index int
    *
+   * @param lore  String
+   * @param index int
    * @return ItemBuilder
    */
-  @NotNull
-  public ItemBuilder replaceLore(@NotNull final String lore, final int index) {
+  public ItemBuilder replaceLore(final String lore, final int index) {
     final List<String> newLore = meta.getLore();
     if (newLore == null) {
       return this;
@@ -199,13 +200,12 @@ public final class ItemBuilder implements Cloneable {
 
   /**
    * Replaces the lore
-   * @param lore String
-   * @param index int
    *
+   * @param lore  String
+   * @param index int
    * @return ItemBuilder
    */
-  @NotNull
-  public ItemBuilder replaceLoreAnyway(@NotNull final String lore, final int index) {
+  public ItemBuilder replaceLoreAnyway(final String lore, final int index) {
     final List<String> newLore = meta.getLore() == null ? new ArrayList<>() : meta.getLore();
 
     if (index >= newLore.size()) {
@@ -222,13 +222,12 @@ public final class ItemBuilder implements Cloneable {
 
   /**
    * Add a enchantment to the item
-   * @param enchantment String
-   * @param level int
    *
+   * @param enchantment String
+   * @param level       int
    * @return ItemBuilder
    */
-  @NotNull
-  public ItemBuilder enchantment(@NotNull final String enchantment, final int level) {
+  public ItemBuilder enchantment(final String enchantment, final int level) {
     final Enchantment enchant = EnchantmentType.getEnchantment(enchantment);
     itemStack.addUnsafeEnchantment(enchant, level);
 
@@ -237,23 +236,21 @@ public final class ItemBuilder implements Cloneable {
 
   /**
    * Adds enchantments to the item
-   * @param enchantment String...
    *
+   * @param enchantment String...
    * @return ItemBuilder
    */
-  @NotNull
-  public ItemBuilder enchantment(@NotNull final String... enchantment) {
+  public ItemBuilder enchantment(final String... enchantment) {
     return enchantment(ImmutableList.copyOf(enchantment));
   }
 
   /**
    * Adds enchantments to the item
-   * @param enchantment List
    *
+   * @param enchantment List
    * @return ItemBuilder
    */
-  @NotNull
-  public ItemBuilder enchantment(@NotNull final List<String> enchantment) {
+  public ItemBuilder enchantment(final List<String> enchantment) {
     enchantment.forEach(enchantAndLevel -> {
       final String[] split = enchantAndLevel.split(":");
 
@@ -271,12 +268,12 @@ public final class ItemBuilder implements Cloneable {
 
   /**
    * Adds enchantments to the item
-   * @param enchantment Entry of String and Integer
    *
+   * @param enchantment Entry of String and Integer
    * @return ItemBuilder
    */
-  @NotNull @SafeVarargs
-  public final ItemBuilder enchantment(@NotNull final Entry<String, Integer>... enchantment) {
+  @SafeVarargs
+  public final ItemBuilder enchantment(final Entry<String, Integer>... enchantment) {
     Arrays.stream(enchantment).forEach(entry -> {
       final Enchantment enchant = EnchantmentType.getEnchantment(entry.getKey());
       final int level = entry.getValue();
@@ -289,12 +286,11 @@ public final class ItemBuilder implements Cloneable {
 
   /**
    * Removes the enchantments with those names
-   * @param enchantments String...
    *
+   * @param enchantments String...
    * @return ItemBuilder
    */
-  @NotNull
-  public ItemBuilder removeEnchantment(@NotNull final String... enchantments) {
+  public ItemBuilder removeEnchantment(final String... enchantments) {
     Arrays.stream(enchantments).forEach(enchantName -> {
       final Enchantment enchant = EnchantmentType.getEnchantment(enchantName);
       itemStack.removeEnchantment(enchant);
@@ -305,11 +301,10 @@ public final class ItemBuilder implements Cloneable {
 
   /**
    * Sets the item to glow
-   * @param glow boolean
    *
+   * @param glow boolean
    * @return ItemBuilder
    */
-  @NotNull
   public ItemBuilder glow(final boolean glow) {
     if (glow) {
       itemStack.addUnsafeEnchantment(Enchantment.DURABILITY, 1);
@@ -326,41 +321,45 @@ public final class ItemBuilder implements Cloneable {
 
   /**
    * Gets the skull from the URL
-   * @param url String
-   * @param uuid UUID
    *
+   * @param url  String
+   * @param uuid UUID
    * @return ItemBuilder
    */
-  @NotNull @SneakyThrows
-  public ItemBuilder skull(@NotNull final String url, @NotNull final UUID uuid) {
-    if (!(meta instanceof SkullMeta)) return this;
+  @SneakyThrows
+  public ItemBuilder skull(final String url, final UUID uuid) {
+    if (!(meta instanceof SkullMeta)) {
+      return this;
+    }
     itemStack.setItemMeta(meta);
 
     final SkullMeta skullMeta = (SkullMeta) meta;
     final String texture = "http://textures.minecraft.net/texture/" + url;
 
-    final Class<?> gameProfileClass = ReflectionUtil.getClazz("com.mojang.authlib.GameProfile");
-    final Class<?> propertyClass = ReflectionUtil.getClazz("com.mojang.authlib.properties.Property");
+    final Class<?> gameProfileClass = ReflectionNms.getClazz("com.mojang.authlib.GameProfile");
+    final Class<?> propertyClass = ReflectionNms.getClazz("com.mojang.authlib.properties.Property");
 
-    final Constructor<?> gameProfileConstructor = ReflectionUtil.getConstructor(gameProfileClass, UUID.class, String.class);
-    final Constructor<?> propertyConstructor = ReflectionUtil.getConstructor(propertyClass, String.class, String.class);
-    final Field propertiesField = ReflectionUtil.getDcField(gameProfileClass, "properties");
+    final Constructor<?> gameProfileConstructor = ReflectionNms
+        .getConstructor(gameProfileClass, UUID.class, String.class);
+    final Constructor<?> propertyConstructor = ReflectionNms
+        .getConstructor(propertyClass, String.class, String.class);
+    final Field propertiesField = ReflectionNms.getDcField(gameProfileClass, "properties");
 
     final String encoded = Base64.getEncoder().encodeToString(
         String.format("{textures:{SKIN:{url:\"%s\"}}}",
-        new Object[] {texture}).getBytes()
+            new Object[]{texture}).getBytes()
     );
-    final Object profile = ReflectionUtil.instance(gameProfileConstructor, uuid, null);
-    final Object property = ReflectionUtil.instance(propertyConstructor, "textures", encoded);
+    final Object profile = ReflectionNms.instance(gameProfileConstructor, uuid, null);
+    final Object property = ReflectionNms.instance(propertyConstructor, "textures", encoded);
 
-    final Class<?> propertiesClass = ReflectionUtil.getClazz(propertiesField);
+    final Class<?> propertiesClass = ReflectionNms.getClazz(propertiesField);
 
-    final Method put = ReflectionUtil.getMethod(propertiesClass, "put", Object.class, Object.class);
-    final Object properties = ReflectionUtil.get(propertiesField, profile);
+    final Method put = ReflectionNms.getMethod(propertiesClass, "put", Object.class, Object.class);
+    final Object properties = ReflectionNms.get(propertiesField, profile);
 
-    ReflectionUtil.invoke(put, properties, "textures", property);
+    ReflectionNms.invoke(put, properties, "textures", property);
 
-    final Field profileField = ReflectionUtil.getDcField(meta.getClass(), "profile");
+    final Field profileField = ReflectionNms.getDcField(meta.getClass(), "profile");
     profileField.set(skullMeta, profile);
 
     meta = skullMeta;
@@ -369,12 +368,11 @@ public final class ItemBuilder implements Cloneable {
 
   /**
    * Sets the skull of the item
-   * @param owner OfflinePlayer
    *
+   * @param owner OfflinePlayer
    * @return ItemBuilder
    */
-  @NotNull
-  public ItemBuilder skull(@NotNull final String owner) {
+  public ItemBuilder skull(final String owner) {
     final SkullMeta meta = (SkullMeta) this.meta;
     meta.setOwner(owner);
 
@@ -383,12 +381,11 @@ public final class ItemBuilder implements Cloneable {
 
   /**
    * Sets the mob inside the spawner
-   * @param type EntityType
    *
+   * @param type EntityType
    * @return ItemBuilder
    */
-  @NotNull
-  public ItemBuilder mob(@NotNull final EntityType type) {
+  public ItemBuilder mob(final EntityType type) {
     if (!(meta instanceof BlockStateMeta)) {
       return this;
     }
@@ -402,12 +399,11 @@ public final class ItemBuilder implements Cloneable {
 
   /**
    * Sets the color of the armor
-   * @param color Color
    *
+   * @param color Color
    * @return ItemBuilder
    */
-  @NotNull
-  public ItemBuilder armor(@NotNull final Color color) {
+  public ItemBuilder armor(final Color color) {
     if (!(meta instanceof LeatherArmorMeta)) {
       return this;
     }
@@ -420,12 +416,11 @@ public final class ItemBuilder implements Cloneable {
 
   /**
    * Creates a potion
-   * @param potions List
    *
+   * @param potions List
    * @return ItemBuilder
    */
-  @NotNull
-  public ItemBuilder potion(@NotNull final List<String> potions) {
+  public ItemBuilder potion(final List<String> potions) {
     if (!(meta instanceof PotionMeta)) {
       return this;
     }
@@ -433,7 +428,8 @@ public final class ItemBuilder implements Cloneable {
     potions.stream()
         .map(potionNameDurationAndAmplifier -> potionNameDurationAndAmplifier.split(":"))
         .filter(split -> split.length == 3 && (PotionEffectType.getByName(split[0]) != null
-            || (Pattern.matches("[0-9]+", split[0]) && PotionEffectType.getById(Integer.parseInt(split[0])) != null)))
+            || (Pattern.matches("[0-9]+", split[0])
+            && PotionEffectType.getById(Integer.parseInt(split[0])) != null)))
         .forEach(split -> {
           final String potionName = split[0];
           final int duration = Integer.parseInt(split[1]);
@@ -453,14 +449,14 @@ public final class ItemBuilder implements Cloneable {
 
   /**
    * Creates a potion with the details
-   * @param potionName String
-   * @param duration int
-   * @param amplifier int
    *
+   * @param potionName String
+   * @param duration   int
+   * @param amplifier  int
    * @return ItemBuilder
    */
-  @NotNull
-  public ItemBuilder potion(@NotNull final String potionName, final int duration, final int amplifier) {
+  public ItemBuilder potion(final String potionName, final int duration,
+      final int amplifier) {
     if (!(meta instanceof PotionMeta)) {
       return this;
     }
@@ -482,8 +478,8 @@ public final class ItemBuilder implements Cloneable {
 
   /**
    * Removes the potion effect
-   * @param potionName String
    *
+   * @param potionName String
    * @return ItemBuilder
    */
   @NotNull
@@ -507,50 +503,54 @@ public final class ItemBuilder implements Cloneable {
 
   /**
    * Sets the NBT tag
-   * @param key T
-   * @param value T
-   * @param <T> T
    *
+   * @param key   T
+   * @param value T
+   * @param <T>   T
    * @return ItemBuilder
    */
-  @NotNull @SneakyThrows
+  @NotNull
+  @SneakyThrows
   public <T> ItemBuilder nbtTag(@NotNull final T key, @NotNull final T value) {
     itemStack.setItemMeta(meta);
 
-    final Class<?> craftItemStackClazz = ReflectionUtil.getOBC("inventory.CraftItemStack");
-    final Class<?> itemStackClazz = ReflectionUtil.getNMS("ItemStack");
-    final Class<?> compoundClazz = ReflectionUtil.getNMS("NBTTagCompound");
+    final Class<?> craftItemStackClazz = ReflectionNms.getOBC("inventory.CraftItemStack");
+    final Class<?> itemStackClazz = ReflectionNms.getNMS("ItemStack");
+    final Class<?> compoundClazz = ReflectionNms.getNMS("NBTTagCompound");
 
-    final Method asNMSCopy = ReflectionUtil.getMethod(craftItemStackClazz, "asNMSCopy", ItemStack.class);
-    final Method hasTag = ReflectionUtil.getMethod(itemStackClazz, "hasTag");
-    final Method getTag = ReflectionUtil.getMethod(itemStackClazz, "getTag");
+    final Method asNmsCopy = ReflectionNms
+        .getMethod(craftItemStackClazz, "asNMSCopy", ItemStack.class);
+    final Method hasTag = ReflectionNms.getMethod(itemStackClazz, "hasTag");
+    final Method getTag = ReflectionNms.getMethod(itemStackClazz, "getTag");
 
-    final Object nmsItem = ReflectionUtil.invokeStatic(asNMSCopy, itemStack);
-    final boolean isExist = (Boolean) ReflectionUtil.invoke(hasTag, nmsItem);
-    final Object compound = isExist ? ReflectionUtil.invoke(getTag, nmsItem) : compoundClazz.newInstance();
+    final Object nmsItem = ReflectionNms.invokeStatic(asNmsCopy, itemStack);
+    final boolean isExist = (Boolean) ReflectionNms.invoke(hasTag, nmsItem);
+    final Object compound =
+        isExist ? ReflectionNms.invoke(getTag, nmsItem) : compoundClazz.newInstance();
 
-    final Class<?> tagClazz = ReflectionUtil.getNMS("NBTTagString");
-    final Class<?> baseClazz = ReflectionUtil.getNMS("NBTBase");
+    final Class<?> tagClazz = ReflectionNms.getNMS("NBTTagString");
+    final Class<?> baseClazz = ReflectionNms.getNMS("NBTBase");
 
-    final Constructor<?> tagCon = ReflectionUtil.getDcConstructor(tagClazz, String.class);
+    final Constructor<?> tagCon = ReflectionNms.getDcConstructor(tagClazz, String.class);
 
-    final Method set = ReflectionUtil.getMethod(compoundClazz, "set", String.class, baseClazz);
-    final Method setTag = ReflectionUtil.getMethod(itemStackClazz, "setTag", compoundClazz);
-    final Method getItemMeta = ReflectionUtil.getMethod(craftItemStackClazz, "getItemMeta", itemStackClazz);
+    final Method set = ReflectionNms.getMethod(compoundClazz, "set", String.class, baseClazz);
+    final Method setTag = ReflectionNms.getMethod(itemStackClazz, "setTag", compoundClazz);
+    final Method getItemMeta = ReflectionNms
+        .getMethod(craftItemStackClazz, "getItemMeta", itemStackClazz);
 
-    final Object tag = ReflectionUtil.instance(tagCon, value.toString());
-    ReflectionUtil.invoke(set, compound, key.toString(), tag);
-    ReflectionUtil.invoke(setTag, nmsItem, compound);
+    final Object tag = ReflectionNms.instance(tagCon, value.toString());
+    ReflectionNms.invoke(set, compound, key.toString(), tag);
+    ReflectionNms.invoke(setTag, nmsItem, compound);
 
-    meta = (ItemMeta) ReflectionUtil.invokeStatic(getItemMeta, nmsItem);
+    meta = (ItemMeta) ReflectionNms.invokeStatic(getItemMeta, nmsItem);
 
     return this;
   }
 
   /**
    * Sets the ItemFlag into the item
-   * @param flag ItemFlag
    *
+   * @param flag ItemFlag
    * @return ItemBuilder
    */
   @NotNull
@@ -561,8 +561,8 @@ public final class ItemBuilder implements Cloneable {
 
   /**
    * Removes the ItemFlag from the item
-   * @param flag ItemFlag
    *
+   * @param flag ItemFlag
    * @return ItemBuilder
    */
   @NotNull
@@ -573,6 +573,7 @@ public final class ItemBuilder implements Cloneable {
 
   /**
    * Builds the item
+   *
    * @return ItemStack
    */
   @NotNull
@@ -583,9 +584,12 @@ public final class ItemBuilder implements Cloneable {
 
   /**
    * Clones the ItemBuilder
+   *
    * @return ItemBuilder
    */
-  @Override @NotNull @SneakyThrows
+  @Override
+  @NotNull
+  @SneakyThrows
   public ItemBuilder clone() {
     return (ItemBuilder) super.clone();
   }

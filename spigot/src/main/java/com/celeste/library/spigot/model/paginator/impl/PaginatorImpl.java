@@ -3,9 +3,10 @@ package com.celeste.library.spigot.model.paginator.impl;
 import com.celeste.library.spigot.exception.MenuException;
 import com.celeste.library.spigot.model.paginator.Paginator;
 import com.celeste.library.spigot.model.paginator.PaginatorContent;
+import java.util.LinkedHashSet;
+import java.util.List;
+import java.util.Set;
 import lombok.Getter;
-
-import java.util.*;
 
 @Getter
 public class PaginatorImpl<T> extends PaginatorContent<T> implements Paginator<T> {
@@ -19,8 +20,8 @@ public class PaginatorImpl<T> extends PaginatorContent<T> implements Paginator<T
 
   /**
    * Returns the resource on that index
-   * @param index int
    *
+   * @param index int
    * @return T
    */
   @Override
@@ -40,8 +41,8 @@ public class PaginatorImpl<T> extends PaginatorContent<T> implements Paginator<T
   }
 
   /**
-   * Returns the number of pages that his paginator
-   * contains depending on his shape and source size.
+   * Returns the number of pages that his paginator contains depending on his shape and source
+   * size.
    *
    * @return int
    */
@@ -51,8 +52,7 @@ public class PaginatorImpl<T> extends PaginatorContent<T> implements Paginator<T
   }
 
   /**
-   * Gets all items registered on that
-   * page in the Paginator
+   * Gets all items registered on that page in the Paginator
    *
    * @param page Integer
    * @return List
@@ -64,10 +64,18 @@ public class PaginatorImpl<T> extends PaginatorContent<T> implements Paginator<T
 
     final Set<T> items = new LinkedHashSet<>();
 
-    if (sourceSize == 0) return items;
-    if (sourceSize < shapeLength) return new LinkedHashSet<>(getSource());
+    if (sourceSize == 0) {
+      return items;
+    }
+
+    if (sourceSize < shapeLength) {
+      return new LinkedHashSet<>(getSource());
+    }
+
     if (page < 0 || page >= totalPages()) {
-      throw new MenuException("The page index must be more than 1 to a maximum of " + totalPages() + ", given: " + page);
+      throw new MenuException(
+          "The page index must be more than 1 to a maximum of " + totalPages() + ", given: "
+              + page);
     }
 
     for (int i = shapeLength * page; i < shapeLength; i++) {

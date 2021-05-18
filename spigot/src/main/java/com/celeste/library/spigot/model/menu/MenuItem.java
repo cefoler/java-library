@@ -1,17 +1,15 @@
 package com.celeste.library.spigot.model.menu;
 
 import com.celeste.library.spigot.model.menu.action.ClickAction;
+import java.util.Properties;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
-import java.util.Properties;
-
 /**
- * The MenuItem is the object where the
- * Item, Slot and Action will be storaged.
+ * The MenuItem is the object where the Item, Slot and Action will be storaged.
  *
  * <p>This class also has default methods to close,
  * reopen and set property after the item has been clicked.</p>
@@ -27,6 +25,7 @@ public final class MenuItem {
 
   /**
    * Sets the item of this MenuItem.
+   *
    * @param item ItemStack
    * @return MenuItem
    */
@@ -64,24 +63,23 @@ public final class MenuItem {
   }
 
   /**
-   * When clicked, opens a new Menu without properties
+   * When clicked, opens a new AbstractMenu without properties
    *
-   * @param menu Menu that will be opened
+   * @param menu AbstractMenu that will be opened
    * @return MenuItem
    */
-  public MenuItem open(final Menu menu) {
+  public MenuItem open(final AbstractMenu menu) {
     return open(menu, new Properties());
   }
 
   /**
-   * When clicked, opens a new Menu with properties
+   * When clicked, opens a new AbstractMenu with properties
    *
-   * @param menu Menu that will be opened
+   * @param menu       AbstractMenu that will be opened
    * @param properties Immutable map of the properties.
-   *
    * @return MenuItem
    */
-  public MenuItem open(final Menu menu, final Properties properties) {
+  public MenuItem open(final AbstractMenu menu, final Properties properties) {
     return action((holder, event) -> {
       // Adds the new properties into the holder
       properties.forEach((key, value) -> holder.setProperty(key.toString(), value));
@@ -92,6 +90,7 @@ public final class MenuItem {
 
   /**
    * When clicked, clears and updates the inventory
+   *
    * @return MenuItem
    */
   public MenuItem reopen() {
@@ -99,7 +98,7 @@ public final class MenuItem {
       final Inventory inventory = holder.getInventory();
       holder.getInventory().clear();
 
-      for (MenuItem holderItem : holder.getItems()) {
+      for (final MenuItem holderItem : holder.getItems()) {
         inventory.setItem(holderItem.getSlot(), holderItem.getItem());
       }
     });
@@ -112,9 +111,8 @@ public final class MenuItem {
   /**
    * After the item is clicked, it sets a property into the holder.
    *
-   * @param key Key
+   * @param key   Key
    * @param value Value for the key
-   *
    * @return MenuItem
    */
   public MenuItem setProperty(final String key, final Object value) {

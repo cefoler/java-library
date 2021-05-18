@@ -46,7 +46,7 @@ public final class ConcurrentRegistry<T, U> extends AbstractRegistry<T, U> {
   /**
    * Creates ConcurrentAbstractRegistry from another map
    *
-   * @param map Map<T, U>
+   * @param map Map
    */
   public ConcurrentRegistry(final Map<T, U> map) {
     super(new ConcurrentHashMap<>(map));

@@ -2,10 +2,9 @@ package com.celeste.library.spigot.model.paginator.impl;
 
 import com.celeste.library.spigot.model.menu.MenuHolder;
 import com.celeste.library.spigot.util.item.ItemBuilder;
+import java.util.List;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
-
-import java.util.List;
 
 public final class MenuPaginatorImpl<T> extends PaginatorImpl<T> {
 
@@ -17,10 +16,10 @@ public final class MenuPaginatorImpl<T> extends PaginatorImpl<T> {
   }
 
   /**
-   * Setups the default items on the menu depending
-   * on the Source size and page.
+   * Setups the default items on the menu depending on the Source size and page.
    *
-   * @param slots Integer of the slots that each item will be, first is for previous and second for next
+   * @param slots Integer of the slots that each item will be, first is for previous and second for
+   *              next
    */
   public void setup(final Integer[] slots) {
     if (getCurrentPage() > 0) {

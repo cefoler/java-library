@@ -1,24 +1,22 @@
 package com.celeste.library.spigot.model.menu;
 
+import java.util.ArrayList;
+import java.util.Properties;
 import lombok.Getter;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.inventory.InventoryOpenEvent;
 import org.bukkit.inventory.ItemStack;
 
-import java.util.ArrayList;
-import java.util.Properties;
-
 /**
- * The Menu class should be extended on the class that
- * will create the Menu
+ * The AbstractMenu class should be extended on the class that will create the AbstractMenu
  *
  * <p>When extended, the constructor will create a super with Title and Size
- * For modifications on the inventory, you should create the onRender,
- * onOpen and onClose on the class extended by Menu.</p>
+ * For modifications on the inventory, you should create the onRender, onOpen and onClose on the
+ * class extended by AbstractMenu.</p>
  */
 @Getter
-public abstract class Menu {
+public abstract class AbstractMenu {
 
   private final String title;
   private final int size;
@@ -26,12 +24,12 @@ public abstract class Menu {
   private final ArrayList<MenuItem> items;
 
   /**
-   * Creates the Menu with the title and size specified.
+   * Creates the AbstractMenu with the title and size specified.
    *
    * @param title String
-   * @param size int
+   * @param size  int
    */
-  public Menu(final String title, final int size) {
+  public AbstractMenu(final String title, final int size) {
     this.title = title;
     this.size = size;
     this.items = new ArrayList<>(size);
@@ -42,7 +40,6 @@ public abstract class Menu {
    *
    * @param slot Int
    * @param item ItemStack
-   *
    * @return MenuItem
    */
   public final MenuItem slot(final int slot, final ItemStack item) {
@@ -63,7 +60,7 @@ public abstract class Menu {
   /**
    * Event when the menu is opened
    *
-   * @param event InventoryOpenEvent for the Menu
+   * @param event  InventoryOpenEvent for the AbstractMenu
    * @param holder MenuHolder
    */
   public abstract void onOpen(final InventoryOpenEvent event, final MenuHolder holder);
@@ -71,16 +68,15 @@ public abstract class Menu {
   /**
    * Event when the menu is opened
    *
-   * @param event InventoryCloseEvent for the Menu
+   * @param event  InventoryCloseEvent for the AbstractMenu
    * @param holder MenuHolder
    */
   public abstract void onClose(final InventoryCloseEvent event, final MenuHolder holder);
 
   /**
-   * Shows the player the Menu, this method doesn't contains
-   * Any properties.
+   * Shows the player the AbstractMenu, this method doesn't contains Any properties.
    *
-   * @param player The player that will open the Menu
+   * @param player The player that will open the AbstractMenu
    * @return MenuHolder
    */
   public final MenuHolder show(final Player player) {
@@ -88,11 +84,10 @@ public abstract class Menu {
   }
 
   /**
-   * Shows the player the Menu.
+   * Shows the player the AbstractMenu.
    *
-   * @param player The player that will open the Menu
-   * @param properties ImmutableMap of properties needed on the Menu class
-   *
+   * @param player     The player that will open the AbstractMenu
+   * @param properties ImmutableMap of properties needed on the AbstractMenu class
    * @return MenuHolder
    */
   public final MenuHolder show(final Player player, final Properties properties) {
@@ -103,12 +98,10 @@ public abstract class Menu {
   }
 
   /**
-   * Shows the player the Menu and provides the page
-   * for the properties.
+   * Shows the player the AbstractMenu and provides the page for the properties.
    *
-   * @param player The player that will open the Menu
-   * @param page Page number
-   *
+   * @param player The player that will open the AbstractMenu
+   * @param page   Page number
    * @return MenuHolder
    */
   public final MenuHolder show(final Player player, final int page) {

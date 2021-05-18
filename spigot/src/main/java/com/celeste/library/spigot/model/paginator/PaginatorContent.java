@@ -1,9 +1,8 @@
 package com.celeste.library.spigot.model.paginator;
 
+import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Data;
-
-import java.util.List;
 
 @Data
 @AllArgsConstructor

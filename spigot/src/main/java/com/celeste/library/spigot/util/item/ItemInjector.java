@@ -1,16 +1,15 @@
 package com.celeste.library.spigot.util.item;
 
-import com.celeste.library.spigot.util.ReflectionUtil;
+import static com.celeste.library.spigot.util.ReflectionNms.invoke;
+import static com.celeste.library.spigot.util.ReflectionNms.invokeStatic;
+
+import com.celeste.library.spigot.util.ReflectionNms;
+import java.lang.reflect.Constructor;
+import java.lang.reflect.Method;
 import lombok.AllArgsConstructor;
 import lombok.SneakyThrows;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
-import org.jetbrains.annotations.NotNull;
-
-import java.lang.reflect.Constructor;
-import java.lang.reflect.Method;
-
-import static com.celeste.library.spigot.util.ReflectionUtil.*;
 
 @AllArgsConstructor
 public final class ItemInjector {
@@ -19,7 +18,7 @@ public final class ItemInjector {
 
   private final Class<?> ctsClass;
   private final Class<?> isClass;
-  private final Class<?> NTCClass;
+  private final Class<?> NtcClass;
 
   private final Method asNMSCopy;
   private final Method hasTag;
@@ -30,14 +29,14 @@ public final class ItemInjector {
   public ItemInjector(final ItemStack item) {
     this.item = item;
 
-    ctsClass = getOBC("inventory.CraftItemStack");
-    isClass = getNMS("ItemStack");
-    NTCClass = getNMS("NBTTagCompound");
+    ctsClass = ReflectionNms.getOBC("inventory.CraftItemStack");
+    isClass = ReflectionNms.getNMS("ItemStack");
+    NtcClass = ReflectionNms.getNMS("NBTTagCompound");
 
-    asNMSCopy = getMethod(ctsClass, "asNMSCopy", ItemStack.class);
-    hasTag = getMethod(isClass, "hasTag");
-    getTag = getMethod(isClass, "getTag");
-    getString = getMethod(NTCClass, "getString", String.class);
+    asNMSCopy = ReflectionNms.getMethod(ctsClass, "asNMSCopy", ItemStack.class);
+    hasTag = ReflectionNms.getMethod(isClass, "hasTag");
+    getTag = ReflectionNms.getMethod(isClass, "getTag");
+    getString = ReflectionNms.getMethod(NtcClass, "getString", String.class);
   }
 
   @SneakyThrows
@@ -61,32 +60,35 @@ public final class ItemInjector {
   public void set(@NotNull final String key, @NotNull final Object value) {
     item.setItemMeta(item.getItemMeta());
 
-    final Class<?> craftItemStackClazz = getOBC("inventory.CraftItemStack");
-    final Class<?> itemStackClazz = getNMS("ItemStack");
-    final Class<?> compoundClazz = getNMS("NBTTagCompound");
+    final Class<?> craftItemStackClazz = ReflectionNms.getOBC("inventory.CraftItemStack");
+    final Class<?> itemStackClazz = ReflectionNms.getNMS("ItemStack");
+    final Class<?> compoundClazz = ReflectionNms.getNMS("NBTTagCompound");
 
-    final Method asNMSCopy = ReflectionUtil.getMethod(craftItemStackClazz, "asNMSCopy", ItemStack.class);
-    final Method hasTag = ReflectionUtil.getMethod(itemStackClazz, "hasTag");
-    final Method getTag = ReflectionUtil.getMethod(itemStackClazz, "getTag");
+    final Method asNMSCopy = ReflectionNms
+        .getMethod(craftItemStackClazz, "asNMSCopy", ItemStack.class);
+    final Method hasTag = ReflectionNms.getMethod(itemStackClazz, "hasTag");
+    final Method getTag = ReflectionNms.getMethod(itemStackClazz, "getTag");
 
-    final Object nmsItem = ReflectionUtil.invokeStatic(asNMSCopy, item);
-    final boolean isExist = (Boolean) ReflectionUtil.invoke(hasTag, nmsItem);
-    final Object compound = isExist ? ReflectionUtil.invoke(getTag, nmsItem) : compoundClazz.newInstance();
+    final Object nmsItem = ReflectionNms.invokeStatic(asNMSCopy, item);
+    final boolean isExist = (Boolean) ReflectionNms.invoke(hasTag, nmsItem);
+    final Object compound =
+        isExist ? ReflectionNms.invoke(getTag, nmsItem) : compoundClazz.newInstance();
 
-    final Class<?> tagClazz = getNMS("NBTTagString");
-    final Class<?> baseClazz = getNMS("NBTBase");
+    final Class<?> tagClazz = ReflectionNms.getNMS("NBTTagString");
+    final Class<?> baseClazz = ReflectionNms.getNMS("NBTBase");
 
-    final Constructor<?> tagCon = ReflectionUtil.getDcConstructor(tagClazz, String.class);
+    final Constructor<?> tagCon = ReflectionNms.getDcConstructor(tagClazz, String.class);
 
-    final Method set = ReflectionUtil.getMethod(compoundClazz, "set", String.class, baseClazz);
-    final Method setTag = ReflectionUtil.getMethod(itemStackClazz, "setTag", compoundClazz);
-    final Method getItemMeta = ReflectionUtil.getMethod(craftItemStackClazz, "getItemMeta", itemStackClazz);
+    final Method set = ReflectionNms.getMethod(compoundClazz, "set", String.class, baseClazz);
+    final Method setTag = ReflectionNms.getMethod(itemStackClazz, "setTag", compoundClazz);
+    final Method getItemMeta = ReflectionNms
+        .getMethod(craftItemStackClazz, "getItemMeta", itemStackClazz);
 
-    final Object tag = ReflectionUtil.instance(tagCon, value.toString());
-    ReflectionUtil.invoke(set, compound, key, tag);
-    ReflectionUtil.invoke(setTag, nmsItem, compound);
+    final Object tag = ReflectionNms.instance(tagCon, value.toString());
+    ReflectionNms.invoke(set, compound, key, tag);
+    ReflectionNms.invoke(setTag, nmsItem, compound);
 
-    item.setItemMeta((ItemMeta) ReflectionUtil.invokeStatic(getItemMeta, nmsItem));
+    item.setItemMeta((ItemMeta) ReflectionNms.invokeStatic(getItemMeta, nmsItem));
   }
 
   public ItemStack inject() {

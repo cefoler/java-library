@@ -35,7 +35,7 @@ public final class MapRegistry<T, U> extends AbstractRegistry<T, U> {
   /**
    * Creates a new MapAbstractRegistry from another map
    *
-   * @param map Map<T, U>
+   * @param map Map
    */
   public MapRegistry(final Map<T, U> map) {
     super(new HashMap<>(map));

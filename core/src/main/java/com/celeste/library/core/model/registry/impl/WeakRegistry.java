@@ -35,7 +35,7 @@ public final class WeakRegistry<T, U> extends AbstractRegistry<T, U> {
   /**
    * Creates a new WeakAbstractRegistry from another map
    *
-   * @param map Map<T, U>
+   * @param map Map
    */
   public WeakRegistry(final Map<T, U> map) {
     super(new WeakHashMap<>(map));

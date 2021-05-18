@@ -1,17 +1,15 @@
 package com.celeste.library.spigot.util.message;
 
+import static com.celeste.library.spigot.util.ReflectionNms.getNMS;
+import static com.celeste.library.spigot.util.ReflectionNms.sendPacket;
+
+import java.lang.reflect.Constructor;
+import java.lang.reflect.Method;
 import lombok.Getter;
 import lombok.SneakyThrows;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-import org.jetbrains.annotations.NotNull;
-
-import java.lang.reflect.Constructor;
-import java.lang.reflect.Method;
-
-import static com.celeste.library.spigot.util.ReflectionUtil.getNMS;
-import static com.celeste.library.spigot.util.ReflectionUtil.sendPacket;
 
 @Getter
 public final class TitleUtil {
@@ -54,8 +52,11 @@ public final class TitleUtil {
   }
 
   @SneakyThrows
-  public final void send(final CommandSender sender, @NotNull final String title, @NotNull final String subTitle) {
-    if (!(sender instanceof Player)) return;
+  public final void send(final CommandSender sender, @NotNull final String title,
+      @NotNull final String subTitle) {
+    if (!(sender instanceof Player)) {
+      return;
+    }
 
     final Player player = (Player) sender;
 
@@ -66,7 +67,7 @@ public final class TitleUtil {
     final Object titlePacket = ppotTextCon.newInstance(typeTitle, titleChatBase);
     sendPacket(player, titlePacket);
 
-    final Object subChatBase = method.invoke(null,"{\"text\":\"" + subTitle + "\"}");
+    final Object subChatBase = method.invoke(null, "{\"text\":\"" + subTitle + "\"}");
     final Object subPacket = ppotTextCon.newInstance(typeSubTitle, subChatBase);
     sendPacket(player, subPacket);
 
@@ -81,7 +82,7 @@ public final class TitleUtil {
     final Object titlePacket = ppotTextCon.newInstance(typeTitle, titleChatBase);
     Bukkit.getOnlinePlayers().forEach(player -> sendPacket(player, titlePacket));
 
-    final Object chatBase = method.invoke(null,"{\"text\":\"" + subTitle + "\"}");
+    final Object chatBase = method.invoke(null, "{\"text\":\"" + subTitle + "\"}");
     final Object packet = ppotTextCon.newInstance(typeSubTitle, chatBase);
     Bukkit.getOnlinePlayers().forEach(player -> sendPacket(player, packet));
   }

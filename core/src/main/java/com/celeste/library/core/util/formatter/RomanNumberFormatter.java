@@ -2,7 +2,6 @@ package com.celeste.library.core.util.formatter;
 
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
-import org.jetbrains.annotations.NotNull;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public final class RomanNumberFormatter {

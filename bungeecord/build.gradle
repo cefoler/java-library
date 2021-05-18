@@ -1,10 +1,21 @@
-plugins {
-    id "com.github.johnrengelman.shadow" version "6.1.0"
-}
-
 dependencies {
+    /**
+     * BUNGEECORD DEPENDENCY
+     */
     compileOnly 'net.md-5:bungeecord-api:1.16-R0.4'
+
+    /**
+     * BUNGEECORD FRAMEWORK
+     */
     implementation 'com.github.SaiintBrisson.command-framework:bungee:1.2.0'
 
+    /**
+     * REFLECTION FRAMEWORK
+     */
     implementation 'org.reflections:reflections:0.9.12'
+
+    /**
+     * SHARED FRAMEWORK
+     */
+    implementation project(":core")
 }

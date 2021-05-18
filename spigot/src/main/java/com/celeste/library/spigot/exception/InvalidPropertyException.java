@@ -1,7 +1,5 @@
 package com.celeste.library.spigot.exception;
 
-import org.jetbrains.annotations.NotNull;
-
 public class InvalidPropertyException extends RuntimeException {
 
   public InvalidPropertyException(@NotNull final String error) {

@@ -6,8 +6,8 @@ import org.bukkit.event.Cancellable;
 
 @Data
 @EqualsAndHashCode(callSuper = true)
-public abstract class AbstractCancellableEventWrapper extends AbstractEventWrapper implements Cancellable {
+public abstract class AbstractCancellableEvent extends AbstractEvent implements Cancellable {
 
-    private boolean cancelled;
+  private boolean cancelled;
 
 }

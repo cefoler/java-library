@@ -1,13 +1,11 @@
 package com.celeste.library.spigot.util.item.type;
 
 import com.google.common.collect.ImmutableList;
+import java.util.Arrays;
+import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import org.bukkit.enchantments.Enchantment;
-import org.jetbrains.annotations.NotNull;
-
-import java.util.Arrays;
-import java.util.List;
 
 @Getter
 @AllArgsConstructor
@@ -42,7 +40,8 @@ public enum EnchantmentType {
   PROTECTION_EXPLOSIONS("PROTECTION_EXPLOSIONS", "BLASTPROTECTION", "BLAST_PROTECTION", "BLAST"),
   PROTECTION_FALL("PROTECTION_FALL", "FEATHERFALLING", "FEATHER_FALLING", "FEATHER", "FALLING"),
   PROTECTION_FIRE("PROTECTION_FIRE", "FIREPROTECTION", "FIRE_PROTECTION"),
-  PROTECTION_PROJECTILE("PROTECTION_PROJECTILE", "PROJECTILEPROTECTION", "PROJECTILE_PROTECTION", "PROJECTILE"),
+  PROTECTION_PROJECTILE("PROTECTION_PROJECTILE", "PROJECTILEPROTECTION", "PROJECTILE_PROTECTION",
+      "PROJECTILE"),
   QUICK_CHARGE("QUICK_CHARGE", "QUICKCHARGE", "QUICK", "CHARGE", "FAST_CHARGE", "FASTCHARGE"),
   RIPTIDE("RIPTIDE", "RIP", "TIDE"),
   SILK_TOUCH("SILK_TOUCH", "SILKTOUCH", "ST"),
@@ -54,22 +53,22 @@ public enum EnchantmentType {
 
   private final List<String> names;
 
-  EnchantmentType(@NotNull final String... names) {
+  EnchantmentType(final String... names) {
     this.names = ImmutableList.copyOf(names);
   }
 
   /**
    * Returns the enchantment from that type
-   * @param enchant EnchantmentType
    *
+   * @param enchant EnchantmentType
    * @return Enchantment
    */
-  @NotNull
-  public static Enchantment getEnchantment(@NotNull final String enchant) {
+  public static Enchantment getEnchantment(final String enchant) {
     final EnchantmentType enchantmentType = Arrays.stream(values())
         .filter(type -> type.getNames().contains(enchant.toUpperCase()))
         .findFirst()
-        .orElseThrow(() -> new IllegalArgumentException("The enchantment " + enchant.toUpperCase() + " was not found"));
+        .orElseThrow(() -> new IllegalArgumentException(
+            "The enchantment " + enchant.toUpperCase() + " was not found"));
 
     return Enchantment.getByName(enchantmentType.getNames().get(1));
   }

@@ -5,7 +5,6 @@ import java.util.Comparator;
 import java.util.Map;
 import java.util.SortedMap;
 import java.util.TreeMap;
-import org.jetbrains.annotations.NotNull;
 
 public final class TreeRegistry<T, U> extends AbstractRegistry<T, U> {
 

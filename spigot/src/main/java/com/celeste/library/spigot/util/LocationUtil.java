@@ -1,18 +1,16 @@
 package com.celeste.library.spigot.util;
 
+import java.util.StringJoiner;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
-import org.jetbrains.annotations.NotNull;
-
-import java.util.StringJoiner;
 
 public final class LocationUtil {
 
   /**
    * Serializes a location into a String
-   * @param location Location
-   * @param yawAndPitch boolean
    *
+   * @param location    Location
+   * @param yawAndPitch boolean
    * @return String
    */
   public static String serialize(@NotNull final Location location, final boolean yawAndPitch) {
@@ -33,8 +31,8 @@ public final class LocationUtil {
 
   /**
    * Deserializes a location
-   * @param serializedLocation String
    *
+   * @param serializedLocation String
    * @return Location
    */
   public static Location deserialize(@NotNull final String serializedLocation) {

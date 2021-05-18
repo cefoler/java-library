@@ -1,7 +1,7 @@
 package com.celeste.library.spigot.util.message;
 
-import static com.celeste.library.spigot.util.ReflectionUtil.getNMS;
-import static com.celeste.library.spigot.util.ReflectionUtil.getOBC;
+import static com.celeste.library.spigot.util.ReflectionNms.getNMS;
+import static com.celeste.library.spigot.util.ReflectionNms.getOBC;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
@@ -13,16 +13,19 @@ import org.bukkit.entity.Player;
 
 @Getter
 @Builder
-public class JSONBuilder {
+public class JsonBuilder {
 
+  private static String text;
   private Class<?> cp;
   private Constructor<?> ppocc;
   private Method a, getHandle, sendPacket;
   private Field pcf;
-
   private String json = "{\"text\":\"" + text + "\"}";
-
-  public JSONBuilder() {
+  private String hover;
+  private String click;
+  private HoverEventType hoverAction;
+  private ClickEventType clickAction;
+  public JsonBuilder() {
     try {
       final Class<?> cbc = getNMS("IChatBaseComponent");
       final Class<?> ppoc = getNMS("PacketPlayOutChat");
@@ -43,30 +46,27 @@ public class JSONBuilder {
     }
   }
 
-  private static String text;
-  private String hover;
-  private String click;
-
-  private HoverEventType hoverAction;
-  private ClickEventType clickAction;
-
-  public JSONBuilder build() {
+  public JsonBuilder build() {
     if (getClick() == null && getHover() == null) {
       json = "{\"text\":\"" + text + "\"}";
       return this;
     }
 
     if (getClick() == null && getHover() != null) {
-      json = "{\"text\":\"" + text + "\",\"hoverEvent\":{\"action\":\"" + hoverAction.getName() + "\",\"value\":\"" + hover + "\"}}";
+      json = "{\"text\":\"" + text + "\",\"hoverEvent\":{\"action\":\"" + hoverAction.getName()
+          + "\",\"value\":\"" + hover + "\"}}";
       return this;
     }
     if (getClick() != null && getHover() != null) {
-      json = "{\"text\":\"" + text + "\",\"clickEvent\":{\"action\":\"" + clickAction.getName() + "\",\"value\":\"" + click + "\"},\"hoverEvent\":{\"action\":\"" + hoverAction.getName() + "\",\"value\":\"" + hover + "\"}}";
+      json = "{\"text\":\"" + text + "\",\"clickEvent\":{\"action\":\"" + clickAction.getName()
+          + "\",\"value\":\"" + click + "\"},\"hoverEvent\":{\"action\":\"" + hoverAction.getName()
+          + "\",\"value\":\"" + hover + "\"}}";
       return this;
     }
 
     if (getClick() != null && getHover() == null) {
-      json = "{\"text\":\"" + text + "\",\"clickEvent\":{\"action\":\"" + clickAction.getName() + "\",\"value\":\"" + click + "\"}}";
+      json = "{\"text\":\"" + text + "\",\"clickEvent\":{\"action\":\"" + clickAction.getName()
+          + "\",\"value\":\"" + click + "\"}}";
       return this;
     }
 

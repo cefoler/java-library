@@ -1,21 +1,19 @@
 package com.celeste.library.spigot.util.item;
 
-import org.bukkit.inventory.ItemStack;
-import org.bukkit.util.io.BukkitObjectInputStream;
-import org.bukkit.util.io.BukkitObjectOutputStream;
-import org.jetbrains.annotations.NotNull;
-import org.yaml.snakeyaml.external.biz.base64Coder.Base64Coder;
-
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.util.Base64;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.util.io.BukkitObjectInputStream;
+import org.bukkit.util.io.BukkitObjectOutputStream;
 
 public final class ItemSerializer {
 
   /**
    * Serializes those items into bytes
-   * @param items Itemstack...
    *
+   * @param items Itemstack...
    * @return String
    * @throws IOException Throws if it wasn't able to put the items into byte
    */
@@ -30,23 +28,24 @@ public final class ItemSerializer {
         objectOutput.writeObject(item);
       }
 
-      return Base64Coder.encodeLines(arrayOutput.toByteArray());
+      return Base64.getEncoder().encodeToString(arrayOutput.toByteArray());
     }
   }
 
   /**
    * Deserializes the items into ItemStack again
+   *
    * @param serializedItems String
-   *
    * @return ItemStack[]
-   *
-   * @throws IOException Throws if a error occurs during deserialization
+   * @throws IOException            Throws if a error occurs during deserialization
    * @throws ClassNotFoundException Throws when it wasn't able to find the class
    */
   @NotNull
-  public static ItemStack[] deserialize(@NotNull final String serializedItems) throws IOException, ClassNotFoundException {
+  public static ItemStack[] deserialize(@NotNull final String serializedItems)
+      throws IOException, ClassNotFoundException {
     try (
-        ByteArrayInputStream arrayInput = new ByteArrayInputStream(Base64Coder.decodeLines(serializedItems));
+        ByteArrayInputStream arrayInput = new ByteArrayInputStream(
+            Base64.getDecoder().decode(serializedItems));
         BukkitObjectInputStream objectInput = new BukkitObjectInputStream(arrayInput)
     ) {
       final ItemStack[] items = new ItemStack[objectInput.readInt()];
