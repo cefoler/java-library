@@ -20,7 +20,7 @@ public abstract class AbstractEvent extends Event {
   /**
    * @return HandlerList
    */
-  @Override @NotNull
+  @Override
   public HandlerList getHandlers() {
     return HANDLER_LIST;
   }

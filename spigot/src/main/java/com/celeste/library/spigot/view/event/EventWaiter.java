@@ -1,6 +1,6 @@
 package com.celeste.library.spigot.view.event;
 
-import com.google.gson.reflect.TypeToken;
+import com.google.common.reflect.TypeToken;
 import java.lang.reflect.Type;
 import java.util.Objects;
 import java.util.function.Consumer;
@@ -16,32 +16,38 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.plugin.Plugin;
 
 @Getter(AccessLevel.PACKAGE)
-public final class EventWaiter<E extends Event> {
+public final class EventWaiter<T extends Event> {
 
-  private final Class<E> event;
-  private final boolean ignoreCancelled;
-  private Predicate<E> filter;
-  private Consumer<E> action;
+  private final Class<T> event;
+  private final boolean cancelled;
+
+  private Predicate<T> filter;
+  private Consumer<T> action;
+
   @Setter
   private int executions;
-  private boolean expireAfterExecute;
+  private boolean expire;
+
   private EventPriority priority;
 
   /**
    * Event waiter constructor
    */
   @SneakyThrows
-  @SuppressWarnings("unchecked")
+  @SuppressWarnings({"UnstableApiUsage"})
   public EventWaiter() {
-    final TypeToken<? extends EventWaiter> token = TypeToken.get(getClass());
+    final TypeToken<T> token = new TypeToken<T>(getClass()) { };
     final Type type = token.getType();
-    this.event = (Class<E>) Class.forName(type.getTypeName());
+
+    this.event = (Class<T>) Class.forName(type.getTypeName());
+    this.cancelled = true;
 
     this.filter = Objects::nonNull;
-    this.expireAfterExecute = false;
+
     this.executions = 0;
+    this.expire = false;
+
     this.priority = EventPriority.NORMAL;
-    this.ignoreCancelled = true;
   }
 
   /**
@@ -50,7 +56,7 @@ public final class EventWaiter<E extends Event> {
    * @param predicate Predicate of event
    * @return EventWaiter
    */
-  public EventWaiter<E> filter(final Predicate<E> predicate) {
+  public EventWaiter<T> filter(final Predicate<T> predicate) {
     filter = filter.and(predicate);
     return this;
   }
@@ -61,9 +67,9 @@ public final class EventWaiter<E extends Event> {
    * @param executions Integer
    * @return EventWaiter
    */
-  public EventWaiter<E> expire(final int executions) {
-    this.expireAfterExecute = true;
+  public EventWaiter<T> expire(final int executions) {
     this.executions = executions;
+    this.expire = true;
     return this;
   }
 
@@ -73,7 +79,7 @@ public final class EventWaiter<E extends Event> {
    * @param priority EventPriority
    * @return EventWaiter
    */
-  public EventWaiter<E> priority(final EventPriority priority) {
+  public EventWaiter<T> priority(final EventPriority priority) {
     this.priority = priority;
     return this;
   }
@@ -84,7 +90,7 @@ public final class EventWaiter<E extends Event> {
    * @param consumer Consumer of the event
    * @return EventWaiter
    */
-  public EventWaiter<E> handler(final Consumer<E> consumer) {
+  public EventWaiter<T> handler(final Consumer<T> consumer) {
     if (action != null) {
       action = action.andThen(consumer);
       return this;
@@ -100,9 +106,8 @@ public final class EventWaiter<E extends Event> {
    * @param plugin Plugin
    */
   public void build(final Plugin plugin) {
-    final EventListener<E> executor = new EventListener<>(this);
-    Bukkit.getPluginManager()
-        .registerEvent(event, executor, priority, executor, plugin, ignoreCancelled);
+    final EventListener<T> executor = new EventListener<>(this);
+    Bukkit.getPluginManager().registerEvent(event, executor, priority, executor, plugin, cancelled);
   }
 
   /**
@@ -110,7 +115,7 @@ public final class EventWaiter<E extends Event> {
    *
    * @return EventWaiter
    */
-  public EventWaiter<E> cancel() {
+  public EventWaiter<T> cancel() {
     return handler(event -> {
       if (event instanceof Cancellable) {
         ((Cancellable) event).setCancelled(true);

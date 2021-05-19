@@ -13,28 +13,32 @@ public final class EventListener<T extends Event> implements Listener, EventExec
   private final EventWaiter<T> builder;
 
   @Override
-  public void execute(final Listener listener, final Event eventOne) {
-    if (!builder.getEvent().isInstance(eventOne)) {
+  public void execute(final Listener listener, final Event event) {
+    final Class<T> clazz = builder.getEvent();
+
+    if (!clazz.isInstance(event)) {
       return;
     }
 
-    final T event = builder.getEvent().cast(eventOne);
-    if (builder.getFilter().negate().test(event)) {
+    final T newEvent = clazz.cast(event);
+    if (builder.getFilter().negate().test(newEvent)) {
       return;
     }
 
     final Consumer<T> action = builder.getAction();
     if (action != null) {
-      action.accept(event);
+      action.accept(newEvent);
     }
 
-    if (builder.isExpireAfterExecute()) {
-      if (builder.getExecutions() == 0) {
+    if (builder.isExpire()) {
+      final int executions = builder.getExecutions();
+
+      if (executions == 0) {
         unregister();
         return;
       }
 
-      builder.setExecutions(builder.getExecutions() - 1);
+      builder.setExecutions(executions - 1);
     }
   }
 
@@ -42,9 +46,7 @@ public final class EventListener<T extends Event> implements Listener, EventExec
    * Unregisters the event
    */
   public void unregister() {
-    for (HandlerList handlerList : HandlerList.getHandlerLists()) {
-      handlerList.unregister(this);
-    }
+    HandlerList.getHandlerLists().forEach(handler -> handler.unregister(this));
   }
 
 }
