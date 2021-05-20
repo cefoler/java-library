@@ -1,6 +1,7 @@
 package com.celeste.library.spigot.model.menu;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Properties;
 import lombok.Getter;
 import org.bukkit.entity.Player;
@@ -16,12 +17,12 @@ import org.bukkit.inventory.ItemStack;
  * class extended by AbstractMenu.</p>
  */
 @Getter
-public abstract class AbstractMenu {
+public abstract class AbstractMenu implements Menu {
 
   private final String title;
   private final int size;
 
-  private final ArrayList<MenuItem> items;
+  private final List<MenuItem> items;
 
   /**
    * Creates the AbstractMenu with the title and size specified.
@@ -32,46 +33,9 @@ public abstract class AbstractMenu {
   public AbstractMenu(final String title, final int size) {
     this.title = title;
     this.size = size;
+
     this.items = new ArrayList<>(size);
   }
-
-  /**
-   * Sets the item on the specific slot.
-   *
-   * @param slot Int
-   * @param item ItemStack
-   * @return MenuItem
-   */
-  public final MenuItem slot(final int slot, final ItemStack item) {
-    final MenuItem menuItem = new MenuItem(slot).item(item);
-    items.set(slot, menuItem);
-
-    return menuItem;
-  }
-
-  /**
-   * Event when the menu is rendered
-   *
-   * @param player Player that will render the menu
-   * @param holder MenuHolder
-   */
-  public abstract void onRender(final Player player, final MenuHolder holder);
-
-  /**
-   * Event when the menu is opened
-   *
-   * @param event  InventoryOpenEvent for the AbstractMenu
-   * @param holder MenuHolder
-   */
-  public abstract void onOpen(final InventoryOpenEvent event, final MenuHolder holder);
-
-  /**
-   * Event when the menu is opened
-   *
-   * @param event  InventoryCloseEvent for the AbstractMenu
-   * @param holder MenuHolder
-   */
-  public abstract void onClose(final InventoryCloseEvent event, final MenuHolder holder);
 
   /**
    * Shows the player the AbstractMenu, this method doesn't contains Any properties.
@@ -112,6 +76,20 @@ public abstract class AbstractMenu {
     holder.show(player);
 
     return holder;
+  }
+
+  /**
+   * Sets the item on the specific slot.
+   *
+   * @param slot Int
+   * @param item ItemStack
+   * @return MenuItem
+   */
+  public final MenuItem slot(final int slot, final ItemStack item) {
+    final MenuItem menuItem = new MenuItem(slot).item(item);
+    items.set(slot, menuItem);
+
+    return menuItem;
   }
 
 }

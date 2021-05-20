@@ -1,36 +1,19 @@
 package com.celeste.library.spigot.model.paginator;
 
-import com.celeste.library.spigot.model.paginator.impl.MenuPaginatorImpl;
+import com.celeste.library.spigot.model.paginator.impl.MenuPaginator;
 import com.celeste.library.spigot.model.paginator.impl.PaginatorImpl;
-import java.util.Set;
+import java.util.List;
 
 /**
- * The Paginator interface is the main creator for paginators.
+ * The Paginator interface is the main creator for paginator.
  *
  * <p>Here you can access universal methods for
- * each of the paginators</p>
+ * each of the paginator</p>
  *
- * <p>Type of paginators: {@link PaginatorImpl} for Object paginator and
- * {@link MenuPaginatorImpl} for Object paginator with AbstractMenu features}</p>
+ * <p>Type of paginator: {@link PaginatorImpl} for Object paginator and
+ * {@link MenuPaginator} for Object paginator with AbstractMenu features}</p>
  */
 public interface Paginator<T> {
-
-  /**
-   * Returns the item from the source index
-   *
-   * @param index int
-   * @return T
-   */
-  T getItem(int index);
-
-  /**
-   * Checks if the Paginator contains the page in that index.
-   * <p>If contains, it returns true</p>
-   *
-   * @param index int
-   * @return Boolean
-   */
-  boolean hasPage(int index);
 
   /**
    * Returns the total pages of the Paginator
@@ -38,6 +21,15 @@ public interface Paginator<T> {
    * @return int
    */
   int totalPages();
+
+  /**
+   * Checks if the Paginator contains the page in that page.
+   * <p>If contains, it returns true</p>
+   *
+   * @param page int
+   * @return Boolean
+   */
+  boolean hasPage(final int page);
 
   /**
    * Checks if the paginator is in the first page
@@ -65,30 +57,32 @@ public interface Paginator<T> {
    *
    * @return Paginator
    */
-  Paginator<T> page(int index);
+  Paginator<T> page(final int page);
 
   /**
    * Goes to the previous page of the paginator
    */
-  void previous();
+  Paginator<T> previous();
 
   /**
    * Goes to the next page of the paginator
    */
-  void next();
+  Paginator<T> next();
 
   /**
-   * This can only be used for {@link MenuPaginatorImpl}, it creates the default previous and next
-   * items in the menu
+   * Returns the item from the source index
+   *
+   * @param index int
+   * @return T
    */
-  void setup(final Integer[] slots);
+  T getItem(final int index);
 
   /**
    * Gets the items contained on the page specified.
    *
-   * @param index int
+   * @param page int
    * @return Set
    */
-  Set<T> getItems(final int index);
+  List<T> getItems(final int page);
 
 }

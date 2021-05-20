@@ -1,7 +1,7 @@
 package com.celeste.library.spigot.util.message;
 
-import static com.celeste.library.spigot.util.ReflectionNms.getNMS;
-import static com.celeste.library.spigot.util.ReflectionNms.getOBC;
+import static com.celeste.library.spigot.util.ReflectionNms.getNms;
+import static com.celeste.library.spigot.util.ReflectionNms.getObc;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
@@ -27,18 +27,18 @@ public class JsonBuilder {
   private ClickEventType clickAction;
   public JsonBuilder() {
     try {
-      final Class<?> cbc = getNMS("IChatBaseComponent");
-      final Class<?> ppoc = getNMS("PacketPlayOutChat");
+      final Class<?> cbc = getNms("IChatBaseComponent");
+      final Class<?> ppoc = getNms("PacketPlayOutChat");
 
-      this.cp = getOBC("CraftPlayer");
-      final Class<?> entityPlayer = getNMS("EntityPlayer");
-      final Class<?> playerConnection = getNMS("PlayerConnection");
+      this.cp = getObc("CraftPlayer");
+      final Class<?> entityPlayer = getNms("EntityPlayer");
+      final Class<?> playerConnection = getNms("PlayerConnection");
 
       this.ppocc = ppoc.getConstructor(cbc, byte.class);
 
-      this.a = getNMS("IChatBaseComponent$ChatSerializer").getMethod("a", String.class);
+      this.a = getNms("IChatBaseComponent$ChatSerializer").getMethod("a", String.class);
       this.getHandle = cp.getMethod("getHandle");
-      this.sendPacket = playerConnection.getMethod("sendPacket", getNMS("Packet"));
+      this.sendPacket = playerConnection.getMethod("sendPacket", getNms("Packet"));
 
       pcf = entityPlayer.getDeclaredField("playerConnection");
     } catch (Exception exception) {

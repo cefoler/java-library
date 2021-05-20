@@ -20,7 +20,7 @@ public final class TreeRegistry<T, U> extends AbstractRegistry<T, U> {
    *
    * @param comparator Comparator
    */
-  public TreeRegistry(@NotNull final Comparator<? super T> comparator) {
+  public TreeRegistry(final Comparator<? super T> comparator) {
     super(new TreeMap<>(comparator));
   }
 
@@ -29,7 +29,7 @@ public final class TreeRegistry<T, U> extends AbstractRegistry<T, U> {
    *
    * @param sorted SortedMap
    */
-  public TreeRegistry(@NotNull final SortedMap<T, ? extends U> sorted) {
+  public TreeRegistry(final SortedMap<T, ? extends U> sorted) {
     super(new TreeMap<>(sorted));
   }
 

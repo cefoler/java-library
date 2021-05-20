@@ -2,11 +2,15 @@ package com.celeste.library.spigot.exception;
 
 public class InvalidPropertyException extends RuntimeException {
 
-  public InvalidPropertyException(@NotNull final String error) {
+  public InvalidPropertyException(final String error) {
     super(error);
   }
 
-  public InvalidPropertyException(@NotNull final String error, @NotNull final Throwable cause) {
+  public InvalidPropertyException(final Throwable cause) {
+    super(cause);
+  }
+
+  public InvalidPropertyException(final String error, final Throwable cause) {
     super(error, cause);
   }
 

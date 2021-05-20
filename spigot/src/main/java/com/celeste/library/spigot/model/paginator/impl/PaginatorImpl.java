@@ -1,43 +1,19 @@
 package com.celeste.library.spigot.model.paginator.impl;
 
-import com.celeste.library.spigot.exception.MenuException;
 import com.celeste.library.spigot.model.paginator.Paginator;
-import com.celeste.library.spigot.model.paginator.PaginatorContent;
-import java.util.LinkedHashSet;
+import com.celeste.library.spigot.model.paginator.AbstractPaginator;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 import lombok.Getter;
 
 @Getter
-public class PaginatorImpl<T> extends PaginatorContent<T> implements Paginator<T> {
+public class PaginatorImpl<T> extends AbstractPaginator<T> {
 
   private int currentPage;
 
-  public PaginatorImpl(final Integer[] shape, final List<T> source) {
+  public PaginatorImpl(final int[] shape, final List<T> source) {
     super(shape, source);
     this.currentPage = 1;
-  }
-
-  /**
-   * Returns the resource on that index
-   *
-   * @param index int
-   * @return T
-   */
-  @Override
-  public T getItem(final int index) {
-    return getSource().get(index);
-  }
-
-  /**
-   * Checks if it contains that page.
-   *
-   * @param index int
-   * @return boolean If exists
-   */
-  @Override
-  public boolean hasPage(final int index) {
-    return index >= 0 && index < totalPages();
   }
 
   /**
@@ -52,37 +28,14 @@ public class PaginatorImpl<T> extends PaginatorContent<T> implements Paginator<T
   }
 
   /**
-   * Gets all items registered on that page in the Paginator
+   * Checks if it contains that page.
    *
-   * @param page Integer
-   * @return List
+   * @param page int
+   * @return boolean If exists
    */
   @Override
-  public Set<T> getItems(final int page) {
-    final int sourceSize = getSource().size();
-    final int shapeLength = getShape().length;
-
-    final Set<T> items = new LinkedHashSet<>();
-
-    if (sourceSize == 0) {
-      return items;
-    }
-
-    if (sourceSize < shapeLength) {
-      return new LinkedHashSet<>(getSource());
-    }
-
-    if (page < 0 || page >= totalPages()) {
-      throw new MenuException(
-          "The page index must be more than 1 to a maximum of " + totalPages() + ", given: "
-              + page);
-    }
-
-    for (int i = shapeLength * page; i < shapeLength; i++) {
-      items.add(getSource().get(i));
-    }
-
-    return items;
+  public boolean hasPage(final int page) {
+    return page >= 0 && page < totalPages();
   }
 
   @Override
@@ -102,24 +55,67 @@ public class PaginatorImpl<T> extends PaginatorContent<T> implements Paginator<T
   }
 
   @Override
-  public Paginator<T> page(int index) {
-    this.currentPage = index;
+  public Paginator<T> page(final int page) {
+    this.currentPage = page;
     return this;
   }
 
   @Override
-  public void previous() {
+  public Paginator<T> previous() {
     this.currentPage = currentPage - 1;
+    return this;
   }
 
   @Override
-  public void next() {
+  public Paginator<T> next() {
     this.currentPage = currentPage + 1;
+    return this;
   }
 
+  /**
+   * Returns the resource on that index
+   *
+   * @param index int
+   * @return T
+   */
   @Override
-  public void setup(final Integer[] slots) {
-    // do nothing, this isn't implemented on PaginatorImpl.
+  public T getItem(final int index) {
+    return getSource().get(index);
+  }
+
+  /**
+   * Gets all items registered on that page in the Paginator
+   *
+   * @param page Integer
+   * @return List
+   */
+  @Override
+  public List<T> getItems(final int page) {
+    final int sourceSize = getSource().size();
+    final int shapeLength = getShape().length;
+
+    final List<T> items = new ArrayList<>();
+
+    if (sourceSize == 0) {
+      return items;
+    }
+
+    if (sourceSize < shapeLength) {
+      final List<T> source = getSource();
+      return new ArrayList<>(source);
+    }
+
+    if (page < 0 || page >= totalPages()) {
+      throw new ArrayIndexOutOfBoundsException("The page must be more than 1 to a maximum of "
+          + totalPages() + ", given: " + page);
+    }
+
+    for (int index = shapeLength * page; index < shapeLength; index++) {
+      final T item = getItem(index);
+      items.add(item);
+    }
+
+    return items;
   }
 
 }

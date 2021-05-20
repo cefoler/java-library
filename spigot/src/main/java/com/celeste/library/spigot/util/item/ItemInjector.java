@@ -29,9 +29,9 @@ public final class ItemInjector {
   public ItemInjector(final ItemStack item) {
     this.item = item;
 
-    ctsClass = ReflectionNms.getOBC("inventory.CraftItemStack");
-    isClass = ReflectionNms.getNMS("ItemStack");
-    NtcClass = ReflectionNms.getNMS("NBTTagCompound");
+    ctsClass = ReflectionNms.getObc("inventory.CraftItemStack");
+    isClass = ReflectionNms.getNms("ItemStack");
+    NtcClass = ReflectionNms.getNms("NBTTagCompound");
 
     asNMSCopy = ReflectionNms.getMethod(ctsClass, "asNMSCopy", ItemStack.class);
     hasTag = ReflectionNms.getMethod(isClass, "hasTag");
@@ -60,9 +60,9 @@ public final class ItemInjector {
   public void set(@NotNull final String key, @NotNull final Object value) {
     item.setItemMeta(item.getItemMeta());
 
-    final Class<?> craftItemStackClazz = ReflectionNms.getOBC("inventory.CraftItemStack");
-    final Class<?> itemStackClazz = ReflectionNms.getNMS("ItemStack");
-    final Class<?> compoundClazz = ReflectionNms.getNMS("NBTTagCompound");
+    final Class<?> craftItemStackClazz = ReflectionNms.getObc("inventory.CraftItemStack");
+    final Class<?> itemStackClazz = ReflectionNms.getNms("ItemStack");
+    final Class<?> compoundClazz = ReflectionNms.getNms("NBTTagCompound");
 
     final Method asNMSCopy = ReflectionNms
         .getMethod(craftItemStackClazz, "asNMSCopy", ItemStack.class);
@@ -74,8 +74,8 @@ public final class ItemInjector {
     final Object compound =
         isExist ? ReflectionNms.invoke(getTag, nmsItem) : compoundClazz.newInstance();
 
-    final Class<?> tagClazz = ReflectionNms.getNMS("NBTTagString");
-    final Class<?> baseClazz = ReflectionNms.getNMS("NBTBase");
+    final Class<?> tagClazz = ReflectionNms.getNms("NBTTagString");
+    final Class<?> baseClazz = ReflectionNms.getNms("NBTBase");
 
     final Constructor<?> tagCon = ReflectionNms.getDcConstructor(tagClazz, String.class);
 

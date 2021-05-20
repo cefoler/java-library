@@ -8,6 +8,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
+import org.bukkit.event.inventory.InventoryDragEvent;
 import org.bukkit.event.inventory.InventoryOpenEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
@@ -17,6 +18,7 @@ import org.bukkit.inventory.ItemStack;
 public final class MenuHolder implements InventoryHolder {
 
   private final Properties properties;
+
   private AbstractMenu menu;
   private Inventory inventory;
 
@@ -26,59 +28,15 @@ public final class MenuHolder implements InventoryHolder {
   /**
    * AbstractMenu holder constructor.
    *
-   * @param menu       AbstractMenu
+   * @param menu AbstractMenu
    * @param properties ImmutableMap of the properties.
    */
   public MenuHolder(final AbstractMenu menu, final Properties properties) {
     this.menu = menu;
+
     this.properties = properties;
+
     this.items = new MenuItem[menu.getSize()];
-  }
-
-  /**
-   * Puts the item on the specific slot.
-   *
-   * @param item ItemStack
-   * @param slot Slot
-   * @return MenuItem
-   */
-  public MenuItem slot(final int slot, final ItemStack item) {
-    final MenuItem menuItem = new MenuItem(slot).item(item);
-
-    items[slot] = menuItem;
-    return menuItem;
-  }
-
-  /**
-   * Reopens the AbstractMenu again with the new items set in the holder
-   */
-  public void reopen() {
-    inventory.clear();
-
-    for (final MenuItem item : getItems()) {
-      if (item == null || item.getItem() == null) {
-        return;
-      }
-
-      inventory.setItem(item.getSlot(), item.getItem());
-    }
-  }
-
-  /**
-   * Reopens the AbstractMenu again with the new items and a new title provided
-   */
-  public void reopen(final String title, final int size) {
-    inventory.clear();
-
-    for (final MenuItem item : getItems()) {
-      if (item == null || item.getItem() == null) {
-        return;
-      }
-
-      inventory.setItem(item.getSlot(), item.getItem());
-    }
-
-    // TODO: Change via packets the title
   }
 
   /**
@@ -86,16 +44,15 @@ public final class MenuHolder implements InventoryHolder {
    */
   public void show(final AbstractMenu menu, final Player player) {
     inventory.clear();
+
     menu.onRender(player, this);
 
-    for (MenuItem item : menu.getItems()) {
-      if (item == null || item.getItem() == null) {
-        return;
-      }
-
-      inventory.setItem(item.getSlot(), item.getItem());
-      slot(item.getSlot(), item.getItem());
-    }
+    menu.getItems().stream()
+        .filter(item -> item != null && item.getItem() != null)
+        .forEach(item -> {
+          inventory.setItem(item.getSlot(), item.getItem());
+          slot(item.getSlot(), item.getItem());
+        });
 
     this.menu = menu;
     this.items = new MenuItem[menu.getSize()];
@@ -110,17 +67,52 @@ public final class MenuHolder implements InventoryHolder {
    */
   public void show(final Player player) {
     menu.onRender(player, this);
+
     this.inventory = Bukkit.createInventory(this, menu.getSize(), menu.getTitle());
 
-    for (final MenuItem item : items) {
-      if (item == null) {
-        continue;
-      }
-
-      inventory.setItem(item.getSlot(), item.getItem());
-    }
+    menu.getItems().stream()
+        .filter(item -> item != null && item.getItem() != null)
+        .forEach(item -> inventory.setItem(item.getSlot(), item.getItem()));
 
     player.openInventory(inventory);
+  }
+
+  /**
+   * Reopens the AbstractMenu again with the new items set in the holder
+   */
+  public void reopen() {
+    inventory.clear();
+
+    menu.getItems().stream()
+        .filter(item -> item != null && item.getItem() != null)
+        .forEach(item -> inventory.setItem(item.getSlot(), item.getItem()));
+  }
+
+  /**
+   * Reopens the AbstractMenu again with the new items and a new title provided
+   */
+  public void reopen(final String title, final int size) {
+    inventory.clear();
+
+    menu.getItems().stream()
+        .filter(item -> item != null && item.getItem() != null)
+        .forEach(item -> inventory.setItem(item.getSlot(), item.getItem()));
+
+    // TODO: Change via packets the title
+  }
+
+  /**
+   * Puts the item on the specific slot.
+   *
+   * @param item ItemStack
+   * @param slot Slot
+   * @return MenuItem
+   */
+  public MenuItem slot(final int slot, final ItemStack item) {
+    final MenuItem menuItem = new MenuItem(slot).item(item);
+    items[slot] = menuItem;
+
+    return menuItem;
   }
 
   public void handleClick(final InventoryClickEvent event) {
@@ -145,6 +137,10 @@ public final class MenuHolder implements InventoryHolder {
 
   public void handleClose(final InventoryCloseEvent event) {
     menu.onClose(event, this);
+  }
+
+  public void handleDrag(final InventoryDragEvent event) {
+    menu.onDrag(event, this);
   }
 
   /**

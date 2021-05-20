@@ -1,6 +1,6 @@
 package com.celeste.library.spigot.util.message;
 
-import static com.celeste.library.spigot.util.ReflectionNms.getNMS;
+import static com.celeste.library.spigot.util.ReflectionNms.getNms;
 import static com.celeste.library.spigot.util.ReflectionNms.sendPacket;
 
 import java.lang.reflect.Constructor;
@@ -27,20 +27,20 @@ public final class TitleUtil {
 
   @SneakyThrows
   public TitleUtil() {
-    final Class<?> ppotClass = getNMS("PacketPlayOutTitle");
-    final Class<?> icbcClass = getNMS("IChatBaseComponent");
+    final Class<?> ppotClass = getNms("PacketPlayOutTitle");
+    final Class<?> icbcClass = getNms("IChatBaseComponent");
     final Class<?> etaClass;
 
     if (ppotClass.getDeclaredClasses().length > 0) {
       etaClass = ppotClass.getDeclaredClasses()[0];
     } else {
-      etaClass = getNMS("EnumTitleAction");
+      etaClass = getNms("EnumTitleAction");
     }
 
     if (icbcClass.getDeclaredClasses().length > 0) {
       method = icbcClass.getDeclaredClasses()[0].getMethod("a", String.class);
     } else {
-      method = getNMS("ChatSerializer").getMethod("a", String.class);
+      method = getNms("ChatSerializer").getMethod("a", String.class);
     }
 
     ppotTimeCon = ppotClass.getConstructor(etaClass, icbcClass, int.class, int.class, int.class);
@@ -52,8 +52,7 @@ public final class TitleUtil {
   }
 
   @SneakyThrows
-  public final void send(final CommandSender sender, @NotNull final String title,
-      @NotNull final String subTitle) {
+  public final void send(final CommandSender sender, final String title, final String subTitle) {
     if (!(sender instanceof Player)) {
       return;
     }
@@ -74,7 +73,7 @@ public final class TitleUtil {
   }
 
   @SneakyThrows
-  public final void sendAll(@NotNull final String title, @NotNull final String subTitle) {
+  public final void sendAll(final String title, final String subTitle) {
     final Object timePacket = ppotTimeCon.newInstance(time, null, 10, 10, 10);
     Bukkit.getOnlinePlayers().forEach(player -> sendPacket(player, timePacket));
 

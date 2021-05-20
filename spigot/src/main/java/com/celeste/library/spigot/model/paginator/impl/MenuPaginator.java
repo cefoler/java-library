@@ -6,11 +6,11 @@ import java.util.List;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 
-public final class MenuPaginatorImpl<T> extends PaginatorImpl<T> {
+public final class MenuPaginator<T> extends PaginatorImpl<T> {
 
   private final MenuHolder holder;
 
-  public MenuPaginatorImpl(final MenuHolder holder, final Integer[] shape, final List<T> source) {
+  public MenuPaginator(final MenuHolder holder, final int[] shape, final List<T> source) {
     super(shape, source);
     this.holder = holder;
   }
@@ -18,10 +18,10 @@ public final class MenuPaginatorImpl<T> extends PaginatorImpl<T> {
   /**
    * Setups the default items on the menu depending on the Source size and page.
    *
-   * @param slots Integer of the slots that each item will be, first is for previous and second for
-   *              next
+   * @param slots Integer of the slots that each item will be,
+   *              first is for previous and second for next
    */
-  public void setup(final Integer[] slots) {
+  public void setup(final int[] slots) {
     if (getCurrentPage() > 0) {
       holder.slot(slots[0], getDefaultPreviousItem())
           .setProperty("page", getCurrentPage() - 1)

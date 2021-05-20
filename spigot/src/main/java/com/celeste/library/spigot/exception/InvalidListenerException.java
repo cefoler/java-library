@@ -2,11 +2,15 @@ package com.celeste.library.spigot.exception;
 
 public class InvalidListenerException extends RuntimeException {
 
-  public InvalidListenerException(@NotNull final String error) {
+  public InvalidListenerException(final String error) {
     super(error);
   }
 
-  public InvalidListenerException(@NotNull final String error, Throwable cause) {
+  public InvalidListenerException(final Throwable cause) {
+    super(cause);
+  }
+
+  public InvalidListenerException(final String error, final Throwable cause) {
     super(error, cause);
   }
 

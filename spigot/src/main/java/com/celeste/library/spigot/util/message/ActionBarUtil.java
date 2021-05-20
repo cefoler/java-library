@@ -1,6 +1,6 @@
 package com.celeste.library.spigot.util.message;
 
-import static com.celeste.library.spigot.util.ReflectionNms.getNMS;
+import static com.celeste.library.spigot.util.ReflectionNms.getNms;
 import static com.celeste.library.spigot.util.ReflectionNms.isEqualsOrMoreRecent;
 import static com.celeste.library.spigot.util.ReflectionNms.sendPacket;
 
@@ -29,11 +29,11 @@ public final class ActionBarUtil {
   @SneakyThrows
   public ActionBarUtil() {
     final Class<?> cmtClass;
-    final Class<?> icbcClass = getNMS("IChatBaseComponent");
-    final Class<?> ppocClass = getNMS("PacketPlayOutChat");
+    final Class<?> icbcClass = getNms("IChatBaseComponent");
+    final Class<?> ppocClass = getNms("PacketPlayOutChat");
 
     if (isEqualsOrMoreRecent(12)) {
-      cmtClass = getNMS("ChatMessageType");
+      cmtClass = getNms("ChatMessageType");
       type = cmtClass.getEnumConstants()[2];
     } else {
       cmtClass = byte.class;
@@ -43,7 +43,7 @@ public final class ActionBarUtil {
     if (icbcClass.getDeclaredClasses().length > 0) {
       method = icbcClass.getDeclaredClasses()[0].getMethod("a", String.class);
     } else {
-      method = getNMS("ChatSerializer").getMethod("a", String.class);
+      method = getNms("ChatSerializer").getMethod("a", String.class);
     }
 
     if (isEqualsOrMoreRecent(16)) {

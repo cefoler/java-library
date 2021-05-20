@@ -6,6 +6,10 @@ public class InvalidCommandException extends RuntimeException {
     super(error);
   }
 
+  public InvalidCommandException(final Throwable cause) {
+    super(cause);
+  }
+
   public InvalidCommandException(final String error, final Throwable cause) {
     super(error, cause);
   }

@@ -1,7 +1,6 @@
 package com.celeste.library.core.util.formatter;
 
-import com.celeste.library.core.test.util.RegexPattern;
-import com.celeste.library.core.util.formatter.type.TimeMultiplier;
+import com.celeste.library.core.util.formatter.type.TimeType;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.TimeZone;
@@ -12,7 +11,12 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public final class DateFormatter {
 
-  private static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("MM/dd/yyyy HH:mm");
+  private static final SimpleDateFormat DATE_FORMAT;
+
+  static {
+    DATE_FORMAT = new SimpleDateFormat("MM/dd/yyyy HH:mm");
+    DATE_FORMAT.setTimeZone(TimeZone.getDefault());
+  }
 
   /**
    * Converts the timestamp into a String of the date.
@@ -21,7 +25,6 @@ public final class DateFormatter {
    * @return String
    */
   public static String convertToString(final long time) {
-    DATE_FORMAT.setTimeZone(TimeZone.getDefault());
     return DATE_FORMAT.format(time);
   }
 
@@ -32,7 +35,7 @@ public final class DateFormatter {
    * @return String
    */
   public static String convertToString(final Date date) {
-    return convertToString(date.getTime());
+    return DATE_FORMAT.format(date.getTime());
   }
 
   /**
@@ -45,38 +48,14 @@ public final class DateFormatter {
     long totalTime = 0;
 
     for (final String date : dates) {
-      final int time = Integer.parseInt(date.split(RegexPattern.REMOVE_LETTERS)[0]);
-      final String prefix = date.split(RegexPattern.REMOVE_NUMBERS)[0];
+      final String prefix = date.replaceAll("[0-9]", "");
+      final int time = Integer.parseInt(date.replaceAll("[A-Z|a-z]", ""));
 
-      final TimeMultiplier type = TimeMultiplier.getType(prefix);
+      final TimeType type = TimeType.getType(prefix);
       totalTime += type.getMultiplier() * time;
     }
 
-    if (totalTime == 0) {
-      return totalTime;
-    }
-
-    throw new NullPointerException("Dates is empty");
-  }
-
-  /**
-   * Converts date (1d, 1s, 1m) into long.
-   *
-   * @return Long
-   */
-  public static long convert(final String date) {
-    long time = 0;
-
-    final String[] split = date.split(" ");
-
-    for (final String arg : split) {
-      char prefix = arg.charAt(arg.length() - 1);
-      int timeInt = Integer.parseInt(arg.replace(Character.toString(prefix), ""));
-
-      time += TimeMultiplier.getType(prefix).getMultiplier() * timeInt;
-    }
-
-    return time;
+    return totalTime;
   }
 
   /**
@@ -116,8 +95,7 @@ public final class DateFormatter {
     }
 
     if (seconds > 0) {
-      builder.append(
-          days > 0 || hours > 0 || minutes > 0 ? " and " : builder.length() > 0 ? ", " : "");
+      builder.append(days > 0 || hours > 0 || minutes > 0 ? " and " : builder.length() > 0 ? ", " : "");
       builder.append(seconds);
       builder.append(seconds == 1 ? " second" : "seconds");
     }

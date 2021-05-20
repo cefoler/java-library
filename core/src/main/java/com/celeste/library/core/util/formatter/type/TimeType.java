@@ -7,7 +7,7 @@ import lombok.Getter;
 
 @Getter
 @AllArgsConstructor
-public enum TimeMultiplier {
+public enum TimeType {
 
   SECONDS(1000, "S", "SECOND", "SECONDS"),
   MINUTES(60 * 1000, "M", "MI", "MT", "MINUTE", "MINUTES"),
@@ -18,31 +18,31 @@ public enum TimeMultiplier {
   YEARS(365L * 24 * 60 * 60 * 1000, "Y", "YEAR", "YEARS");
 
   private final long multiplier;
-  private final List<String> prefixes;
+  private final List<String> names;
 
-  TimeMultiplier(final long multiplier, @NotNull final String... prefixes) {
+  TimeType(final long multiplier, final String... names) {
     this.multiplier = multiplier;
-    this.prefixes = Arrays.asList(prefixes);
+    this.names = Arrays.asList(names);
   }
 
   /**
    * Returns the time according to its name
    *
-   * @param prefix String
+   * @param time String
    * @return TimeMultiplierType
    */
-  public static TimeMultiplier getType(final String prefix) {
+  public static TimeType getType(final String time) {
     return Arrays.stream(values())
-        .filter(type -> type.getPrefixes().contains(prefix.toUpperCase()))
+        .filter(type -> type.getNames().contains(time.toUpperCase()))
         .findFirst()
-        .orElseThrow(() -> new IllegalArgumentException("Argument " + prefix + " isn't valid"));
+        .orElseThrow(() -> new IllegalArgumentException("Invalid time: " + time));
   }
 
-  public static TimeMultiplier getType(final char prefix) {
+  public static TimeType getType(final char time) {
     return Arrays.stream(values())
-        .filter(type -> type.getPrefixes().contains(Character.toString(prefix).toUpperCase()))
+        .filter(type -> type.getNames().contains(Character.toString(time).toUpperCase()))
         .findFirst()
-        .orElseThrow(() -> new IllegalArgumentException("Argument " + prefix + " isn't valid"));
+        .orElseThrow(() -> new IllegalArgumentException("Invalid time: " + time));
   }
 
 }

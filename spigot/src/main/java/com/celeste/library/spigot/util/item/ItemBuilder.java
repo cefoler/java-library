@@ -482,8 +482,7 @@ public final class ItemBuilder implements Cloneable {
    * @param potionName String
    * @return ItemBuilder
    */
-  @NotNull
-  public ItemBuilder removePotion(@NotNull final String potionName) {
+  public ItemBuilder removePotion(final String potionName) {
     if (!(meta instanceof PotionMeta)) {
       return this;
     }
@@ -514,9 +513,9 @@ public final class ItemBuilder implements Cloneable {
   public <T> ItemBuilder nbtTag(@NotNull final T key, @NotNull final T value) {
     itemStack.setItemMeta(meta);
 
-    final Class<?> craftItemStackClazz = ReflectionNms.getOBC("inventory.CraftItemStack");
-    final Class<?> itemStackClazz = ReflectionNms.getNMS("ItemStack");
-    final Class<?> compoundClazz = ReflectionNms.getNMS("NBTTagCompound");
+    final Class<?> craftItemStackClazz = ReflectionNms.getObc("inventory.CraftItemStack");
+    final Class<?> itemStackClazz = ReflectionNms.getNms("ItemStack");
+    final Class<?> compoundClazz = ReflectionNms.getNms("NBTTagCompound");
 
     final Method asNmsCopy = ReflectionNms
         .getMethod(craftItemStackClazz, "asNMSCopy", ItemStack.class);
@@ -528,8 +527,8 @@ public final class ItemBuilder implements Cloneable {
     final Object compound =
         isExist ? ReflectionNms.invoke(getTag, nmsItem) : compoundClazz.newInstance();
 
-    final Class<?> tagClazz = ReflectionNms.getNMS("NBTTagString");
-    final Class<?> baseClazz = ReflectionNms.getNMS("NBTBase");
+    final Class<?> tagClazz = ReflectionNms.getNms("NBTTagString");
+    final Class<?> baseClazz = ReflectionNms.getNms("NBTBase");
 
     final Constructor<?> tagCon = ReflectionNms.getDcConstructor(tagClazz, String.class);
 

@@ -13,7 +13,7 @@ import org.bukkit.plugin.messaging.PluginMessageListener;
 /**
  * Creates a connection between the Bukkit plugin with the Bungeecord.
  *
- * <p>This factory auxiliates
+ * <p>This factory auxiliaries
  * to send the player to another servers connected into the Bungeecord
  *
  * @param <T> AbstractBukkitPlugin

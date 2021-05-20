@@ -27,19 +27,6 @@ public final class MenuListener implements Listener {
   }
 
   /**
-   * Registers menu InventoryClick event.
-   *
-   * @param event InventoryClickEvent
-   */
-  @EventHandler(ignoreCancelled = true)
-  public void onInventoryDrag(final InventoryDragEvent event) {
-    final Inventory inventory = event.getInventory();
-    if (!(inventory.getHolder() instanceof MenuHolder)) {
-      event.setCancelled(true);
-    }
-  }
-
-  /**
    * Registers menu InventoryCloseEvent event.
    *
    * @param event InventoryCloseEvent
