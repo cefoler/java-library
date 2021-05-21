@@ -1,8 +1,5 @@
 package com.celeste.library.spigot.util.item;
 
-import static com.celeste.library.spigot.util.ReflectionNms.invoke;
-import static com.celeste.library.spigot.util.ReflectionNms.invokeStatic;
-
 import com.celeste.library.spigot.util.ReflectionNms;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
@@ -20,7 +17,7 @@ public final class ItemInjector {
   private final Class<?> isClass;
   private final Class<?> NtcClass;
 
-  private final Method asNMSCopy;
+  private final Method asNmsCopy;
   private final Method hasTag;
   private final Method getTag;
   private final Method getString;
@@ -33,24 +30,15 @@ public final class ItemInjector {
     isClass = ReflectionNms.getNms("ItemStack");
     NtcClass = ReflectionNms.getNms("NBTTagCompound");
 
-    asNMSCopy = ReflectionNms.getMethod(ctsClass, "asNMSCopy", ItemStack.class);
+    asNmsCopy = ReflectionNms.getMethod(ctsClass, "asNMSCopy", ItemStack.class);
     hasTag = ReflectionNms.getMethod(isClass, "hasTag");
     getTag = ReflectionNms.getMethod(isClass, "getTag");
     getString = ReflectionNms.getMethod(NtcClass, "getString", String.class);
   }
 
   @SneakyThrows
-  public boolean has(final String key) {
-    final Object nmsItem = invokeStatic(asNMSCopy, item);
-    final Object compound = invoke(getTag, nmsItem);
-    final Object object = getString.invoke(compound, key);
-
-    return object != null;
-  }
-
-  @SneakyThrows
   public String get(final String key) {
-    final Object nmsItem = invokeStatic(asNMSCopy, item);
+    final Object nmsItem = invokeStatic(asNmsCopy, item);
     final Object compound = invoke(getTag, nmsItem);
 
     return getString.invoke(compound, key).toString();
@@ -89,6 +77,15 @@ public final class ItemInjector {
     ReflectionNms.invoke(setTag, nmsItem, compound);
 
     item.setItemMeta((ItemMeta) ReflectionNms.invokeStatic(getItemMeta, nmsItem));
+  }
+
+  @SneakyThrows
+  public boolean has(final String key) {
+    final Object nmsItem = invokeStatic(asNmsCopy, item);
+    final Object compound = invoke(getTag, nmsItem);
+    final Object object = getString.invoke(compound, key);
+
+    return object != null;
   }
 
   public ItemStack inject() {

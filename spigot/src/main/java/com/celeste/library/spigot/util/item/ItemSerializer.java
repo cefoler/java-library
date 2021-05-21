@@ -13,17 +13,17 @@ public final class ItemSerializer {
   /**
    * Serializes those items into bytes
    *
-   * @param items Itemstack...
+   * @param items ItemStack...
    * @return String
    * @throws IOException Throws if it wasn't able to put the items into byte
    */
-  @NotNull
-  public static String serialize(@NotNull final ItemStack... items) throws IOException {
+  public static String serialize(final ItemStack... items) throws IOException {
     try (
-        ByteArrayOutputStream arrayOutput = new ByteArrayOutputStream();
-        BukkitObjectOutputStream objectOutput = new BukkitObjectOutputStream(arrayOutput)
+        final ByteArrayOutputStream arrayOutput = new ByteArrayOutputStream();
+        final BukkitObjectOutputStream objectOutput = new BukkitObjectOutputStream(arrayOutput)
     ) {
       objectOutput.writeInt(items.length);
+
       for (final ItemStack item : items) {
         objectOutput.writeObject(item);
       }
@@ -37,20 +37,21 @@ public final class ItemSerializer {
    *
    * @param serializedItems String
    * @return ItemStack[]
-   * @throws IOException            Throws if a error occurs during deserialization
+   * @throws IOException Throws if a error occurs during deserialization
    * @throws ClassNotFoundException Throws when it wasn't able to find the class
    */
-  @NotNull
-  public static ItemStack[] deserialize(@NotNull final String serializedItems)
+  public static ItemStack[] deserialize(final String serializedItems)
       throws IOException, ClassNotFoundException {
+    final byte[] decodeItems = Base64.getDecoder().decode(serializedItems);
+
     try (
-        ByteArrayInputStream arrayInput = new ByteArrayInputStream(
-            Base64.getDecoder().decode(serializedItems));
-        BukkitObjectInputStream objectInput = new BukkitObjectInputStream(arrayInput)
+        final ByteArrayInputStream arrayInput = new ByteArrayInputStream(decodeItems);
+        final BukkitObjectInputStream objectInput = new BukkitObjectInputStream(arrayInput)
     ) {
       final ItemStack[] items = new ItemStack[objectInput.readInt()];
-      for (int i = 0; i < items.length; i++) {
-        items[i] = (ItemStack) objectInput.readObject();
+
+      for (int index = 0; index < items.length; index++) {
+        items[index] = (ItemStack) objectInput.readObject();
       }
 
       return items;

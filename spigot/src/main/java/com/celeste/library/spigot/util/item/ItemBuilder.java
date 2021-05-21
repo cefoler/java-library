@@ -18,6 +18,7 @@ import org.bukkit.Color;
 import org.bukkit.Material;
 import org.bukkit.block.BlockState;
 import org.bukkit.block.CreatureSpawner;
+import org.bukkit.craftbukkit.v1_8_R3.inventory.CraftItemStack;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.EntityType;
 import org.bukkit.inventory.ItemFlag;
@@ -228,7 +229,7 @@ public final class ItemBuilder implements Cloneable {
    * @return ItemBuilder
    */
   public ItemBuilder enchantment(final String enchantment, final int level) {
-    final Enchantment enchant = EnchantmentType.getEnchantment(enchantment);
+    final Enchantment enchant = EnchantmentType.getRealEnchantment(enchantment);
     itemStack.addUnsafeEnchantment(enchant, level);
 
     return this;
@@ -258,7 +259,7 @@ public final class ItemBuilder implements Cloneable {
         return;
       }
 
-      final Enchantment enchant = EnchantmentType.getEnchantment(split[0]);
+      final Enchantment enchant = EnchantmentType.getRealEnchantment(split[0]);
       final int level = Integer.parseInt(split[1]);
       itemStack.addUnsafeEnchantment(enchant, level);
     });
@@ -275,7 +276,7 @@ public final class ItemBuilder implements Cloneable {
   @SafeVarargs
   public final ItemBuilder enchantment(final Entry<String, Integer>... enchantment) {
     Arrays.stream(enchantment).forEach(entry -> {
-      final Enchantment enchant = EnchantmentType.getEnchantment(entry.getKey());
+      final Enchantment enchant = EnchantmentType.getRealEnchantment(entry.getKey());
       final int level = entry.getValue();
 
       itemStack.addUnsafeEnchantment(enchant, level);
@@ -292,7 +293,7 @@ public final class ItemBuilder implements Cloneable {
    */
   public ItemBuilder removeEnchantment(final String... enchantments) {
     Arrays.stream(enchantments).forEach(enchantName -> {
-      final Enchantment enchant = EnchantmentType.getEnchantment(enchantName);
+      final Enchantment enchant = EnchantmentType.getRealEnchantment(enchantName);
       itemStack.removeEnchantment(enchant);
     });
 
