@@ -23,11 +23,10 @@ public final class GsonTypeAdapter<T> implements TypeAdapterFactory {
   private final Class<T> base;
 
   private final String fieldName;
+  private final boolean maintain;
 
   private final Map<String, Class<?>> labelToSubtype;
   private final Map<Class<?>, String> subtypeToLabel;
-
-  private final boolean maintain;
 
   public GsonTypeAdapter(final Class<T> base) {
     this(base, "type");
@@ -37,8 +36,7 @@ public final class GsonTypeAdapter<T> implements TypeAdapterFactory {
     this(base, fieldName, false);
   }
 
-  public GsonTypeAdapter(final Class<T> base, final String fieldName,
-      final boolean maintain) {
+  public GsonTypeAdapter(final Class<T> base, final String fieldName, final boolean maintain) {
     this.base = base;
     this.fieldName = fieldName;
     this.maintain = maintain;

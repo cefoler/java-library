@@ -5,11 +5,10 @@ import java.util.Properties;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.bukkit.entity.Player;
-import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
 /**
- * The MenuItem is the object where the Item, Slot and Action will be storaged.
+ * The MenuItem is the object where the Item, Slot and Action will be storage.
  *
  * <p>This class also has default methods to close,
  * reopen and set property after the item has been clicked.</p>
@@ -22,6 +21,49 @@ public final class MenuItem {
 
   private ItemStack item;
   private ClickAction action;
+
+  /**
+   * When clicked, opens a new AbstractMenu without properties
+   *
+   * @param menu AbstractMenu that will be opened
+   * @return MenuItem
+   */
+  public MenuItem open(final AbstractMenu menu) {
+    return open(menu, new Properties());
+  }
+
+  /**
+   * When clicked, opens a new AbstractMenu with properties
+   *
+   * @param menu AbstractMenu that will be opened
+   * @param properties Immutable map of the properties.
+   * @return MenuItem
+   */
+  public MenuItem open(final AbstractMenu menu, final Properties properties) {
+    return action((holder, event) -> {
+      final Player player = (Player) event.getWhoClicked();
+      holder.setProperties(properties);
+      holder.show(menu, player);
+    });
+  }
+
+  /**
+   * When clicked, clears and updates the inventory
+   *
+   * @return MenuItem
+   */
+  public MenuItem reopen() {
+    return action((holder, event) -> holder.reopen());
+  }
+
+  /**
+   * When the item is clicked, the menu is closed.
+   *
+   * @return MenuItem
+   */
+  public MenuItem close() {
+    return action((holder, event) -> event.getWhoClicked().closeInventory());
+  }
 
   /**
    * Sets the item of this MenuItem.
@@ -37,71 +79,12 @@ public final class MenuItem {
   /**
    * Executes the ClickAction provided
    *
-   * @param action ClickAction for the item.
+   * @param clickAction ClickAction for the item.
    * @return MenuItem
    */
-  public MenuItem action(final ClickAction action) {
-    if (this.action == null) {
-      this.action = action;
-      return this;
-    }
-
-    this.action = this.action.and(action);
+  public MenuItem action(final ClickAction clickAction) {
+    this.action = action != null ? action.and(clickAction) : clickAction;
     return this;
-  }
-
-  /**
-   * When the item is clicked, the menu is closed.
-   *
-   * @return MenuItem
-   */
-  public MenuItem close() {
-    return action((holder, event) -> {
-      final Player player = (Player) event.getWhoClicked();
-      player.closeInventory();
-    });
-  }
-
-  /**
-   * When clicked, opens a new AbstractMenu without properties
-   *
-   * @param menu AbstractMenu that will be opened
-   * @return MenuItem
-   */
-  public MenuItem open(final AbstractMenu menu) {
-    return open(menu, new Properties());
-  }
-
-  /**
-   * When clicked, opens a new AbstractMenu with properties
-   *
-   * @param menu       AbstractMenu that will be opened
-   * @param properties Immutable map of the properties.
-   * @return MenuItem
-   */
-  public MenuItem open(final AbstractMenu menu, final Properties properties) {
-    return action((holder, event) -> {
-      // Adds the new properties into the holder
-      properties.forEach((key, value) -> holder.setProperty(key.toString(), value));
-      // Updates the menu and show to the player
-      holder.show(menu, (Player) event.getWhoClicked());
-    });
-  }
-
-  /**
-   * When clicked, clears and updates the inventory
-   *
-   * @return MenuItem
-   */
-  public MenuItem reopen() {
-    return action((holder, event) -> {
-      final Inventory inventory = holder.getInventory();
-      holder.getInventory().clear();
-
-      for (final MenuItem holderItem : holder.getItems()) {
-        inventory.setItem(holderItem.getSlot(), holderItem.getItem());
-      }
-    });
   }
 
   public MenuItem cancel() {

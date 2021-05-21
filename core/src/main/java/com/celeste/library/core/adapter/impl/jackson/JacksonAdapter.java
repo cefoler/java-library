@@ -19,10 +19,6 @@ public final class JacksonAdapter implements Json {
     this.mapper = new ObjectMapper();
   }
 
-  public static JacksonAdapter getInstance() {
-    return INSTANCE;
-  }
-
   @Override
   public String serialize(final Object value) throws JsonSerializeException {
     try {
@@ -40,6 +36,10 @@ public final class JacksonAdapter implements Json {
     } catch (Exception exception) {
       throw new JsonDeserializeException(exception.getMessage(), exception.getCause());
     }
+  }
+
+  public static JacksonAdapter getInstance() {
+    return INSTANCE;
   }
 
 }

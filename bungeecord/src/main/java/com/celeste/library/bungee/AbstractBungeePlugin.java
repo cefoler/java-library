@@ -30,7 +30,6 @@ public abstract class AbstractBungeePlugin extends Plugin {
 
   public AbstractBungeePlugin() {
     this.manager = getProxy().getPluginManager();
-
     this.executor = Executors.newCachedThreadPool();
     this.scheduledExecutor = Executors.newSingleThreadScheduledExecutor();
   }

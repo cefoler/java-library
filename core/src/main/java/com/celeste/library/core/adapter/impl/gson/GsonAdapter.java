@@ -23,10 +23,6 @@ public final class GsonAdapter implements Json {
         .create();
   }
 
-  public static GsonAdapter getInstance() {
-    return INSTANCE;
-  }
-
   @SafeVarargs
   public final <T> void registerAdapter(final Class<T> type, final Class<? extends T>... subTypes) {
     final GsonTypeAdapter<T> adapter = new GsonTypeAdapter<>(type)
@@ -67,6 +63,10 @@ public final class GsonAdapter implements Json {
     } catch (Exception exception) {
       throw new JsonDeserializeException(exception.getMessage(), exception.getCause());
     }
+  }
+
+  public static GsonAdapter getInstance() {
+    return INSTANCE;
   }
 
 }

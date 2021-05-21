@@ -33,7 +33,6 @@ public abstract class AbstractMenu implements Menu {
   public AbstractMenu(final String title, final int size) {
     this.title = title;
     this.size = size;
-
     this.items = new ArrayList<>(size);
   }
 
