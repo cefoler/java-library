@@ -7,7 +7,6 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
-import net.minecraft.server.v1_8_R3.NBTTagCompound;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.jetbrains.annotations.Nullable;

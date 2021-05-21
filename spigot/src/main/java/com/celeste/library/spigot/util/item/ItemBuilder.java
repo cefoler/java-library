@@ -1,9 +1,11 @@
 package com.celeste.library.spigot.util.item;
 
 import com.celeste.library.core.util.Reflection;
+import com.celeste.library.spigot.error.ServerStartError;
 import com.celeste.library.spigot.util.ReflectionNms;
 import com.celeste.library.spigot.util.item.type.EnchantmentType;
 import com.google.common.collect.ImmutableList;
+import com.mojang.authlib.GameProfile;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
@@ -16,8 +18,10 @@ import java.util.Map.Entry;
 import java.util.UUID;
 import java.util.regex.Pattern;
 import lombok.SneakyThrows;
+import org.bukkit.Bukkit;
 import org.bukkit.Color;
 import org.bukkit.Material;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.block.BlockState;
 import org.bukkit.block.CreatureSpawner;
 import org.bukkit.enchantments.Enchantment;
@@ -34,6 +38,84 @@ import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
 public final class ItemBuilder implements Cloneable {
+
+  private static final Constructor<?> COMPOUND_CONSTRUCTOR;
+
+  private static final Constructor<?> PROFILE_CONSTRUCTOR;
+  private static final Constructor<?> PROPERTY_CONSTRUCTOR;
+
+  private static final Method AS_NMS_COPY;
+  private static final Method HAS_TAG;
+  private static final Method GET_TAG;
+  private static final Method SET_TAG;
+  private static final Method GET_ITEM_META;
+
+  private static final Method SET_CUSTOM_MODEL_DATA;
+
+  private static final Method SET_BOOLEAN;
+
+  private static final Method PUT;
+
+  private static final Method SET_OWNER;
+
+  private static final Field PROPERTIES;
+  private static final Field PROFILE;
+
+  private static final Material SKULL;
+
+  private static final Material SPAWNER;
+
+  static {
+    try {
+      final Class<?> craftItemStackClazz = ReflectionNms.getObc("inventory.CraftItemStack");
+      final Class<?> itemStackClazz = ReflectionNms.getNms("ItemStack");
+      final Class<?> compoundClazz = ReflectionNms.getNms("NBTTagCompound");
+
+      COMPOUND_CONSTRUCTOR = Reflection.getConstructor(compoundClazz);
+
+      AS_NMS_COPY = Reflection.getMethod(craftItemStackClazz, "asNMSCopy", ItemStack.class);
+      HAS_TAG = Reflection.getMethod(itemStackClazz, "hasTag");
+      GET_TAG = Reflection.getMethod(itemStackClazz, "getTag");
+      SET_TAG = Reflection.getMethod(itemStackClazz, "setTag", compoundClazz);
+      GET_ITEM_META = Reflection.getMethod(craftItemStackClazz, "getItemMeta", itemStackClazz);
+
+      // MODEL DATA
+      SET_CUSTOM_MODEL_DATA = Reflection.getMethod(ItemMeta.class, "setCustomModelData");
+
+      // UNBREAKABLE
+      SET_BOOLEAN = Reflection.getMethod(compoundClazz, "setBoolean", String.class, boolean.class);
+
+      // SKULL
+      SKULL = ReflectionNms.isEqualsOrMoreRecent(13) ?
+          Enum.valueOf(Material.class, "PLAYER_HEAD") :
+          Enum.valueOf(Material.class, "SKULL_ITEM");
+
+      final Class<?> profileClazz = Reflection.getClazz("com.mojang.authlib.GameProfile");
+      final Class<?> propertyClazz = Reflection.getClazz("com.mojang.authlib.properties.Property");
+      final Class<?> propertiesClazz = Reflection.getClazz("com.mojang.authlib.properties"
+          + ".PropertyMap");
+
+      PROFILE_CONSTRUCTOR = Reflection.getConstructor(profileClazz, UUID.class, String.class);
+      PROPERTY_CONSTRUCTOR = Reflection.getConstructor(propertyClazz, String.class, String.class);
+
+      PUT = Reflection.getMethod(propertiesClazz,"put", Object.class, Object.class);
+
+      PROPERTIES = Reflection.getDcField(profileClazz, "properties");
+      PROFILE = Reflection.getDcField(SkullMeta.class, "profile");
+
+      // SKULL OWNER
+      SET_OWNER = ReflectionNms.isEqualsOrMoreRecent(13)
+          ? Reflection.getMethod(SkullMeta.class, "setOwningPlayer", OfflinePlayer.class)
+          : Reflection.getMethod(SkullMeta.class, "setOwner", String.class);
+
+      // SPAWNERS
+      SPAWNER = ReflectionNms.isEqualsOrMoreRecent(13) ?
+          Enum.valueOf(Material.class, "MOB_SPAWNER") :
+          Enum.valueOf(Material.class, "SPAWNER");
+    } catch (Exception exception) {
+      throw new ServerStartError(exception.getMessage(), exception.getCause());
+    }
+  }
 
   private final ItemStack itemStack;
   private ItemMeta meta;
@@ -52,6 +134,7 @@ public final class ItemBuilder implements Cloneable {
     this.meta = itemStack.getItemMeta();
   }
 
+  @SuppressWarnings("deprecation")
   public ItemBuilder(final Material material, final int amount, final int data) {
     this.itemStack = new ItemStack(material, amount, (short) data);
     this.meta = itemStack.getItemMeta();
@@ -64,6 +147,12 @@ public final class ItemBuilder implements Cloneable {
 
   public ItemBuilder data(final int data) {
     itemStack.setDurability((short) data);
+    return this;
+  }
+
+  @SneakyThrows
+  public ItemBuilder modelData(final int data) {
+    SET_CUSTOM_MODEL_DATA.invoke(meta, data);
     return this;
   }
 
@@ -229,22 +318,40 @@ public final class ItemBuilder implements Cloneable {
     return this;
   }
 
+  @SuppressWarnings("deprecation")
   public ItemBuilder setDurability(final short durability) {
     itemStack.setDurability(durability);
     return this;
   }
 
+  @SuppressWarnings("deprecation")
   public ItemBuilder addDurability(final short durability) {
     final short currentDurability = itemStack.getDurability();
-    final short newDurability = (short) (currentDurability + durability);
 
+    if (currentDurability == 0) {
+      return this;
+    }
+
+    final short newDurability = (short) (currentDurability + durability);
     itemStack.setDurability(newDurability);
     return this;
   }
 
-  public ItemBuilder infinity() {
-    itemStack.setDurability(Short.MAX_VALUE);
-    meta.addItemFlags(ItemFlag.HIDE_DESTROYS);
+  @SneakyThrows
+  public ItemBuilder unbreakable(final boolean unbreakable) {
+    itemStack.setItemMeta(meta);
+
+    final Object nmsItemStack = Reflection.invokeStatic(AS_NMS_COPY, itemStack);
+    final boolean containsTag = (Boolean) Reflection.invoke(HAS_TAG, nmsItemStack);
+
+    final Object compound = containsTag
+        ? Reflection.invoke(GET_TAG, nmsItemStack)
+        : Reflection.instance(COMPOUND_CONSTRUCTOR);
+
+    Reflection.invoke(SET_BOOLEAN, compound, "Unbreakable", unbreakable);
+    Reflection.invoke(SET_TAG, nmsItemStack, compound);
+
+    this.meta = (ItemMeta) Reflection.invokeStatic(GET_ITEM_META, nmsItemStack);
     return this;
   }
 
@@ -264,52 +371,58 @@ public final class ItemBuilder implements Cloneable {
   }
 
   @SneakyThrows
-  public ItemBuilder skull(String texture, final UUID uuid) {
-    final Material material = ReflectionNms.isEqualsOrMoreRecent(13) ?
-        Enum.valueOf(Material.class, "PLAYER_HEAD") :
-        Enum.valueOf(Material.class, "SKULL_ITEM");
-
-    if (itemStack.getType() != material) {
+  public ItemBuilder skull(final String texture, final UUID uuid) {
+    if (itemStack.getType() != SKULL) {
       return this;
     }
 
-    texture = "http://textures.minecraft.net/texture/" + texture;
+    itemStack.setItemMeta(meta);
+
+    final String newTexture = "https://textures.minecraft.net/texture/" + texture;
     final SkullMeta skullMeta = (SkullMeta) meta;
-    final Class<?> profileClass = Reflection.getClazz("com.mojang.authlib.GameProfile");
-    final Class<?> propertyClass = Reflection.getClazz("com.mojang.authlib.properties.Property");
 
-    final Constructor<?> profileCon = Reflection.getConstructor(profileClass, UUID.class, String.class);
-    final Constructor<?> propertyCon = Reflection.getConstructor(propertyClass, String.class, String.class);
-    final Field propertiesField = Reflection.getDcField(profileClass, "properties");
+    final byte[] textureBytes = String.format("{textures:{SKIN:{url:\"%s\"}}}",
+        new Object[] { newTexture }).getBytes();
 
-    final String encoded = Base64.getEncoder().encodeToString(String.format("{textures:{SKIN:{url:\"%s\"}}}", new Object[] { texture }).getBytes());
-    final Object profile = Reflection.instance(profileCon, uuid, null);
-    final Object property =Reflection. instance(propertyCon, "textures", encoded);
+    final String encoded = Base64.getEncoder().encodeToString(textureBytes);
 
-    final Class<?> propertiesClass = Reflection.getClazz(propertiesField);
+    final Object profile = Reflection.instance(PROFILE_CONSTRUCTOR, uuid, null);
+    final Object property = Reflection.instance(PROPERTY_CONSTRUCTOR, "textures", encoded);
+    final Object properties = PROPERTIES.get(profile);
 
-    final Method put = Reflection.getMethod(propertiesClass,"put", Object.class, Object.class);
-    Reflection.invoke(put, propertiesField.get(profile),"textures", property);
+    Reflection.invoke(PUT, properties,"textures", property);
+    PROFILE.set(skullMeta, profile);
 
-    final Field profileField = Reflection.getDcField(meta.getClass(), "profile");
-    profileField.set(skullMeta, profile);
+    this.meta = skullMeta;
     return this;
   }
 
+  @SneakyThrows
+  @SuppressWarnings("deprecation")
   public ItemBuilder skullOwner(final String owner) {
-    final SkullMeta skullMeta = (SkullMeta) meta;
+    if (itemStack.getType() != SKULL) {
+      return this;
+    }
 
-    skullMeta.setOwner(owner);
+    final SkullMeta skullMeta = (SkullMeta) meta;
+    final Object player = ReflectionNms.isEqualsOrMoreRecent(13)
+        ? Bukkit.getOfflinePlayer(owner)
+        : owner;
+
+    Reflection.invoke(SET_OWNER, skullMeta, player);
     return this;
   }
 
   public ItemBuilder mob(final EntityType type) {
-    if (itemStack.getType() != Material.MOB_SPAWNER) return this;
+    if (itemStack.getType() != SPAWNER) {
+      return this;
+    }
 
-    final BlockState state = ((BlockStateMeta) meta).getBlockState();
+    final BlockStateMeta blockStateMeta = (BlockStateMeta) meta;
+    final BlockState state = blockStateMeta.getBlockState();
+
     ((CreatureSpawner) state).setSpawnedType(type);
-    ((BlockStateMeta) meta).setBlockState(state);
-
+    blockStateMeta.setBlockState(state);
     return this;
   }
 
@@ -320,7 +433,8 @@ public final class ItemBuilder implements Cloneable {
     return this;
   }
 
-  public ItemBuilder potion(final List<String> potions) {
+  @SuppressWarnings("deprecation")
+  public ItemBuilder addPotion(final List<String> potions) {
     if (itemStack.getType() != Material.POTION) {
       return this;
     }
@@ -354,7 +468,8 @@ public final class ItemBuilder implements Cloneable {
     return this;
   }
 
-  public ItemBuilder potion(final String potionName, final int duration, final int amplifier) {
+  @SuppressWarnings("deprecation")
+  public ItemBuilder addPotion(final String potionName, final int duration, final int amplifier) {
     if (itemStack.getType() != Material.POTION) {
       return this;
     }
@@ -375,29 +490,32 @@ public final class ItemBuilder implements Cloneable {
     return this;
   }
 
+  @SuppressWarnings("deprecation")
   public ItemBuilder removePotion(final String potionName) {
-    if (itemStack.getType() != Material.POTION) return this;
-
-    final PotionMeta potionMeta = (PotionMeta) meta;
-    PotionEffectType type = PotionEffectType.getByName(potionName);
-
-    if (!isValid(type) && Pattern.matches("[0-9]+", potionName)) {
-      type = PotionEffectType.getById(Integer.parseInt(potionName));
+    if (itemStack.getType() != Material.POTION) {
+      return this;
     }
 
-    if (type == null) return this;
+    final PotionMeta potionMeta = (PotionMeta) meta;
+    final PotionEffectType type = PotionEffectType.getByName(potionName);
+
+    if (type == null) {
+      return this;
+    }
 
     potionMeta.removeCustomEffect(type);
 
     final Potion potion = Potion.fromItemStack(itemStack);
     potion.setSplash(potion.isSplash());
     potion.apply(itemStack);
-
     return this;
   }
 
+  @SuppressWarnings("deprecation")
   public ItemBuilder clearPotion() {
-    if (itemStack.getType() != Material.POTION) return this;
+    if (itemStack.getType() != Material.POTION) {
+      return this;
+    }
 
     final PotionMeta potionMeta = (PotionMeta) meta;
     potionMeta.clearCustomEffects();
@@ -405,65 +523,22 @@ public final class ItemBuilder implements Cloneable {
     final Potion potion = Potion.fromItemStack(itemStack);
     potion.setSplash(potion.isSplash());
     potion.apply(itemStack);
-
     return this;
   }
 
-  @SneakyThrows
-  public <T> ItemBuilder nbtTag(final T key, final T value) {
-    itemStack.setItemMeta(meta);
-
-    final Class<?> craftItemStackClazz = getOBC("inventory.CraftItemStack");
-    final Class<?> itemStackClazz = getNMS("ItemStack");
-    final Class<?> compoundClazz = getNMS("NBTTagCompound");
-
-    final Method asNMSCopy = getMethod(craftItemStackClazz, "asNMSCopy", ItemStack.class);
-    final Method hasTag = getMethod(itemStackClazz, "hasTag");
-    final Method getTag = getMethod(itemStackClazz, "getTag");
-
-    final Object nmsItem = invokeStatic(asNMSCopy, itemStack);
-    final boolean isExist = (Boolean) invoke(hasTag, nmsItem);
-    final Object compound = isExist ? invoke(getTag, nmsItem) : compoundClazz.newInstance();
-
-    final Class<?> tagClazz = getNMS("NBTTagString");
-    final Class<?> baseClazz = getNMS("NBTBase");
-
-    final Constructor<?> tagCon = getDcConstructor(tagClazz, String.class);
-
-    final Method set = getMethod(compoundClazz, "set", String.class, baseClazz);
-    final Method setTag = getMethod(itemStackClazz, "setTag", compoundClazz);
-    final Method getItemMeta = getMethod(craftItemStackClazz, "getItemMeta", itemStackClazz);
-
-    final Object tag = instance(tagCon, value.toString());
-    invoke(set, compound, key.toString(), tag);
-    invoke(setTag, nmsItem, compound);
-
-    meta = (ItemMeta) invokeStatic(getItemMeta, nmsItem);
-
+  public ItemBuilder addItemFlag(final ItemFlag... flags) {
+    meta.addItemFlags(flags);
     return this;
   }
 
-  public ItemBuilder itemFlag(final ItemFlag... flag) {
-    meta.addItemFlags(flag);
-    return this;
-  }
-
-  public ItemBuilder removeItemFlag(final ItemFlag... flag) {
-    meta.removeItemFlags(flag);
+  public ItemBuilder removeItemFlag(final ItemFlag... flags) {
+    meta.removeItemFlags(flags);
     return this;
   }
 
   public ItemStack build() {
     itemStack.setItemMeta(meta);
     return itemStack;
-  }
-
-  private boolean isValid(final Object argument) {
-    if (argument instanceof Object[]) return ((Object[]) argument).length != 0;
-
-    if (argument instanceof List) return ((List<?>) argument).size() != 0;
-
-    return argument != null && !argument.equals("");
   }
 
   @Override
