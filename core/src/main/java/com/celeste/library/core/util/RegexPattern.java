@@ -7,6 +7,8 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public enum RegexPattern {
 
+  REMOVE_UPPER_LETTERS("[A-Z]"),
+  REMOVE_LOWER_LETTERS("[a-z]"),
   REMOVE_LETTERS("[A-Z|a-z]"),
   REMOVE_NUMBERS("[0-9]");
 

@@ -4,7 +4,7 @@ import java.util.StringJoiner;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 
-public final class LocationUtil {
+public final class LocationSerializer {
 
   /**
    * Serializes a location into a String
@@ -13,7 +13,7 @@ public final class LocationUtil {
    * @param yawAndPitch boolean
    * @return String
    */
-  public static String serialize(@NotNull final Location location, final boolean yawAndPitch) {
+  public static String serialize(final Location location, final boolean yawAndPitch) {
     final StringJoiner joiner = new StringJoiner(";");
 
     joiner.add(location.getWorld().getName());
@@ -35,15 +35,14 @@ public final class LocationUtil {
    * @param serializedLocation String
    * @return Location
    */
-  public static Location deserialize(@NotNull final String serializedLocation) {
+  public static Location deserialize(final String serializedLocation) {
     final String[] location = serializedLocation.split(";");
     if (location.length == 4) {
       return new Location(
           Bukkit.getWorld(location[0]),
           Double.parseDouble(location[1]),
           Double.parseDouble(location[2]),
-          Double.parseDouble(location[3])
-      );
+          Double.parseDouble(location[3]));
     }
 
     if (location.length == 6) {
@@ -53,8 +52,7 @@ public final class LocationUtil {
           Double.parseDouble(location[2]),
           Double.parseDouble(location[3]),
           Float.parseFloat(location[4]),
-          Float.parseFloat(location[5])
-      );
+          Float.parseFloat(location[5]));
     }
 
     throw new IllegalArgumentException("This string cannot be deserialized");

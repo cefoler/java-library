@@ -13,6 +13,7 @@ public final class Data extends Properties {
 
   public synchronized Data setData(final Object key, final Object value) {
     put(String.valueOf(key), String.valueOf(value));
+
     return this;
   }
 

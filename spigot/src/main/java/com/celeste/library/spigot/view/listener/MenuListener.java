@@ -27,6 +27,19 @@ public final class MenuListener implements Listener {
   }
 
   /**
+   * Registers menu InventoryOpenEvent event.
+   *
+   * @param event InventoryOpenEvent
+   */
+  @EventHandler(ignoreCancelled = true)
+  public void onInventoryOpen(final InventoryOpenEvent event) {
+    final Inventory inventory = event.getInventory();
+    if (inventory.getHolder() instanceof MenuHolder) {
+      ((MenuHolder) (inventory.getHolder())).handleOpen(event);
+    }
+  }
+
+  /**
    * Registers menu InventoryCloseEvent event.
    *
    * @param event InventoryCloseEvent
@@ -40,15 +53,15 @@ public final class MenuListener implements Listener {
   }
 
   /**
-   * Registers menu InventoryOpenEvent event.
+   * Registers menu InventoryDragEvent event.
    *
-   * @param event InventoryOpenEvent
+   * @param event InventoryDragEvent
    */
   @EventHandler(ignoreCancelled = true)
-  public void onInventoryOpen(final InventoryOpenEvent event) {
+  public void onInventoryDrag(final InventoryDragEvent event) {
     final Inventory inventory = event.getInventory();
     if (inventory.getHolder() instanceof MenuHolder) {
-      ((MenuHolder) (inventory.getHolder())).handleOpen(event);
+      ((MenuHolder) (inventory.getHolder())).handleDrag(event);
     }
   }
 

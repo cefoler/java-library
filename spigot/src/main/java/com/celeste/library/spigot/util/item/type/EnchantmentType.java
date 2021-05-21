@@ -67,8 +67,7 @@ public enum EnchantmentType {
     final EnchantmentType enchantmentType = Arrays.stream(values())
         .filter(type -> type.getNames().contains(enchant.toUpperCase()))
         .findFirst()
-        .orElseThrow(() -> new IllegalArgumentException(
-            "The enchantment " + enchant.toUpperCase() + " was not found"));
+        .orElseThrow(() -> new IllegalArgumentException("Invalid enchantment " + enchant));
 
     return Enchantment.getByName(enchantmentType.getNames().get(1));
   }
