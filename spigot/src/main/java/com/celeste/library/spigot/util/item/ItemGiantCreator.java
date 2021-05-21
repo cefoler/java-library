@@ -5,12 +5,15 @@ import com.celeste.library.spigot.error.ServerStartError;
 import com.celeste.library.spigot.util.ReflectionNms;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
 import lombok.SneakyThrows;
 import org.bukkit.Location;
 import org.bukkit.entity.Giant;
 import org.bukkit.inventory.EntityEquipment;
 import org.bukkit.inventory.ItemStack;
 
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
 public final class ItemGiantCreator {
 
   private static final Constructor<?> COMPOUND_CONSTRUCTOR;

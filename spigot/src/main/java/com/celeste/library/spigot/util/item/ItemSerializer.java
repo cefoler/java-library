@@ -4,10 +4,13 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.Base64;
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.util.io.BukkitObjectInputStream;
 import org.bukkit.util.io.BukkitObjectOutputStream;
 
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
 public final class ItemSerializer {
 
   /**

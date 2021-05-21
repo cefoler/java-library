@@ -12,9 +12,9 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 @Getter
-public final class TitleUtil {
+public final class Title {
 
-  public static final TitleUtil INSTANCE = new TitleUtil();
+  public static final Title INSTANCE = new Title();
 
   private final Constructor<?> ppotTimeCon;
   private final Constructor<?> ppotTextCon;
@@ -26,7 +26,7 @@ public final class TitleUtil {
   private final Object typeSubTitle;
 
   @SneakyThrows
-  public TitleUtil() {
+  public Title() {
     final Class<?> ppotClass = getNms("PacketPlayOutTitle");
     final Class<?> icbcClass = getNms("IChatBaseComponent");
     final Class<?> etaClass;
@@ -52,13 +52,7 @@ public final class TitleUtil {
   }
 
   @SneakyThrows
-  public final void send(final CommandSender sender, final String title, final String subTitle) {
-    if (!(sender instanceof Player)) {
-      return;
-    }
-
-    final Player player = (Player) sender;
-
+  public final void send(final Player player, final String title, final String subTitle) {
     final Object timePacket = ppotTimeCon.newInstance(time, null, 10, 10, 10);
     sendPacket(player, timePacket);
 

@@ -1,9 +1,12 @@
 package com.celeste.library.spigot.util;
 
 import java.util.StringJoiner;
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
 public final class LocationSerializer {
 
   /**
