@@ -57,19 +57,23 @@ public enum EnchantmentType {
     this.names = ImmutableList.copyOf(names);
   }
 
-  public static EnchantmentType getEnchantment(final String enchant) {
+  public static EnchantmentType getEnchantment(final String enchantment) {
     return Arrays.stream(values())
-        .filter(type -> type.getNames().contains(enchant.toUpperCase()))
+        .filter(type -> type.getNames().contains(enchantment.toUpperCase()))
         .findFirst()
-        .orElseThrow(() -> new IllegalArgumentException("Invalid enchantment: " + enchant));
+        .orElseThrow(() -> new IllegalArgumentException("Invalid enchantment: " + enchantment));
   }
 
-  public static Enchantment getRealEnchantment(final String enchant) {
-    final EnchantmentType enchantment = Arrays.stream(values())
-        .filter(type -> type.getNames().contains(enchant.toUpperCase()))
+  public static Enchantment getRealEnchantment(final String enchantment) {
+    final EnchantmentType enchantmentType = Arrays.stream(values())
+        .filter(type -> type.getNames().contains(enchantment.toUpperCase()))
         .findFirst()
-        .orElseThrow(() -> new IllegalArgumentException("Invalid enchantment: " + enchant));
+        .orElseThrow(() -> new IllegalArgumentException("Invalid enchantment: " + enchantment));
 
+    return Enchantment.getByName(enchantmentType.name());
+  }
+
+  public static Enchantment getRealEnchantment(final EnchantmentType enchantment) {
     return Enchantment.getByName(enchantment.name());
   }
 
