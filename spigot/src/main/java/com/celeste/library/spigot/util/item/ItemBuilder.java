@@ -5,7 +5,6 @@ import com.celeste.library.spigot.error.ServerStartError;
 import com.celeste.library.spigot.util.ReflectionNms;
 import com.celeste.library.spigot.util.item.type.EnchantmentType;
 import com.google.common.collect.ImmutableList;
-import com.mojang.authlib.GameProfile;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
