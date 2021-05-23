@@ -1,7 +1,7 @@
 package com.celeste.library.spigot.model.paginator.impl;
 
-import com.celeste.library.spigot.model.paginator.Paginator;
 import com.celeste.library.spigot.model.paginator.AbstractPaginator;
+import com.celeste.library.spigot.model.paginator.Paginator;
 import java.util.ArrayList;
 import java.util.List;
 import lombok.Getter;

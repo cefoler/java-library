@@ -31,7 +31,7 @@ public enum PrefixFormatter {
     double value = Double.parseDouble(String.valueOf(number));
     int index = -1;
 
-    for (;value / 1000 >= 1; value /= 1000) {
+    for (; value / 1000 >= 1; value /= 1000) {
       index++;
     }
 
