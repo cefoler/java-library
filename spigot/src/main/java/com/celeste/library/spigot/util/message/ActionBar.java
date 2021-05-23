@@ -10,7 +10,6 @@ import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import lombok.SneakyThrows;
 import org.bukkit.Bukkit;
-import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 /**
@@ -33,14 +32,15 @@ public final class ActionBar {
           ? ReflectionNms.getNms("ChatMessageType")
           : byte.class;
 
+      final Class<?> serializer = Reflection.getDcClasses(componentClazz).length > 0
+          ? Reflection.getDcClasses(componentClazz, 0)
+          : ReflectionNms.getNms("ChatSerializer");
+
       MESSAGE_TYPE = ReflectionNms.isEqualsOrMoreRecent(12)
           ? messageTypeClazz.getEnumConstants()[2]
           : (byte) 2;
 
-      final Class<?>[] componentClasses = Reflection.getDcClasses(componentClazz);
-      A = componentClasses.length > 0
-          ? Reflection.getMethod(componentClasses[0], "a", String.class)
-          : Reflection.getMethod(ReflectionNms.getNms("ChatSerializer"), "a", String.class);
+      A = Reflection.getMethod(serializer, "a", String.class);
 
       PACKET_CHAT_CONSTRUCTOR = ReflectionNms.isEqualsOrMoreRecent(16)
           ? Reflection.getConstructor(packetChatClazz, messageTypeClazz, UUID.class)
@@ -66,7 +66,7 @@ public final class ActionBar {
   }
 
   @SneakyThrows
-  public final void sendAll(final String message) {
+  public static void sendAll(final String message) {
     final Object chat = Reflection.invokeStatic(A, "{\"text\":\"" + message + "\"}");
 
     if (ReflectionNms.isEqualsOrMoreRecent(16)) {
