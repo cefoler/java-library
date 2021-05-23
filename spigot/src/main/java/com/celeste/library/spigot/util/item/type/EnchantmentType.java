@@ -5,10 +5,10 @@ import java.util.Arrays;
 import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 import org.bukkit.enchantments.Enchantment;
 
 @Getter
-@AllArgsConstructor
 public enum EnchantmentType {
 
   ARROW_DAMAGE("ARROW_DAMAGE", "POWER"),

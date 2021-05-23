@@ -52,26 +52,26 @@ public final class ActionBar {
 
   @SneakyThrows
   public static void send(final Player player, final String message) {
-    final Object chat = Reflection.invokeStatic(A, "{\"text\":\"" + message + "\"}");
+    final Object text = Reflection.invokeStatic(A, "{\"text\":\"" + message + "\"}");
 
     if (ReflectionNms.isEqualsOrMoreRecent(16)) {
-      final Object packet = Reflection.instance(PACKET_CHAT_CONSTRUCTOR, chat, MESSAGE_TYPE,
+      final Object packet = Reflection.instance(PACKET_CHAT_CONSTRUCTOR, text, MESSAGE_TYPE,
           player.getUniqueId());
       ReflectionNms.sendPacket(player, packet);
       return;
     }
 
-    final Object packet = Reflection.instance(PACKET_CHAT_CONSTRUCTOR, chat, MESSAGE_TYPE);
+    final Object packet = Reflection.instance(PACKET_CHAT_CONSTRUCTOR, text, MESSAGE_TYPE);
     ReflectionNms.sendPacket(player, packet);
   }
 
   @SneakyThrows
   public static void sendAll(final String message) {
-    final Object chat = Reflection.invokeStatic(A, "{\"text\":\"" + message + "\"}");
+    final Object text = Reflection.invokeStatic(A, "{\"text\":\"" + message + "\"}");
 
     if (ReflectionNms.isEqualsOrMoreRecent(16)) {
       for (final Player player : Bukkit.getOnlinePlayers()) {
-        final Object packet = Reflection.instance(PACKET_CHAT_CONSTRUCTOR, chat, MESSAGE_TYPE,
+        final Object packet = Reflection.instance(PACKET_CHAT_CONSTRUCTOR, text, MESSAGE_TYPE,
             player.getUniqueId());
         ReflectionNms.sendPacket(player, packet);
       }
@@ -79,7 +79,7 @@ public final class ActionBar {
       return;
     }
 
-    final Object packet = Reflection.instance(PACKET_CHAT_CONSTRUCTOR, chat, MESSAGE_TYPE);
+    final Object packet = Reflection.instance(PACKET_CHAT_CONSTRUCTOR, text, MESSAGE_TYPE);
     for (final Player player : Bukkit.getOnlinePlayers()) {
       ReflectionNms.sendPacket(player, packet);
     }

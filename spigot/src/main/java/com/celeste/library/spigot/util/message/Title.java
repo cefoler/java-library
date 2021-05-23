@@ -1,7 +1,5 @@
 package com.celeste.library.spigot.util.message;
 
-import static com.celeste.library.spigot.util.ReflectionNms.sendPacket;
-
 import com.celeste.library.core.util.Reflection;
 import com.celeste.library.spigot.error.ServerStartError;
 import com.celeste.library.spigot.util.ReflectionNms;
@@ -9,7 +7,6 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import lombok.AccessLevel;
-import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.SneakyThrows;
 import org.bukkit.Bukkit;
@@ -73,9 +70,9 @@ public final class Title {
     final Object subtitlePacket = Reflection.instance(PACKET_TEXT_CONSTRUCTOR, SUBTITLE,
         subtitleText);
 
-    sendPacket(player, timePacket);
-    sendPacket(player, titlePacket);
-    sendPacket(player, subtitlePacket);
+    ReflectionNms.sendPacket(player, timePacket);
+    ReflectionNms.sendPacket(player, titlePacket);
+    ReflectionNms.sendPacket(player, subtitlePacket);
   }
 
   @SneakyThrows
@@ -93,9 +90,9 @@ public final class Title {
         subtitleText);
 
     for (final Player player : Bukkit.getOnlinePlayers()) {
-      sendPacket(player, timePacket);
-      sendPacket(player, titlePacket);
-      sendPacket(player, subtitlePacket);
+      ReflectionNms.sendPacket(player, timePacket);
+      ReflectionNms.sendPacket(player, titlePacket);
+      ReflectionNms.sendPacket(player, subtitlePacket);
     }
   }
 
