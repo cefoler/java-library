@@ -1,4 +1,4 @@
-package com.celeste.library.spigot.factory;
+package com.celeste.library.spigot.model.entity;
 
 import java.io.ByteArrayOutputStream;
 import java.io.DataOutputStream;
@@ -19,7 +19,7 @@ import org.bukkit.plugin.messaging.PluginMessageListener;
  * @param <T> AbstractBukkitPlugin
  */
 @Getter
-public final class BungeeConnectionFactory<T extends Plugin> implements PluginMessageListener {
+public abstract class AbstractBungeeConnection<T extends Plugin> implements PluginMessageListener {
 
   private final T plugin;
   private final Messenger messenger;
@@ -31,7 +31,7 @@ public final class BungeeConnectionFactory<T extends Plugin> implements PluginMe
    *
    * @param plugin LobbyPlugin
    */
-  public BungeeConnectionFactory(final T plugin) {
+  public AbstractBungeeConnection(final T plugin) {
     this.plugin = plugin;
     this.messenger = plugin.getServer().getMessenger();
     this.connected = false;
@@ -78,10 +78,6 @@ public final class BungeeConnectionFactory<T extends Plugin> implements PluginMe
       throw new UnsupportedOperationException("Unable to connect server: " + server
           + " through Bungeecord", exception.getCause());
     }
-  }
-
-  @Override
-  public void onPluginMessageReceived(final String server, final Player player, final byte[] data) {
   }
 
 }
