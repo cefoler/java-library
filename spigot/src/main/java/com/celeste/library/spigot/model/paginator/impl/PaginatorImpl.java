@@ -13,7 +13,7 @@ public class PaginatorImpl<T> extends AbstractPaginator<T> {
 
   public PaginatorImpl(final int[] shape, final List<T> source) {
     super(shape, source);
-    this.currentPage = 1;
+    this.currentPage = 0;
   }
 
   /**
