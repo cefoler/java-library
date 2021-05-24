@@ -21,6 +21,7 @@ import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.ServicesManager;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.reflections.Reflections;
+import org.reflections.util.ClasspathHelper;
 
 @Getter
 public abstract class AbstractBukkitPlugin extends JavaPlugin {
@@ -39,23 +40,23 @@ public abstract class AbstractBukkitPlugin extends JavaPlugin {
     this.scheduledExecutor = Executors.newSingleThreadScheduledExecutor();
   }
 
-  public void register(final Class<?> clazz, final Object instance) {
-    registerListeners(clazz, instance);
-    registerCommands(clazz, instance);
+  public void register(final String prefix, final Class<?> clazz, final Object instance) {
+    registerListeners(prefix, clazz, instance);
+    registerCommands(prefix, clazz, instance);
   }
 
   @SafeVarargs
-  public final void register(final Entry<Class<?>, Object>... entries) {
-    registerListeners(entries);
-    registerCommands(entries);
+  public final void register(final String prefix, final Entry<Class<?>, Object>... entries) {
+    registerListeners(prefix, entries);
+    registerCommands(prefix, entries);
   }
 
-  public void registerListeners(final Class<?> clazz, final Object instance) {
-    registerListeners(new SimpleImmutableEntry<>(clazz, instance));
+  public void registerListeners(final String prefix, final Class<?> clazz, final Object instance) {
+    registerListeners(prefix, new SimpleImmutableEntry<>(clazz, instance));
   }
 
   @SafeVarargs
-  public final void registerListeners(final Entry<Class<?>, Object>... entries) {
+  public final void registerListeners(final String prefix, final Entry<Class<?>, Object>... entries) {
     try {
       final Class<?>[] parameters = Arrays.stream(entries)
           .map(Entry::getKey)
@@ -65,7 +66,7 @@ public abstract class AbstractBukkitPlugin extends JavaPlugin {
           .map(Entry::getValue)
           .toArray();
 
-      final Reflections reflections = new Reflections("");
+      final Reflections reflections = new Reflections(prefix);
 
       for (final Class<? extends Listener> clazz : reflections.getSubTypesOf(Listener.class)) {
         final Constructor<? extends Listener>[] constructors = Reflection.getConstructors(clazz);
@@ -86,12 +87,12 @@ public abstract class AbstractBukkitPlugin extends JavaPlugin {
     }
   }
 
-  public void registerCommands(final Class<?> clazz, final Object instance) {
-    registerCommands(new SimpleImmutableEntry<>(clazz, instance));
+  public void registerCommands(final String prefix, final Class<?> clazz, final Object instance) {
+    registerCommands(prefix, new SimpleImmutableEntry<>(clazz, instance));
   }
 
   @SafeVarargs
-  public final void registerCommands(final Entry<Class<?>, Object>... entries) {
+  public final void registerCommands(final String prefix, final Entry<Class<?>, Object>... entries) {
     try {
       final Class<?>[] parameters = Arrays.stream(entries)
           .map(Entry::getKey)
@@ -101,7 +102,7 @@ public abstract class AbstractBukkitPlugin extends JavaPlugin {
           .map(Entry::getValue)
           .toArray();
 
-      final Reflections reflections = new Reflections("");
+      final Reflections reflections = new Reflections(prefix);
 
       final BukkitFrame frame = new BukkitFrame(this);
       final MessageHolder holder = frame.getMessageHolder();
