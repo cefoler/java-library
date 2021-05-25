@@ -113,7 +113,7 @@ public final class ItemBuilder implements Cloneable {
           Enum.valueOf(Material.class, "MOB_SPAWNER") :
           Enum.valueOf(Material.class, "SPAWNER");
     } catch (Exception exception) {
-      throw new ServerStartError(exception.getMessage(), exception.getCause());
+      throw new ServerStartError(exception);
     }
   }
 

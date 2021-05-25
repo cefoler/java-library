@@ -52,7 +52,7 @@ public final class Title {
       TITLE = Reflection.getStatic(title);
       SUBTITLE = Reflection.getStatic(subtitle);
     } catch (Exception exception) {
-      throw new ServerStartError(exception.getMessage(), exception.getCause());
+      throw new ServerStartError(exception);
     }
   }
 

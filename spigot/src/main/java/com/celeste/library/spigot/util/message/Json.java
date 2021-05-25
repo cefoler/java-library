@@ -35,7 +35,7 @@ public final class Json {
       PACKET_CHAT_CONSTRUCTOR = Reflection.getConstructor(packetChatClazz, componentClazz,
           byte.class);
     } catch (Exception exception) {
-      throw new ServerStartError(exception.getMessage(), exception.getCause());
+      throw new ServerStartError(exception);
     }
   }
 

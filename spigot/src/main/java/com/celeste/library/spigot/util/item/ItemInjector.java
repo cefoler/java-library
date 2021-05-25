@@ -73,7 +73,7 @@ public final class ItemInjector {
       // HAS
       HAS_KEY = Reflection.getMethod(compoundClazz, "hasKey", String.class);
     } catch (Exception exception) {
-      throw new ServerStartError(exception.getMessage(), exception.getCause());
+      throw new ServerStartError(exception);
     }
   }
 

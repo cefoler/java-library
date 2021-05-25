@@ -38,7 +38,7 @@ public final class ReflectionNms {
 
       PLAYER_CONNECTION = Reflection.getField(entityPlayerClazz, "playerConnection");
     } catch (Exception exception) {
-      throw new ServerStartError(exception.getMessage(), exception.getCause());
+      throw new ServerStartError(exception);
     }
   }
 

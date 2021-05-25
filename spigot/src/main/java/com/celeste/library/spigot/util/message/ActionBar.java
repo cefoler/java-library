@@ -46,7 +46,7 @@ public final class ActionBar {
           ? Reflection.getConstructor(packetChatClazz, messageTypeClazz, UUID.class)
           : Reflection.getConstructor(packetChatClazz, messageTypeClazz);
     } catch (Exception exception) {
-      throw new ServerStartError(exception.getMessage(), exception.getCause());
+      throw new ServerStartError(exception);
     }
   }
 

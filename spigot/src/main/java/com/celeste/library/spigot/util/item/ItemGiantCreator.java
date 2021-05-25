@@ -44,7 +44,7 @@ public final class ItemGiantCreator {
       // INVISIBLE
       SET_INVISIBLE = Reflection.getMethod(entityClazz, "setInvisible", boolean.class);
     } catch (Exception exception) {
-      throw new ServerStartError(exception.getMessage(), exception.getCause());
+      throw new ServerStartError(exception);
     }
   }
 

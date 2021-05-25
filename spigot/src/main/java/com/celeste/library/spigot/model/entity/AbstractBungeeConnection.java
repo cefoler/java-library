@@ -76,7 +76,7 @@ public abstract class AbstractBungeeConnection<T extends Plugin> implements Plug
       player.sendPluginMessage(plugin, "BungeeCord", byteOutput.toByteArray());
     } catch (IOException exception) {
       throw new UnsupportedOperationException("Unable to connect server: " + server
-          + " through Bungeecord", exception.getCause());
+          + " through Bungeecord", exception);
     }
   }
 

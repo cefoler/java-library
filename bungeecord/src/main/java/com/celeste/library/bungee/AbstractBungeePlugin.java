@@ -77,7 +77,7 @@ public abstract class AbstractBungeePlugin extends Plugin {
         manager.registerListener(this, constructor.newInstance(instances));
       }
     } catch (Exception exception) {
-      throw new InvalidListenerException("Unable to register listener: ", exception.getCause());
+      throw new InvalidListenerException("Unable to register listener: ", exception);
     }
   }
 
@@ -121,7 +121,7 @@ public abstract class AbstractBungeePlugin extends Plugin {
         frame.registerCommands(constructor.newInstance(instances));
       }
     } catch (Exception exception) {
-      throw new InvalidCommandException("Unable to register command: ", exception.getCause());
+      throw new InvalidCommandException("Unable to register command: ", exception);
     }
   }
 
