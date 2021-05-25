@@ -78,7 +78,8 @@ public final class ItemBuilder implements Cloneable {
       GET_ITEM_META = Reflection.getMethod(craftItemStackClazz, "getItemMeta", itemStackClazz);
 
       // MODEL DATA
-      SET_CUSTOM_MODEL_DATA = Reflection.getMethod(ItemMeta.class, "setCustomModelData");
+      final Class<?> metaItemClazz = ReflectionNms.getObc("inventory.CraftMetaItem");
+      SET_CUSTOM_MODEL_DATA = Reflection.getMethod(metaItemClazz, "setCustomModelData");
 
       // UNBREAKABLE
       SET_BOOLEAN = Reflection.getMethod(compoundClazz, "setBoolean", String.class, boolean.class);
