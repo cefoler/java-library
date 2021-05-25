@@ -1,9 +1,8 @@
 subprojects {
-    apply plugin: 'maven'
     apply plugin: 'java'
 
     group 'com.celeste'
-    version '3.0.2-SNAPSHOT'
+    version '3.0.3-SNAPSHOT'
 
     sourceCompatibility = 1.8
     targetCompatibility = 1.8
