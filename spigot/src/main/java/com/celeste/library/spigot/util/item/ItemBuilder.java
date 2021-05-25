@@ -92,6 +92,7 @@ public final class ItemBuilder implements Cloneable {
       final Class<?> propertyClazz = Reflection.getClazz("com.mojang.authlib.properties.Property");
       final Class<?> propertiesClazz = Reflection.getClazz("com.mojang.authlib.properties"
           + ".PropertyMap");
+      final Class<?> metaSkullClazz = ReflectionNms.getObc("inventory.CraftMetaSkull");
 
       PROFILE_CONSTRUCTOR = Reflection.getConstructor(profileClazz, UUID.class, String.class);
       PROPERTY_CONSTRUCTOR = Reflection.getConstructor(propertyClazz, String.class, String.class);
@@ -99,12 +100,12 @@ public final class ItemBuilder implements Cloneable {
       PUT = Reflection.getMethod(propertiesClazz,"put", Object.class, Object.class);
 
       PROPERTIES = Reflection.getDcField(profileClazz, "properties");
-      PROFILE = Reflection.getDcField(SkullMeta.class, "profile");
+      PROFILE = Reflection.getDcField(metaSkullClazz, "profile");
 
       // SKULL OWNER
       SET_OWNER = ReflectionNms.isEqualsOrMoreRecent(13)
-          ? Reflection.getMethod(SkullMeta.class, "setOwningPlayer", OfflinePlayer.class)
-          : Reflection.getMethod(SkullMeta.class, "setOwner", String.class);
+          ? Reflection.getMethod(metaSkullClazz, "setOwningPlayer", OfflinePlayer.class)
+          : Reflection.getMethod(metaSkullClazz, "setOwner", String.class);
 
       // SPAWNERS
       SPAWNER = ReflectionNms.isEqualsOrMoreRecent(13) ?
