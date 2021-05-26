@@ -6,6 +6,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
+import java.util.function.BiFunction;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -34,6 +36,21 @@ public abstract class AbstractRegistry<T, U> implements Registry<T, U> {
   }
 
   @Override
+  public void registerAllIfAbsent(final Map<T, U> values) {
+    values.forEach(this::registerIfAbsent);
+  }
+
+  @Override
+  public U compute(final T key, final BiFunction<T, U, U> function) {
+    return map.compute(key, function);
+  }
+
+  @Override
+  public U computeIfAbsent(final T key, final Function<T, U> function) {
+    return map.computeIfAbsent(key, function);
+  }
+
+  @Override
   public U remove(final T key) {
     return map.remove(key);
   }
@@ -45,7 +62,7 @@ public abstract class AbstractRegistry<T, U> implements Registry<T, U> {
 
   @Override
   @Nullable
-  public U get(final T key) {
+  public U find(final T key) {
     return map.get(key);
   }
 
@@ -55,23 +72,23 @@ public abstract class AbstractRegistry<T, U> implements Registry<T, U> {
   }
 
   @Override
-  public Set<Entry<T, U>> getEntrySet() {
+  public Set<Entry<T, U>> findEntrySet() {
     return map.entrySet();
   }
 
   @Override
-  public Set<T> getKeys() {
+  public Set<T> findKeys() {
     return map.keySet();
   }
 
   @Override
-  public Collection<U> getAll() {
+  public Collection<U> findAll() {
     return map.values();
   }
 
   @Override
   public List<U> sort(final Comparator<U> comparator) {
-    return getAll()
+    return findAll()
         .stream()
         .sorted(comparator)
         .collect(Collectors.toList());
@@ -99,7 +116,6 @@ public abstract class AbstractRegistry<T, U> implements Registry<T, U> {
 
   @Override
   @SneakyThrows
-  @SuppressWarnings("unchecked")
   public Registry<T, U> clone() {
     return (Registry<T, U>) super.clone();
   }

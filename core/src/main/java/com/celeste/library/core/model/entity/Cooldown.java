@@ -1,6 +1,5 @@
 package com.celeste.library.core.model.entity;
 
-import com.celeste.library.core.model.registry.AbstractRegistry;
 import com.celeste.library.core.model.registry.Registry;
 import com.celeste.library.core.model.registry.impl.TreeRegistry;
 import java.util.Set;
@@ -51,7 +50,7 @@ public final class Cooldown<T> {
   }
 
   public Set<T> getKeys() {
-    return cooldown.getKeys();
+    return cooldown.findKeys();
   }
 
   /**
@@ -65,7 +64,7 @@ public final class Cooldown<T> {
       return false;
     }
 
-    if (cooldown.get(value) >= System.currentTimeMillis()) {
+    if (cooldown.find(value) >= System.currentTimeMillis()) {
       return true;
     }
 
