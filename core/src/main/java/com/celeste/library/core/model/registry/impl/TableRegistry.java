@@ -4,7 +4,7 @@ import com.celeste.library.core.model.registry.AbstractRegistry;
 import java.util.Hashtable;
 import java.util.Map;
 
-public final class TableRegistry<T, U> extends AbstractRegistry<T, U> {
+public class TableRegistry<T, U> extends AbstractRegistry<T, U> {
 
   /**
    * Creates a new TableAbstractRegistry

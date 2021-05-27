@@ -12,46 +12,7 @@ import java.util.Set;
  *
  * @param <T> Object
  */
-public final class Cooldown<T> {
-
-  private final Registry<T, Long> cooldown;
-
-  public Cooldown() {
-    this.cooldown = new TreeRegistry<>();
-  }
-
-  /**
-   * Registers the Object into the Cooldown with the provided time in Long
-   *
-   * @param value T
-   * @param time  long
-   */
-  public Long register(final T value, final long time) {
-    return cooldown.register(value, time);
-  }
-
-  /**
-   * Removes the Object from the Cooldown
-   *
-   * @param value T
-   */
-  public Long remove(final T value) {
-    return cooldown.remove(value);
-  }
-
-  /**
-   * Check if the Object is in the cooldown list.
-   *
-   * @param value T
-   * @return Boolean
-   */
-  public boolean contains(final T value) {
-    return cooldown.contains(value);
-  }
-
-  public Set<T> getKeys() {
-    return cooldown.findKeys();
-  }
+public class Cooldown<T> extends TreeRegistry<T, Long> {
 
   /**
    * Check if the cooldown from the Object is currently active.
@@ -60,11 +21,11 @@ public final class Cooldown<T> {
    * @return Boolean
    */
   public boolean isActive(final T value) {
-    if (!cooldown.contains(value)) {
+    if (!contains(value)) {
       return false;
     }
 
-    if (cooldown.find(value) >= System.currentTimeMillis()) {
+    if (find(value) >= System.currentTimeMillis()) {
       return true;
     }
 

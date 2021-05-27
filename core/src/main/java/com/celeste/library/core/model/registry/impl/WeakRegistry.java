@@ -4,7 +4,7 @@ import com.celeste.library.core.model.registry.AbstractRegistry;
 import java.util.Map;
 import java.util.WeakHashMap;
 
-public final class WeakRegistry<T, U> extends AbstractRegistry<T, U> {
+public class WeakRegistry<T, U> extends AbstractRegistry<T, U> {
 
   /**
    * Creates a new WeakAbstractRegistry

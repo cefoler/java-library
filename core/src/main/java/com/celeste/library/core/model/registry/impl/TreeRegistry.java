@@ -6,7 +6,7 @@ import java.util.Map;
 import java.util.SortedMap;
 import java.util.TreeMap;
 
-public final class TreeRegistry<T, U> extends AbstractRegistry<T, U> {
+public class TreeRegistry<T, U> extends AbstractRegistry<T, U> {
 
   /**
    * Creates a new TreeAbstractRegistry

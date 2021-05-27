@@ -5,7 +5,7 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-public final class LinkedRegistry<T, U> extends AbstractRegistry<T, U> {
+public class LinkedRegistry<T, U> extends AbstractRegistry<T, U> {
 
   /**
    * Creates a LinkedAbstractRegistry

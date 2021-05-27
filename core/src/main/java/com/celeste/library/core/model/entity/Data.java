@@ -5,7 +5,7 @@ import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
-public final class Data extends Properties {
+public class Data extends Properties {
 
   private Data(final Properties properties) {
     super(properties);

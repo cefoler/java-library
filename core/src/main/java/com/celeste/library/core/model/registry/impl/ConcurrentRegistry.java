@@ -4,7 +4,7 @@ import com.celeste.library.core.model.registry.AbstractRegistry;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-public final class ConcurrentRegistry<T, U> extends AbstractRegistry<T, U> {
+public class ConcurrentRegistry<T, U> extends AbstractRegistry<T, U> {
 
   /**
    * Creates ConcurrentAbstractRegistry
