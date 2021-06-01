@@ -1,6 +1,12 @@
 package com.celeste.library.spigot.model.menu;
 
 import java.util.Properties;
+
+import com.celeste.library.core.util.Reflection;
+import com.celeste.library.spigot.exception.MenuException;
+import com.celeste.library.spigot.model.menu.annotation.Menu;
+import com.celeste.library.spigot.model.menu.entity.AbstractContext;
+import com.celeste.library.spigot.model.menu.entity.event.InventoryRenderEvent;
 import lombok.Getter;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryCloseEvent;
@@ -24,13 +30,17 @@ public abstract class AbstractMenu {
 
   /**
    * Creates the AbstractMenu with the title and size specified.
-   *
-   * @param title String
-   * @param size  int
    */
-  public AbstractMenu(final String title, final int size) {
-    this.title = title;
-    this.size = size;
+  public AbstractMenu() {
+    final Class<? extends AbstractMenu> clazz = getClass();
+    if (!Reflection.containsAnnotation(clazz, Menu.class)) {
+      throw new MenuException("The menu " + clazz.getSimpleName() + " doesn't have a @Menu annotation");
+    }
+
+    final Menu annotation = Reflection.getAnnotation(clazz, Menu.class);
+
+    this.title = annotation.title();
+    this.size = annotation.size();
     this.items = new MenuItem[size];
   }
 
@@ -75,12 +85,27 @@ public abstract class AbstractMenu {
     return holder;
   }
 
+  public void onRender(final AbstractContext<InventoryRenderEvent> context) {
+  }
+
+  public void onOpen(final AbstractContext<InventoryOpenEvent> context) {
+  }
+
+  public void onClose(final AbstractContext<InventoryCloseEvent> context) {
+  }
+
+  public void onDrag(final AbstractContext<InventoryDragEvent> context) {
+  }
+
   /**
    * Event when the menu is rendered
    *
    * @param player Player that will render the menu
    * @param holder MenuHolder
+   *
+   * @deprecated since 3.0.6
    */
+  @Deprecated
   public void onRender(final Player player, final MenuHolder holder) {
   }
 
@@ -89,7 +114,10 @@ public abstract class AbstractMenu {
    *
    * @param event InventoryOpenEvent for the AbstractMenu
    * @param holder MenuHolder
+   *
+   * @deprecated since 3.0.6
    */
+  @Deprecated
   public void onOpen(final InventoryOpenEvent event, final MenuHolder holder) {
   }
 
@@ -98,7 +126,10 @@ public abstract class AbstractMenu {
    *
    * @param event InventoryCloseEvent for the AbstractMenu
    * @param holder MenuHolder
+   *
+   * @deprecated since 3.0.6
    */
+  @Deprecated
   public void onClose(final InventoryCloseEvent event, final MenuHolder holder) {
   }
 
@@ -107,7 +138,10 @@ public abstract class AbstractMenu {
    *
    * @param event InventoryDragEvent for the AbstractMenu
    * @param holder MenuHolder
+   *
+   * @deprecated since 3.0.6
    */
+  @Deprecated
   public void onDrag(final InventoryDragEvent event, final MenuHolder holder) {
   }
 
