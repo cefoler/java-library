@@ -73,7 +73,7 @@ public final class MenuHolder implements InventoryHolder {
   public MenuHolder(final AbstractMenu menu, final Properties properties) {
     this.menu = menu;
     this.properties = properties;
-    this.items = new MenuItem[menu.getSize()];
+    this.items = menu.getItems().toArray(new MenuItem[0]);
   }
 
   /**
