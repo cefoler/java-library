@@ -6,7 +6,6 @@ import lombok.Data;
 import lombok.RequiredArgsConstructor;
 
 @Data
-@RequiredArgsConstructor
 public abstract class AbstractPaginator<T> implements Paginator<T> {
 
   private final int[] shape;

@@ -8,9 +8,9 @@ import com.celeste.library.spigot.util.ReflectionNms;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
+import java.util.Arrays;
 import java.util.Properties;
 import lombok.Getter;
-import lombok.Setter;
 import lombok.SneakyThrows;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -61,9 +61,6 @@ public final class MenuHolder implements InventoryHolder {
   private AbstractMenu menu;
   private Inventory inventory;
 
-  @Setter
-  private MenuItem[] items;
-
   /**
    * AbstractMenu holder constructor.
    *
@@ -73,7 +70,6 @@ public final class MenuHolder implements InventoryHolder {
   public MenuHolder(final AbstractMenu menu, final Properties properties) {
     this.menu = menu;
     this.properties = properties;
-    this.items = new MenuItem[menu.getSize()];
   }
 
   /**
@@ -86,7 +82,7 @@ public final class MenuHolder implements InventoryHolder {
 
     this.inventory = Bukkit.createInventory(this, menu.getSize(), menu.getTitle());
 
-    menu.getItems().stream()
+    Arrays.stream(menu.getItems())
         .filter(item -> item != null && item.getItem() != null)
         .forEach(item -> inventory.setItem(item.getSlot(), item.getItem()));
 
@@ -101,7 +97,6 @@ public final class MenuHolder implements InventoryHolder {
     inventory.clear();
 
     this.menu = menu;
-    this.items = new MenuItem[menu.getSize()];
 
     final Object entityPlayer = Reflection.invoke(GET_HANDLE, player);
     final Object container = Reflection.get(ACTIVE_CONTAINER, entityPlayer);
@@ -116,12 +111,9 @@ public final class MenuHolder implements InventoryHolder {
 
     menu.onRender(player, this);
 
-    menu.getItems().stream()
+    Arrays.stream(menu.getItems())
         .filter(item -> item != null && item.getItem() != null)
-        .forEach(item -> {
-          inventory.setItem(item.getSlot(), item.getItem());
-          slot(item.getSlot(), item.getItem());
-        });
+        .forEach(item -> inventory.setItem(item.getSlot(), item.getItem()));
   }
 
   /**
@@ -130,7 +122,7 @@ public final class MenuHolder implements InventoryHolder {
   public void reopen() {
     inventory.clear();
 
-    menu.getItems().stream()
+    Arrays.stream(menu.getItems())
         .filter(item -> item != null && item.getItem() != null)
         .forEach(item -> inventory.setItem(item.getSlot(), item.getItem()));
   }
@@ -144,7 +136,7 @@ public final class MenuHolder implements InventoryHolder {
    */
   public MenuItem slot(final int slot, final ItemStack item) {
     final MenuItem menuItem = new MenuItem(slot).item(item);
-    items[slot] = menuItem;
+    menu.getItems()[slot] = menuItem;
 
     return menuItem;
   }
@@ -157,7 +149,7 @@ public final class MenuHolder implements InventoryHolder {
       return;
     }
 
-    final MenuItem menuItem = items[slot];
+    final MenuItem menuItem = menu.getItems()[slot];
     if (menuItem == null || menuItem.getAction() == null) {
       return;
     }
