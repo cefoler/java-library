@@ -6,6 +6,7 @@ import org.bukkit.event.entity.EntityEvent;
 import org.bukkit.event.player.PlayerEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
 
+@SuppressWarnings("unchecked")
 public final class EventFilters {
 
   private static final EventController CONTROLLER;

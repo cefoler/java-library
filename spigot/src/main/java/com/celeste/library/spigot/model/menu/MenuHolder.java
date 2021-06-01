@@ -4,6 +4,13 @@ import com.celeste.library.core.util.Reflection;
 import com.celeste.library.core.util.Validation;
 import com.celeste.library.spigot.error.ServerStartError;
 import com.celeste.library.spigot.exception.InvalidPropertyException;
+import com.celeste.library.spigot.exception.MenuException;
+import com.celeste.library.spigot.model.menu.annotation.Menu;
+import com.celeste.library.spigot.model.menu.entity.impl.CloseContext;
+import com.celeste.library.spigot.model.menu.entity.impl.DragContext;
+import com.celeste.library.spigot.model.menu.entity.impl.OpenContext;
+import com.celeste.library.spigot.model.menu.entity.impl.RenderContext;
+import com.celeste.library.spigot.model.menu.entity.event.InventoryRenderEvent;
 import com.celeste.library.spigot.util.ReflectionNms;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
@@ -78,8 +85,7 @@ public final class MenuHolder implements InventoryHolder {
    * @param player Player that will open the inventory
    */
   public void show(final Player player) {
-    menu.onRender(player, this);
-
+    menu.onRender(new RenderContext(player, new InventoryRenderEvent(), this));
     this.inventory = Bukkit.createInventory(this, menu.getSize(), menu.getTitle());
 
     Arrays.stream(menu.getItems())
@@ -109,7 +115,7 @@ public final class MenuHolder implements InventoryHolder {
         newTitle, menu.getSize());
     ReflectionNms.sendPacket(player, packet);
 
-    menu.onRender(player, this);
+    menu.onRender(new RenderContext(player, new InventoryRenderEvent(), this));
 
     Arrays.stream(menu.getItems())
         .filter(item -> item != null && item.getItem() != null)
@@ -142,8 +148,6 @@ public final class MenuHolder implements InventoryHolder {
   }
 
   public void handleClick(final InventoryClickEvent event) {
-    event.setCancelled(true);
-
     final int slot = event.getSlot();
     if (slot < 0) {
       return;
@@ -158,15 +162,15 @@ public final class MenuHolder implements InventoryHolder {
   }
 
   public void handleOpen(final InventoryOpenEvent event) {
-    menu.onOpen(event, this);
+    menu.onOpen(new OpenContext((Player) event.getPlayer(), event, this));
   }
 
   public void handleClose(final InventoryCloseEvent event) {
-    menu.onClose(event, this);
+    menu.onClose(new CloseContext((Player) event.getPlayer(), event, this));
   }
 
   public void handleDrag(final InventoryDragEvent event) {
-    menu.onDrag(event, this);
+    menu.onDrag(new DragContext((Player) event.getWhoClicked(), event, this));
   }
 
   /**

@@ -34,6 +34,20 @@ public final class MenuItem {
 
   /**
    * When clicked, opens a new AbstractMenu with properties
+   * as page one
+   *
+   * @param menu AbstractMenu that will be opened
+   * @return MenuItem
+   */
+  public MenuItem open(final AbstractMenu menu, final int page) {
+    final Properties properties = new Properties();
+    properties.put("page", page);
+
+    return open(menu, properties);
+  }
+
+  /**
+   * When clicked, opens a new AbstractMenu with properties
    *
    * @param menu AbstractMenu that will be opened
    * @param properties Immutable map of the properties.
@@ -42,6 +56,7 @@ public final class MenuItem {
   public MenuItem open(final AbstractMenu menu, final Properties properties) {
     return action((holder, event) -> {
       final Player player = (Player) event.getWhoClicked();
+
       holder.setProperties(properties);
       holder.show(menu, player);
     });

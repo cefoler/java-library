@@ -34,7 +34,7 @@ public final class EventWaiter<T extends Event> {
    * Event waiter constructor
    */
   @SneakyThrows
-  @SuppressWarnings({"UnstableApiUsage"})
+  @SuppressWarnings({"UnstableApiUsage", "unchecked"})
   public EventWaiter() {
     final TypeToken<T> token = new TypeToken<T>(getClass()) { };
     final Type type = token.getType();
@@ -67,7 +67,7 @@ public final class EventWaiter<T extends Event> {
    * @param executions Integer
    * @return EventWaiter
    */
-  public EventWaiter<T> expire(final int executions) {
+  public EventWaiter<T> expireAfter(final int executions) {
     this.executions = executions;
     this.expire = true;
     return this;

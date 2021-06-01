@@ -21,7 +21,6 @@ import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.ServicesManager;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.reflections.Reflections;
-import org.reflections.util.ClasspathHelper;
 
 @Getter
 public abstract class AbstractBukkitPlugin extends JavaPlugin {
@@ -40,22 +39,52 @@ public abstract class AbstractBukkitPlugin extends JavaPlugin {
     this.scheduledExecutor = Executors.newSingleThreadScheduledExecutor();
   }
 
+  public void registerListeners(final Listener... listeners) {
+    Arrays.stream(listeners).forEach(listener -> getManager().registerEvents(listener, this));
+  }
+
+  public void registerCommands(final Object... instances) {
+    final BukkitFrame frame = new BukkitFrame(this);
+    final MessageHolder holder = frame.getMessageHolder();
+
+    holder.setMessage(MessageType.ERROR, "§cA error occurred.");
+    holder.setMessage(MessageType.INCORRECT_TARGET, "Only {target} can execute this command..");
+    holder.setMessage(MessageType.INCORRECT_USAGE, "Wrong use! The correct is: /{usage}");
+    holder.setMessage(MessageType.NO_PERMISSION, "You don't have enough permissions.");
+
+    frame.registerCommands(instances);
+  }
+
+  public void registerCommands(final String[] messages, final Object... instances) {
+    final BukkitFrame frame = new BukkitFrame(this);
+    final MessageHolder holder = frame.getMessageHolder();
+
+    holder.setMessage(MessageType.ERROR, messages[0]);
+    holder.setMessage(MessageType.INCORRECT_TARGET, messages[1]);
+    holder.setMessage(MessageType.INCORRECT_USAGE, messages[2]);
+    holder.setMessage(MessageType.NO_PERMISSION, messages[3]);
+
+    frame.registerCommands(instances);
+  }
+
+  @Deprecated
   public void register(final String prefix, final Class<?> clazz, final Object instance) {
     registerListeners(prefix, clazz, instance);
     registerCommands(prefix, clazz, instance);
   }
 
-  @SafeVarargs
+  @SafeVarargs @Deprecated
   public final void register(final String prefix, final Entry<Class<?>, Object>... entries) {
     registerListeners(prefix, entries);
     registerCommands(prefix, entries);
   }
 
+  @Deprecated
   public void registerListeners(final String prefix, final Class<?> clazz, final Object instance) {
     registerListeners(prefix, new SimpleImmutableEntry<>(clazz, instance));
   }
 
-  @SafeVarargs
+  @SafeVarargs @Deprecated
   public final void registerListeners(final String prefix, final Entry<Class<?>, Object>... entries) {
     try {
       final Class<?>[] parameters = Arrays.stream(entries)
@@ -91,7 +120,7 @@ public abstract class AbstractBukkitPlugin extends JavaPlugin {
     registerCommands(prefix, new SimpleImmutableEntry<>(clazz, instance));
   }
 
-  @SafeVarargs
+  @SafeVarargs @Deprecated
   public final void registerCommands(final String prefix, final Entry<Class<?>, Object>... entries) {
     try {
       final Class<?>[] parameters = Arrays.stream(entries)
