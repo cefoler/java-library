@@ -6,6 +6,7 @@ import java.util.Properties;
 import lombok.Getter;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryCloseEvent;
+import org.bukkit.event.inventory.InventoryDragEvent;
 import org.bukkit.event.inventory.InventoryOpenEvent;
 import org.bukkit.inventory.ItemStack;
 
@@ -17,7 +18,7 @@ import org.bukkit.inventory.ItemStack;
  * class extended by AbstractMenu.</p>
  */
 @Getter
-public abstract class AbstractMenu implements Menu {
+public abstract class AbstractMenu {
 
   private final String title;
   private final int size;
@@ -89,6 +90,42 @@ public abstract class AbstractMenu implements Menu {
     items.set(slot, menuItem);
 
     return menuItem;
+  }
+
+  /**
+   * Event when the menu is rendered
+   *
+   * @param player Player that will render the menu
+   * @param holder MenuHolder
+   */
+  public void onRender(final Player player, final MenuHolder holder) {
+  }
+
+  /**
+   * Event when the menu is opened
+   *
+   * @param event InventoryOpenEvent for the AbstractMenu
+   * @param holder MenuHolder
+   */
+  public void onOpen(final InventoryOpenEvent event, final MenuHolder holder) {
+  }
+
+  /**
+   * Event when the menu is opened
+   *
+   * @param event InventoryCloseEvent for the AbstractMenu
+   * @param holder MenuHolder
+   */
+  public void onClose(final InventoryCloseEvent event, final MenuHolder holder) {
+  }
+
+  /**
+   * Event when the player drags item from their inventory
+   *
+   * @param event InventoryDragEvent for the AbstractMenu
+   * @param holder MenuHolder
+   */
+  public void onDrag(final InventoryDragEvent event, final MenuHolder holder) {
   }
 
 }

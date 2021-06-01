@@ -101,7 +101,7 @@ public final class MenuHolder implements InventoryHolder {
     inventory.clear();
 
     this.menu = menu;
-    this.items = new MenuItem[menu.getSize()];
+    this.items = menu.getItems().toArray(new MenuItem[0]);
 
     final Object entityPlayer = Reflection.invoke(GET_HANDLE, player);
     final Object container = Reflection.get(ACTIVE_CONTAINER, entityPlayer);
@@ -118,10 +118,7 @@ public final class MenuHolder implements InventoryHolder {
 
     menu.getItems().stream()
         .filter(item -> item != null && item.getItem() != null)
-        .forEach(item -> {
-          inventory.setItem(item.getSlot(), item.getItem());
-          slot(item.getSlot(), item.getItem());
-        });
+        .forEach(item -> inventory.setItem(item.getSlot(), item.getItem()));
   }
 
   /**
