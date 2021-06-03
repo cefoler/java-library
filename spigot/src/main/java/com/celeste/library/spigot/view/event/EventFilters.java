@@ -101,7 +101,7 @@ public final class EventFilters {
    * Checks if player equals to target
    *
    * @param player Player
-   * @param <T> Predicate
+   * @param <T>    Predicate
    * @return Predicate
    */
   public static <T extends PlayerEvent> Predicate<T> equals(final Player player) {

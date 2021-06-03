@@ -26,7 +26,7 @@ public class TableRegistry<T, U> extends AbstractRegistry<T, U> {
    * Creates a new TableAbstractRegistry with specific initial size and density
    *
    * @param initialSize int
-   * @param density float
+   * @param density     float
    */
   public TableRegistry(final int initialSize, final float density) {
     super(new Hashtable<>(initialSize, density));

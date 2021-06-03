@@ -1,5 +1,6 @@
 package com.celeste.library.spigot.model.paginator.impl;
 
+import com.celeste.library.spigot.model.menu.MenuHolder;
 import com.celeste.library.spigot.model.paginator.AbstractPaginator;
 import com.celeste.library.spigot.model.paginator.Paginator;
 import java.util.ArrayList;
@@ -11,8 +12,8 @@ public class PaginatorImpl<T> extends AbstractPaginator<T> {
 
   private int currentPage;
 
-  public PaginatorImpl(final int[] shape, final List<T> source) {
-    super(shape, source);
+  public PaginatorImpl(final MenuHolder holder, final int[] shape, final List<T> source) {
+    super(holder, shape, source);
     this.currentPage = 0;
   }
 
@@ -24,7 +25,7 @@ public class PaginatorImpl<T> extends AbstractPaginator<T> {
    */
   @Override
   public int totalPages() {
-    return (int) Math.ceil((double) getSource().size() / getShape().length);
+    return (int) Math.ceil((double) source.size() / shape.length);
   }
 
   /**
@@ -51,24 +52,28 @@ public class PaginatorImpl<T> extends AbstractPaginator<T> {
   @Override
   public Paginator<T> first() {
     this.currentPage = 0;
+    holder.setProperty("page", currentPage);
     return this;
   }
 
   @Override
   public Paginator<T> page(final int page) {
     this.currentPage = page;
+    holder.setProperty("page", currentPage);
     return this;
   }
 
   @Override
   public Paginator<T> previous() {
     this.currentPage = currentPage - 1;
+    holder.setProperty("page", currentPage);
     return this;
   }
 
   @Override
   public Paginator<T> next() {
     this.currentPage = currentPage + 1;
+    holder.setProperty("page", currentPage);
     return this;
   }
 
@@ -80,7 +85,7 @@ public class PaginatorImpl<T> extends AbstractPaginator<T> {
    */
   @Override
   public T getItem(final int index) {
-    return getSource().get(index);
+    return source.get(index);
   }
 
   /**
@@ -91,8 +96,8 @@ public class PaginatorImpl<T> extends AbstractPaginator<T> {
    */
   @Override
   public List<T> getItems(final int page) {
-    final int sourceSize = getSource().size();
-    final int shapeLength = getShape().length;
+    final int sourceSize = source.size();
+    final int shapeLength = shape.length;
 
     final List<T> items = new ArrayList<>();
 
@@ -101,7 +106,6 @@ public class PaginatorImpl<T> extends AbstractPaginator<T> {
     }
 
     if (sourceSize < shapeLength) {
-      final List<T> source = getSource();
       return new ArrayList<>(source);
     }
 

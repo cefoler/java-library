@@ -1,15 +1,59 @@
 package com.celeste.library.spigot.model.menu.entity;
 
 import com.celeste.library.spigot.model.menu.MenuHolder;
+import com.celeste.library.spigot.model.menu.MenuItem;
+import com.celeste.library.spigot.model.menu.AbstractMenu;
+import java.util.Properties;
+import java.util.UUID;
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
+import org.bukkit.event.inventory.InventoryCloseEvent;
+import org.bukkit.inventory.ItemStack;
 
-public interface Context<T extends Event> {
+@Getter
+@RequiredArgsConstructor
+public final class Context<T extends Event> {
 
-  T getContext();
+  private final Player player;
+  private final MenuHolder holder;
+  private final T event;
 
-  MenuHolder getHolder();
+  public UUID getPlayerId() {
+    return player.getUniqueId();
+  }
 
-  Player getPlayer();
+  public String getPlayerName() {
+    return player.getName();
+  }
+
+  public void sendMessage(final String message) {
+    player.sendMessage(message.replace("&", "§"));
+  }
+
+  public void close() {
+    player.closeInventory();
+  }
+
+  public Properties getProperties() {
+    return holder.getProperties();
+  }
+
+  public MenuItem slot(final int slot, final ItemStack item) {
+    return holder.slot(slot, item);
+  }
+
+  public void show(final AbstractMenu menu) {
+    holder.show(menu, new Properties(), player);
+  }
+
+  public void show(final AbstractMenu menu, final Properties properties) {
+    holder.show(menu, properties, player);
+  }
+
+  public void reopen() {
+    holder.reopen();
+  }
 
 }

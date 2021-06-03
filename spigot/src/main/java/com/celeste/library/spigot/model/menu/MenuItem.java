@@ -33,8 +33,7 @@ public final class MenuItem {
   }
 
   /**
-   * When clicked, opens a new AbstractMenu with properties
-   * as page one
+   * When clicked, opens a new AbstractMenu with properties as page one
    *
    * @param menu AbstractMenu that will be opened
    * @return MenuItem
@@ -54,12 +53,7 @@ public final class MenuItem {
    * @return MenuItem
    */
   public MenuItem open(final AbstractMenu menu, final Properties properties) {
-    return action((holder, event) -> {
-      final Player player = (Player) event.getWhoClicked();
-
-      holder.setProperties(properties);
-      holder.show(menu, player);
-    });
+    return action((holder, event) -> holder.show(menu, properties, (Player) event.getWhoClicked()));
   }
 
   /**

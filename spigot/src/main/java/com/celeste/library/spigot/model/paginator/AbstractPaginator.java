@@ -1,14 +1,15 @@
 package com.celeste.library.spigot.model.paginator;
 
+import com.celeste.library.spigot.model.menu.MenuHolder;
 import java.util.List;
-import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.RequiredArgsConstructor;
 
 @Data
 public abstract class AbstractPaginator<T> implements Paginator<T> {
 
-  private final int[] shape;
-  private final List<T> source;
+  protected final MenuHolder holder;
+
+  protected final int[] shape;
+  protected final List<T> source;
 
 }
