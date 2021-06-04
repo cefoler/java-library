@@ -84,6 +84,12 @@ public final class MenuHolder implements InventoryHolder {
   public void show(final Player player) {
     final InventoryRenderEvent event = new InventoryRenderEvent(player, inventory);
     System.out.println("A");
+
+    if (event == null) {
+      System.out.println("Algo do destino fez isso ser null");
+      return;
+    }
+
     Bukkit.getPluginManager().callEvent(event);
     System.out.println("B");
     if (event.isCancelled()) {
