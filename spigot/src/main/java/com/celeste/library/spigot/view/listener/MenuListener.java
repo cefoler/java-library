@@ -35,9 +35,7 @@ public final class MenuListener implements Listener {
   @EventHandler(ignoreCancelled = true)
   public void onInventoryRender(final InventoryRenderEvent event) {
     final Inventory inventory = event.getInventory();
-    System.out.println("Evento chamado");
     if (inventory.getHolder() instanceof MenuHolder) {
-      System.out.println("É holder");
       ((MenuHolder) (inventory.getHolder())).handleRender(event);
     }
   }
