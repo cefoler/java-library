@@ -14,7 +14,7 @@ public class PaginatorImpl<T> extends AbstractPaginator<T> {
 
   public PaginatorImpl(final MenuHolder holder, final int[] shape, final List<T> source) {
     super(holder, shape, source);
-    this.currentPage = 0;
+    this.currentPage = holder.getProperty("page");
   }
 
   /**
