@@ -44,6 +44,7 @@ public abstract class AbstractMenu {
 
     this.title = annotation.title();
     this.size = annotation.size();
+
     this.items = new MenuItem[size];
   }
 
@@ -58,20 +59,6 @@ public abstract class AbstractMenu {
   }
 
   /**
-   * Shows the player the AbstractMenu.
-   *
-   * @param player The player that will open the AbstractMenu
-   * @param properties ImmutableMap of properties needed on the AbstractMenu class
-   * @return MenuHolder
-   */
-  public final MenuHolder show(final Player player, final Properties properties) {
-    final MenuHolder holder = new MenuHolder(this, properties);
-    holder.show(player);
-
-    return holder;
-  }
-
-  /**
    * Shows the player the AbstractMenu and provides the page for the properties.
    *
    * @param player The player that will open the AbstractMenu
@@ -82,6 +69,17 @@ public abstract class AbstractMenu {
     final Properties properties = new Properties();
     properties.put("page", page);
 
+    return show(player, properties);
+  }
+
+  /**
+   * Shows the player the AbstractMenu.
+   *
+   * @param player The player that will open the AbstractMenu
+   * @param properties ImmutableMap of properties needed on the AbstractMenu class
+   * @return MenuHolder
+   */
+  public final MenuHolder show(final Player player, final Properties properties) {
     final MenuHolder holder = new MenuHolder(this, properties);
     holder.show(player);
 

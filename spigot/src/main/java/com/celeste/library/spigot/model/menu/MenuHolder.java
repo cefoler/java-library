@@ -125,11 +125,11 @@ public final class MenuHolder implements InventoryHolder {
     final Object container = Reflection.get(ACTIVE_CONTAINER, entityPlayer);
 
     final Object id = Reflection.get(WINDOW_ID, container);
-    final Object newTitle = Reflection.instance(MESSAGE_CONSTRUCTOR, menu.getTitle(),
+    final Object title = Reflection.instance(MESSAGE_CONSTRUCTOR, menu.getTitle(),
         new Object[0]);
 
     final Object packet = PACKET_WINDOW_CONSTRUCTOR.newInstance(id, "minecraft:chest",
-        newTitle, menu.getSize());
+        title, menu.getSize());
     ReflectionNms.sendPacket(player, packet);
 
     final InventoryRenderEvent event = new InventoryRenderEvent(player, inventory);
@@ -158,9 +158,11 @@ public final class MenuHolder implements InventoryHolder {
   /**
    * Reopens the AbstractMenu again with the new items set in the holder
    */
-  public void reopen(final Player player) {
+  public void update(final Player player) {
     inventory.clear();
-    menu.setItems(new MenuItem[menu.getSize()]);
+
+    final MenuItem[] menuItems = new MenuItem[menu.getSize()];
+    menu.setItems(menuItems);
 
     final InventoryRenderEvent event = new InventoryRenderEvent(player, inventory);
     Bukkit.getPluginManager().callEvent(event);

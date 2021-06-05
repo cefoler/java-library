@@ -34,14 +34,16 @@ public final class MenuPaginator<T> extends PaginatorImpl<T> {
   public void setup(final int previous, final int next) {
     if (getCurrentPage() > 0) {
       holder.slot(previous, getDefaultPreviousItem())
-          .setProperty("page", getCurrentPage() - 1)
-          .reopen();
+          .action((holder, event) -> previous())
+          .cancel()
+          .update();
     }
 
     if (getItems(getCurrentPage()).size() > (getCurrentPage() + 1) * getShape().length) {
       holder.slot(next, getDefaultNextItem())
-          .setProperty("page", getCurrentPage() + 1)
-          .reopen();
+          .action((holder, event) -> next())
+          .cancel()
+          .update();
     }
   }
 

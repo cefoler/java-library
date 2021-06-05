@@ -66,6 +66,15 @@ public final class MenuItem {
   }
 
   /**
+   * When clicked, clears and updates the inventory
+   *
+   * @return MenuItem
+   */
+  public MenuItem update() {
+    return action((holder, event) -> holder.update((Player) event.getWhoClicked()));
+  }
+
+  /**
    * When the item is clicked, the menu is closed.
    *
    * @return MenuItem

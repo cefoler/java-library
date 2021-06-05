@@ -1,15 +1,14 @@
 package com.celeste.library.spigot.model.menu.entity;
 
+import com.celeste.library.spigot.model.menu.AbstractMenu;
 import com.celeste.library.spigot.model.menu.MenuHolder;
 import com.celeste.library.spigot.model.menu.MenuItem;
-import com.celeste.library.spigot.model.menu.AbstractMenu;
 import java.util.Properties;
 import java.util.UUID;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
-import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.inventory.ItemStack;
 
 @Getter
@@ -48,12 +47,20 @@ public final class Context<T extends Event> {
     holder.show(menu, new Properties(), player);
   }
 
+  public void show(final AbstractMenu menu, final int page) {
+    holder.show(menu, page, player);
+  }
+
   public void show(final AbstractMenu menu, final Properties properties) {
     holder.show(menu, properties, player);
   }
 
   public void reopen() {
     holder.reopen();
+  }
+
+  public void reopen(final Player player) {
+    holder.update(player);
   }
 
 }
