@@ -26,7 +26,7 @@ public class ConcurrentRegistry<T, U> extends AbstractRegistry<T, U> {
    * Creates ConcurrentAbstractRegistry with specific size and density
    *
    * @param initialSize int
-   * @param density float
+   * @param density     float
    */
   public ConcurrentRegistry(final int initialSize, final float density) {
     super(new ConcurrentHashMap<>(initialSize, density));
@@ -36,8 +36,8 @@ public class ConcurrentRegistry<T, U> extends AbstractRegistry<T, U> {
    * Creates ConcurrentAbstractRegistry with specific size, density and threads
    *
    * @param initialSize int
-   * @param density float
-   * @param threads int
+   * @param density     float
+   * @param threads     int
    */
   public ConcurrentRegistry(final int initialSize, final float density, final int threads) {
     super(new ConcurrentHashMap<>(initialSize, density, threads));

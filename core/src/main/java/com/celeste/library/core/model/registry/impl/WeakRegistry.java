@@ -26,7 +26,7 @@ public class WeakRegistry<T, U> extends AbstractRegistry<T, U> {
    * Creates a new WeakAbstractRegistry with specific size and density
    *
    * @param initialSize int
-   * @param density float
+   * @param density     float
    */
   public WeakRegistry(final int initialSize, final float density) {
     super(new WeakHashMap<>(initialSize, density));

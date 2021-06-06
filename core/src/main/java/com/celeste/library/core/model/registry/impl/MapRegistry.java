@@ -26,7 +26,7 @@ public class MapRegistry<T, U> extends AbstractRegistry<T, U> {
    * Creates a new MapAbstractRegistry with specific size and density
    *
    * @param initialSize int
-   * @param density float
+   * @param density     float
    */
   public MapRegistry(final int initialSize, final float density) {
     super(new HashMap<>(initialSize, density));

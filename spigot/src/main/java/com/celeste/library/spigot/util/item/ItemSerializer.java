@@ -40,7 +40,7 @@ public final class ItemSerializer {
    *
    * @param serializedItems String
    * @return ItemStack[]
-   * @throws IOException Throws if a error occurs during deserialization
+   * @throws IOException            Throws if a error occurs during deserialization
    * @throws ClassNotFoundException Throws when it wasn't able to find the class
    */
   public static ItemStack[] deserialize(final String serializedItems)
