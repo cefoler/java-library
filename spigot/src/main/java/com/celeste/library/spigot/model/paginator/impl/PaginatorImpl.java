@@ -101,29 +101,24 @@ public class PaginatorImpl<T> extends AbstractPaginator<T> {
 
     final List<T> items = new ArrayList<>();
 
-    System.out.println("A");
     if (sourceSize == 0) {
       return items;
     }
 
-    System.out.println("B");
     if (sourceSize < shapeLength) {
       return new ArrayList<>(source);
     }
 
-    System.out.println("C");
     if (page < 0 || page >= totalPages()) {
       throw new ArrayIndexOutOfBoundsException("The page must be more than 1 to a maximum of "
           + totalPages() + ", given: " + page);
     }
 
-    System.out.println("D");
-    for (int index = shapeLength * page; index < shapeLength; index++) {
+    for (int index = shapeLength * page; index < shapeLength * page + shapeLength; index++) {
       final T item = getItem(index);
       items.add(item);
     }
 
-    System.out.println("E");
     return items;
   }
 
