@@ -79,9 +79,7 @@ public final class ItemBuilder implements Cloneable {
 
       // MODEL DATA
       final Class<?> metaItemClazz = ReflectionNms.getObc("inventory.CraftMetaItem");
-      SET_CUSTOM_MODEL_DATA = ReflectionNms.isEqualsOrMoreRecent(13)
-          ? Reflection.getMethod(metaItemClazz, "setCustomModelData")
-          : null;
+      SET_CUSTOM_MODEL_DATA = Reflection.getMethod(metaItemClazz, "setCustomModelData");
 
       // UNBREAKABLE
       SET_BOOLEAN = Reflection.getMethod(compoundClazz, "setBoolean", String.class, boolean.class);
@@ -100,7 +98,7 @@ public final class ItemBuilder implements Cloneable {
       PROFILE_CONSTRUCTOR = Reflection.getConstructor(profileClazz, UUID.class, String.class);
       PROPERTY_CONSTRUCTOR = Reflection.getConstructor(propertyClazz, String.class, String.class);
 
-      PUT = Reflection.getMethod(propertiesClazz, "put", Object.class, Object.class);
+      PUT = Reflection.getMethod(propertiesClazz,"put", Object.class, Object.class);
 
       PROPERTIES = Reflection.getDcField(profileClazz, "properties");
       PROFILE = Reflection.getDcField(metaSkullClazz, "profile");
@@ -112,8 +110,8 @@ public final class ItemBuilder implements Cloneable {
 
       // SPAWNERS
       SPAWNER = ReflectionNms.isEqualsOrMoreRecent(13) ?
-          Enum.valueOf(Material.class, "SPAWNER") :
-          Enum.valueOf(Material.class, "MOB_SPAWNER");
+          Enum.valueOf(Material.class, "MOB_SPAWNER") :
+          Enum.valueOf(Material.class, "SPAWNER");
     } catch (Exception exception) {
       throw new ServerStartError(exception);
     }
@@ -384,7 +382,7 @@ public final class ItemBuilder implements Cloneable {
     final SkullMeta skullMeta = (SkullMeta) meta;
 
     final byte[] textureBytes = String.format("{textures:{SKIN:{url:\"%s\"}}}",
-        new Object[]{newTexture}).getBytes();
+        new Object[] { newTexture }).getBytes();
 
     final String encoded = Base64.getEncoder().encodeToString(textureBytes);
 
@@ -392,7 +390,7 @@ public final class ItemBuilder implements Cloneable {
     final Object property = Reflection.instance(PROPERTY_CONSTRUCTOR, "textures", encoded);
     final Object properties = PROPERTIES.get(profile);
 
-    Reflection.invoke(PUT, properties, "textures", property);
+    Reflection.invoke(PUT, properties,"textures", property);
     PROFILE.set(skullMeta, profile);
 
     this.meta = skullMeta;

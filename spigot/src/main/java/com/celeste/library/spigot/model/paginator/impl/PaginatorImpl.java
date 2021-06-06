@@ -1,6 +1,5 @@
 package com.celeste.library.spigot.model.paginator.impl;
 
-import com.celeste.library.spigot.model.menu.MenuHolder;
 import com.celeste.library.spigot.model.paginator.AbstractPaginator;
 import com.celeste.library.spigot.model.paginator.Paginator;
 import java.util.ArrayList;
@@ -12,9 +11,9 @@ public class PaginatorImpl<T> extends AbstractPaginator<T> {
 
   private int currentPage;
 
-  public PaginatorImpl(final MenuHolder holder, final int[] shape, final List<T> source) {
-    super(holder, shape, source);
-    this.currentPage = holder.getProperty("page");
+  public PaginatorImpl(final int[] shape, final List<T> source) {
+    super(shape, source);
+    this.currentPage = 0;
   }
 
   /**
@@ -25,7 +24,7 @@ public class PaginatorImpl<T> extends AbstractPaginator<T> {
    */
   @Override
   public int totalPages() {
-    return (int) Math.ceil((double) source.size() / shape.length);
+    return (int) Math.ceil((double) getSource().size() / getShape().length);
   }
 
   /**
@@ -36,12 +35,12 @@ public class PaginatorImpl<T> extends AbstractPaginator<T> {
    */
   @Override
   public boolean hasPage(final int page) {
-    return page >= 1 && page <= totalPages();
+    return page >= 0 && page < totalPages();
   }
 
   @Override
   public boolean isFirst() {
-    return currentPage == 1;
+    return currentPage == 0;
   }
 
   @Override
@@ -51,44 +50,25 @@ public class PaginatorImpl<T> extends AbstractPaginator<T> {
 
   @Override
   public Paginator<T> first() {
-    this.currentPage = 1;
-    holder.setProperty("page", currentPage);
-    return this;
-  }
-
-  @Override
-  public Paginator<T> last() {
-    this.currentPage = totalPages();
-    holder.setProperty("page", currentPage);
+    this.currentPage = 0;
     return this;
   }
 
   @Override
   public Paginator<T> page(final int page) {
-    this.currentPage = page < 1 ? 1 : page > totalPages() ? totalPages() : page;
-    holder.setProperty("page", currentPage);
+    this.currentPage = page;
     return this;
   }
 
   @Override
   public Paginator<T> previous() {
-    if (isFirst()) {
-      return this;
-    }
-
     this.currentPage = currentPage - 1;
-    holder.setProperty("page", currentPage);
     return this;
   }
 
   @Override
   public Paginator<T> next() {
-    if (isLast()) {
-      return this;
-    }
-
     this.currentPage = currentPage + 1;
-    holder.setProperty("page", currentPage);
     return this;
   }
 
@@ -100,7 +80,7 @@ public class PaginatorImpl<T> extends AbstractPaginator<T> {
    */
   @Override
   public T getItem(final int index) {
-    return source.get(index);
+    return getSource().get(index);
   }
 
   /**
@@ -111,25 +91,26 @@ public class PaginatorImpl<T> extends AbstractPaginator<T> {
    */
   @Override
   public List<T> getItems(final int page) {
+    final int sourceSize = getSource().size();
+    final int shapeLength = getShape().length;
+
     final List<T> items = new ArrayList<>();
 
-    if (source.isEmpty()) {
+    if (sourceSize == 0) {
       return items;
     }
 
-    if (source.size() < shape.length) {
+    if (sourceSize < shapeLength) {
+      final List<T> source = getSource();
       return new ArrayList<>(source);
     }
 
-    if (page < 1 || page > totalPages()) {
+    if (page < 0 || page >= totalPages()) {
       throw new ArrayIndexOutOfBoundsException("The page must be more than 1 to a maximum of "
           + totalPages() + ", given: " + page);
     }
 
-    final int base = shape.length * (page - 1);
-    final int max = Math.min(base + shape.length, source.size());
-
-    for (int index = base; index < max; index++) {
+    for (int index = shapeLength * page; index < shapeLength; index++) {
       final T item = getItem(index);
       items.add(item);
     }

@@ -52,7 +52,7 @@ public final class ItemGiantCreator {
    * Creates a Giant item
    *
    * @param location Location
-   * @param item     ItemStack
+   * @param item ItemStack
    */
   @SneakyThrows
   public static void create(final Location location, final ItemStack item) {

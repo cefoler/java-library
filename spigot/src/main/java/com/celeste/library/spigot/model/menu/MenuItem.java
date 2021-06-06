@@ -33,7 +33,8 @@ public final class MenuItem {
   }
 
   /**
-   * When clicked, opens a new AbstractMenu with properties as page one
+   * When clicked, opens a new AbstractMenu with properties
+   * as page one
    *
    * @param menu AbstractMenu that will be opened
    * @return MenuItem
@@ -53,7 +54,12 @@ public final class MenuItem {
    * @return MenuItem
    */
   public MenuItem open(final AbstractMenu menu, final Properties properties) {
-    return action((holder, event) -> holder.show(menu, properties, (Player) event.getWhoClicked()));
+    return action((holder, event) -> {
+      final Player player = (Player) event.getWhoClicked();
+
+      holder.setProperties(properties);
+      holder.show(menu, player);
+    });
   }
 
   /**
@@ -63,15 +69,6 @@ public final class MenuItem {
    */
   public MenuItem reopen() {
     return action((holder, event) -> holder.reopen());
-  }
-
-  /**
-   * When clicked, clears and updates the inventory
-   *
-   * @return MenuItem
-   */
-  public MenuItem update() {
-    return action((holder, event) -> holder.update((Player) event.getWhoClicked()));
   }
 
   /**

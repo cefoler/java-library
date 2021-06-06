@@ -1,6 +1,8 @@
 package com.celeste.library.core.model.entity;
 
+import com.celeste.library.core.model.registry.Registry;
 import com.celeste.library.core.model.registry.impl.TreeRegistry;
+import java.util.Set;
 
 /**
  * Creates a new Cooldown that registers the Object and the time in Long.

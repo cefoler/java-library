@@ -4,8 +4,13 @@ import com.celeste.library.core.util.Reflection;
 import com.celeste.library.core.util.Validation;
 import com.celeste.library.spigot.error.ServerStartError;
 import com.celeste.library.spigot.exception.InvalidPropertyException;
-import com.celeste.library.spigot.model.menu.entity.Context;
-import com.celeste.library.spigot.view.event.wrapper.impl.InventoryRenderEvent;
+import com.celeste.library.spigot.exception.MenuException;
+import com.celeste.library.spigot.model.menu.annotation.Menu;
+import com.celeste.library.spigot.model.menu.entity.impl.CloseContext;
+import com.celeste.library.spigot.model.menu.entity.impl.DragContext;
+import com.celeste.library.spigot.model.menu.entity.impl.OpenContext;
+import com.celeste.library.spigot.model.menu.entity.impl.RenderContext;
+import com.celeste.library.spigot.model.menu.entity.event.InventoryRenderEvent;
 import com.celeste.library.spigot.util.ReflectionNms;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
@@ -58,7 +63,7 @@ public final class MenuHolder implements InventoryHolder {
     }
   }
 
-  private Properties properties;
+  private final Properties properties;
 
   private AbstractMenu menu;
   private Inventory inventory;
@@ -72,8 +77,6 @@ public final class MenuHolder implements InventoryHolder {
   public MenuHolder(final AbstractMenu menu, final Properties properties) {
     this.menu = menu;
     this.properties = properties;
-
-    properties.putIfAbsent("page", 1);
   }
 
   /**
@@ -82,14 +85,8 @@ public final class MenuHolder implements InventoryHolder {
    * @param player Player that will open the inventory
    */
   public void show(final Player player) {
+    menu.onRender(new RenderContext(player, new InventoryRenderEvent(), this));
     this.inventory = Bukkit.createInventory(this, menu.getSize(), menu.getTitle());
-
-    final InventoryRenderEvent event = new InventoryRenderEvent(player, inventory);
-    Bukkit.getPluginManager().callEvent(event);
-
-    if (event.isCancelled()) {
-      return;
-    }
 
     Arrays.stream(menu.getItems())
         .filter(item -> item != null && item.getItem() != null)
@@ -99,45 +96,26 @@ public final class MenuHolder implements InventoryHolder {
   }
 
   /**
-   * Reopens the AbstractMenu provided with the items, title and slot without flicking (Via
-   * packets)
-   */
-  public void show(final AbstractMenu menu, final int page, final Player player) {
-    final Properties properties = new Properties();
-    properties.put("page", page);
-
-    show(menu, properties, player);
-  }
-
-  /**
-   * Reopens the AbstractMenu provided with the items, title and slot without flicking (Via
-   * packets)
+   * Reopens the AbstractMenu provided with the items, title and slot without flicking (Via packets)
    */
   @SneakyThrows
-  public void show(final AbstractMenu menu, final Properties properties, final Player player) {
-    this.menu = menu;
-    this.properties = properties;
-
+  public void show(final AbstractMenu menu, final Player player) {
     inventory.clear();
-    properties.putIfAbsent("page", 1);
+
+    this.menu = menu;
 
     final Object entityPlayer = Reflection.invoke(GET_HANDLE, player);
     final Object container = Reflection.get(ACTIVE_CONTAINER, entityPlayer);
 
     final Object id = Reflection.get(WINDOW_ID, container);
-    final Object title = Reflection.instance(MESSAGE_CONSTRUCTOR, menu.getTitle(),
+    final Object newTitle = Reflection.instance(MESSAGE_CONSTRUCTOR, menu.getTitle(),
         new Object[0]);
 
     final Object packet = PACKET_WINDOW_CONSTRUCTOR.newInstance(id, "minecraft:chest",
-        title, menu.getSize());
+        newTitle, menu.getSize());
     ReflectionNms.sendPacket(player, packet);
 
-    final InventoryRenderEvent event = new InventoryRenderEvent(player, inventory);
-    Bukkit.getPluginManager().callEvent(event);
-
-    if (event.isCancelled()) {
-      return;
-    }
+    menu.onRender(new RenderContext(player, new InventoryRenderEvent(), this));
 
     Arrays.stream(menu.getItems())
         .filter(item -> item != null && item.getItem() != null)
@@ -149,27 +127,6 @@ public final class MenuHolder implements InventoryHolder {
    */
   public void reopen() {
     inventory.clear();
-
-    Arrays.stream(menu.getItems())
-        .filter(item -> item != null && item.getItem() != null)
-        .forEach(item -> inventory.setItem(item.getSlot(), item.getItem()));
-  }
-
-  /**
-   * Reopens the AbstractMenu again with the new items set in the holder
-   */
-  public void update(final Player player) {
-    inventory.clear();
-
-    final MenuItem[] menuItems = new MenuItem[menu.getSize()];
-    menu.setItems(menuItems);
-
-    final InventoryRenderEvent event = new InventoryRenderEvent(player, inventory);
-    Bukkit.getPluginManager().callEvent(event);
-
-    if (event.isCancelled()) {
-      return;
-    }
 
     Arrays.stream(menu.getItems())
         .filter(item -> item != null && item.getItem() != null)
@@ -192,7 +149,6 @@ public final class MenuHolder implements InventoryHolder {
 
   public void handleClick(final InventoryClickEvent event) {
     final int slot = event.getSlot();
-
     if (slot < 0) {
       return;
     }
@@ -205,20 +161,16 @@ public final class MenuHolder implements InventoryHolder {
     menuItem.getAction().run(this, event);
   }
 
-  public void handleRender(final InventoryRenderEvent event) {
-    menu.onRender(new Context<>(event.getPlayer(), this, event));
-  }
-
   public void handleOpen(final InventoryOpenEvent event) {
-    menu.onOpen(new Context<>((Player) event.getPlayer(), this, event));
+    menu.onOpen(new OpenContext((Player) event.getPlayer(), event, this));
   }
 
   public void handleClose(final InventoryCloseEvent event) {
-    menu.onClose(new Context<>((Player) event.getPlayer(), this, event));
+    menu.onClose(new CloseContext((Player) event.getPlayer(), event, this));
   }
 
   public void handleDrag(final InventoryDragEvent event) {
-    menu.onDrag(new Context<>((Player) event.getWhoClicked(), this, event));
+    menu.onDrag(new DragContext((Player) event.getWhoClicked(), event, this));
   }
 
   /**
@@ -238,11 +190,15 @@ public final class MenuHolder implements InventoryHolder {
   /**
    * Sets the properties with that Key on the Properties.
    *
-   * @param key Key for the value
+   * @param key   Key for the value
    * @param value Property object
    */
   public void setProperty(final String key, final Object value) {
     properties.put(key, value);
+  }
+
+  public void setProperties(final Properties newProperties) {
+    properties.putAll(newProperties);
   }
 
   /**
