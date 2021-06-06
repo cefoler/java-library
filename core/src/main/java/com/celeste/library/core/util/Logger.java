@@ -8,11 +8,14 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public final class Logger {
 
-  @Getter
-  private static final FluentLogger logger;
+  private static final FluentLogger FLUENT_LOGGER;
 
   static {
-    logger = FluentLogger.forEnclosingClass();
+    FLUENT_LOGGER = FluentLogger.forEnclosingClass();
+  }
+
+  public static FluentLogger getLogger() {
+    return FLUENT_LOGGER;
   }
 
 }

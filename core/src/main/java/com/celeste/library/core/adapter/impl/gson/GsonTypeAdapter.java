@@ -108,6 +108,7 @@ public final class GsonTypeAdapter<T> implements TypeAdapterFactory {
       }
 
       @Override
+      @SuppressWarnings("unchecked")
       public void write(final JsonWriter writer, final U value) throws IOException {
         final Class<?> clazz = value.getClass();
 

@@ -6,6 +6,10 @@ public class InvalidListenerException extends RuntimeException {
     super(error);
   }
 
+  public InvalidListenerException(final Throwable cause) {
+    super(cause);
+  }
+
   public InvalidListenerException(final String error, Throwable cause) {
     super(error, cause);
   }

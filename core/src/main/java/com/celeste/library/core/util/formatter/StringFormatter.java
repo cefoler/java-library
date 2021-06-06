@@ -22,9 +22,9 @@ public final class StringFormatter {
   public static String joinWithArg(final String[] args, final int startArg, final String format) {
     final StringJoiner joiner = new StringJoiner(format);
 
-    for (int index = startArg; index < args.length; index++) {
-      joiner.add(args[index]);
-    }
+    Arrays.asList(args)
+        .subList(startArg, args.length)
+        .forEach(joiner::add);
 
     return joiner.toString();
   }

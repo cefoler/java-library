@@ -4,6 +4,7 @@ import java.util.Arrays;
 import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import org.jetbrains.annotations.Nullable;
 
 @Getter
 @AllArgsConstructor
@@ -25,12 +26,6 @@ public enum TimeType {
     this.names = Arrays.asList(names);
   }
 
-  /**
-   * Returns the time according to its name
-   *
-   * @param time String
-   * @return TimeMultiplierType
-   */
   public static TimeType getType(final String time) {
     return Arrays.stream(values())
         .filter(type -> type.getNames().contains(time.toUpperCase()))
@@ -38,11 +33,25 @@ public enum TimeType {
         .orElseThrow(() -> new IllegalArgumentException("Invalid time: " + time));
   }
 
+  public static TimeType getType(final String time, @Nullable final TimeType orElse) {
+    return Arrays.stream(values())
+        .filter(type -> type.getNames().contains(time.toUpperCase()))
+        .findFirst()
+        .orElse(orElse);
+  }
+
   public static TimeType getType(final char time) {
     return Arrays.stream(values())
         .filter(type -> type.getNames().contains(Character.toString(time).toUpperCase()))
         .findFirst()
         .orElseThrow(() -> new IllegalArgumentException("Invalid time: " + time));
+  }
+
+  public static TimeType getType(final char time, @Nullable final TimeType orElse) {
+    return Arrays.stream(values())
+        .filter(type -> type.getNames().contains(Character.toString(time).toUpperCase()))
+        .findFirst()
+        .orElse(orElse);
   }
 
 }

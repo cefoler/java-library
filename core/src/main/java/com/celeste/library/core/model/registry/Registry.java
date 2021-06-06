@@ -30,15 +30,15 @@ public interface Registry<T, U> extends Serializable, Cloneable {
   U replace(final T key, final U value);
 
   @Nullable
-  U find(final T key);
+  U get(final T key);
 
   boolean contains(final T key);
 
-  Set<Entry<T, U>> findEntrySet();
+  Set<Entry<T, U>> getEntrySet();
 
-  Set<T> findKeys();
+  Set<T> getKeys();
 
-  Collection<U> findAll();
+  Collection<U> getAll();
 
   List<U> sort(final Comparator<U> comparator);
 

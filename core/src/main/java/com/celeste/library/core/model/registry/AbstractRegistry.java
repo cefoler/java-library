@@ -62,7 +62,7 @@ public abstract class AbstractRegistry<T, U> implements Registry<T, U> {
 
   @Override
   @Nullable
-  public U find(final T key) {
+  public U get(final T key) {
     return map.get(key);
   }
 
@@ -72,23 +72,23 @@ public abstract class AbstractRegistry<T, U> implements Registry<T, U> {
   }
 
   @Override
-  public Set<Entry<T, U>> findEntrySet() {
+  public Set<Entry<T, U>> getEntrySet() {
     return map.entrySet();
   }
 
   @Override
-  public Set<T> findKeys() {
+  public Set<T> getKeys() {
     return map.keySet();
   }
 
   @Override
-  public Collection<U> findAll() {
+  public Collection<U> getAll() {
     return map.values();
   }
 
   @Override
   public List<U> sort(final Comparator<U> comparator) {
-    return findAll()
+    return getAll()
         .stream()
         .sorted(comparator)
         .collect(Collectors.toList());
@@ -116,6 +116,7 @@ public abstract class AbstractRegistry<T, U> implements Registry<T, U> {
 
   @Override
   @SneakyThrows
+  @SuppressWarnings("unchecked")
   public Registry<T, U> clone() {
     return (Registry<T, U>) super.clone();
   }

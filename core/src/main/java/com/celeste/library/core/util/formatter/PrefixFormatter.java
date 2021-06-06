@@ -25,7 +25,6 @@ public enum PrefixFormatter {
   private final int multiplier;
 
   public static <T extends Number> String serialize(final T number) {
-    final PrefixFormatter[] prefixes = values();
     final DecimalFormat decimal = new DecimalFormat("#.##");
 
     double value = Double.parseDouble(String.valueOf(number));
@@ -41,7 +40,7 @@ public enum PrefixFormatter {
 
     value = Math.round(value * 100.0) / 100.0;
 
-    return String.valueOf(value) + prefixes[index];
+    return String.valueOf(value) + values()[index];
   }
 
   public static double deserialize(final String number) {

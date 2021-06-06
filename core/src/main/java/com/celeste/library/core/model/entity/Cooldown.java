@@ -1,8 +1,7 @@
 package com.celeste.library.core.model.entity;
 
-import com.celeste.library.core.model.registry.Registry;
 import com.celeste.library.core.model.registry.impl.TreeRegistry;
-import java.util.Set;
+import com.celeste.library.core.util.Validation;
 
 /**
  * Creates a new Cooldown that registers the Object and the time in Long.
@@ -17,19 +16,20 @@ public class Cooldown<T> extends TreeRegistry<T, Long> {
   /**
    * Check if the cooldown from the Object is currently active.
    *
-   * @param value T
+   * @param key T
    * @return Boolean
    */
-  public boolean isActive(final T value) {
-    if (!contains(value)) {
+  public boolean isActive(final T key) {
+
+    if (!contains(key)) {
       return false;
     }
 
-    if (find(value) >= System.currentTimeMillis()) {
+    if (Validation.notNull(get(key)) >= System.currentTimeMillis()) {
       return true;
     }
 
-    remove(value);
+    remove(key);
     return false;
   }
 
