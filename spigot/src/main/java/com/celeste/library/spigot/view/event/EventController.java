@@ -8,7 +8,7 @@ public final class EventController {
    * Checks if it's the same chunk
    *
    * @param location Location
-   * @param target Location
+   * @param target   Location
    * @return boolean
    */
   public boolean isSameChunk(final Location location, final Location target) {
@@ -19,7 +19,7 @@ public final class EventController {
    * Checks if it's the same block
    *
    * @param location Location
-   * @param target Location
+   * @param target   Location
    * @return boolean
    */
   public boolean isSameBlock(final Location location, final Location target) {
@@ -30,7 +30,7 @@ public final class EventController {
    * Method target check if it is the same world.
    *
    * @param location Location
-   * @param target Location
+   * @param target   Location
    * @return boolean true if it's the same
    */
   public boolean isSameWorld(final Location location, final Location target) {

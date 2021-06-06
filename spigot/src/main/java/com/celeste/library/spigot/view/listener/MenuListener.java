@@ -1,6 +1,7 @@
 package com.celeste.library.spigot.view.listener;
 
 import com.celeste.library.spigot.model.menu.MenuHolder;
+import com.celeste.library.spigot.view.event.wrapper.impl.InventoryRenderEvent;
 import lombok.NoArgsConstructor;
 import org.bukkit.Bukkit;
 import org.bukkit.event.EventHandler;
@@ -38,6 +39,19 @@ public final class MenuListener implements Listener {
     final Inventory inventory = event.getInventory();
     if (inventory.getHolder() instanceof MenuHolder) {
       ((MenuHolder) (inventory.getHolder())).handleClick(event);
+    }
+  }
+
+  /**
+   * Registers menu InventoryRenderEvent event.
+   *
+   * @param event InventoryRenderEvent
+   */
+  @EventHandler(ignoreCancelled = true)
+  public void onInventoryRender(final InventoryRenderEvent event) {
+    final Inventory inventory = event.getInventory();
+    if (inventory.getHolder() instanceof MenuHolder) {
+      ((MenuHolder) (inventory.getHolder())).handleRender(event);
     }
   }
 

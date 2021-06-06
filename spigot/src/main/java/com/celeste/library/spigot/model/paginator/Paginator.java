@@ -53,6 +53,13 @@ public interface Paginator<T> {
   Paginator<T> first();
 
   /**
+   * Goes to the last page of the paginator
+   *
+   * @return Paginator
+   */
+  Paginator<T> last();
+
+  /**
    * Goes to the page provided of the paginator
    *
    * @return Paginator
