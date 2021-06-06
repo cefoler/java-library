@@ -114,7 +114,10 @@ public class PaginatorImpl<T> extends AbstractPaginator<T> {
           + totalPages() + ", given: " + page);
     }
 
-    for (int index = shapeLength * page; index < shapeLength * page + shapeLength; index++) {
+    final int base = shapeLength * page;
+    final int max = Math.min(base + shapeLength, sourceSize);
+
+    for (int index = base; index < max; index++) {
       final T item = getItem(index);
       items.add(item);
     }
