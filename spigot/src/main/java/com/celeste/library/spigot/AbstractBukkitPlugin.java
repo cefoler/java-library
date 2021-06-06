@@ -40,7 +40,7 @@ public abstract class AbstractBukkitPlugin extends JavaPlugin {
   }
 
   public void registerListeners(final Listener... listeners) {
-    Arrays.stream(listeners).forEach(listener -> getManager().registerEvents(listener, this));
+    Arrays.stream(listeners).forEach(listener -> manager.registerEvents(listener, this));
   }
 
   public void registerCommands(final Object... instances) {

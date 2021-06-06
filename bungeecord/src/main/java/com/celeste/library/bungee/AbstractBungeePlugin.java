@@ -30,27 +30,60 @@ public abstract class AbstractBungeePlugin extends Plugin {
 
   public AbstractBungeePlugin() {
     this.manager = getProxy().getPluginManager();
+
     this.executor = Executors.newCachedThreadPool();
     this.scheduledExecutor = Executors.newSingleThreadScheduledExecutor();
   }
 
-  public void register(final String prefix, final Class<?> clazz, final Object instance) {
-    registerListeners(prefix, clazz, instance);
-    registerCommands(prefix, clazz, instance);
+  public void registerListeners(final Listener... listeners) {
+    Arrays.stream(listeners).forEach(listener -> manager.registerListener(this, listener));
   }
 
+  public void registerCommands(final Object... instances) {
+    final BungeeFrame frame = new BungeeFrame(this);
+    final MessageHolder holder = frame.getMessageHolder();
+
+    holder.setMessage(MessageType.ERROR, "§cA error occurred.");
+    holder.setMessage(MessageType.INCORRECT_TARGET, "Only {target} can execute this command..");
+    holder.setMessage(MessageType.INCORRECT_USAGE, "Wrong use! The correct is: /{usage}");
+    holder.setMessage(MessageType.NO_PERMISSION, "You don't have enough permissions.");
+
+    frame.registerCommands(instances);
+  }
+
+  public void registerCommands(final String[] messages, final Object... instances) {
+    final BungeeFrame frame = new BungeeFrame(this);
+    final MessageHolder holder = frame.getMessageHolder();
+
+    holder.setMessage(MessageType.ERROR, messages[0]);
+    holder.setMessage(MessageType.INCORRECT_TARGET, messages[1]);
+    holder.setMessage(MessageType.INCORRECT_USAGE, messages[2]);
+    holder.setMessage(MessageType.NO_PERMISSION, messages[3]);
+
+    frame.registerCommands(instances);
+  }
+
+  @Deprecated
+  public void register(final String path, final Class<?> clazz, final Object instance) {
+    registerListeners(path, clazz, instance);
+    registerCommands(path, clazz, instance);
+  }
+
+  @Deprecated
   @SafeVarargs
-  public final void register(final String prefix, final Entry<Class<?>, Object>... entries) {
-    registerListeners(prefix, entries);
-    registerCommands(prefix, entries);
+  public final void register(final String path, final Entry<Class<?>, Object>... entries) {
+    registerListeners(path, entries);
+    registerCommands(path, entries);
   }
 
-  public void registerListeners(final String prefix, final Class<?> clazz, final Object instance) {
-    registerListeners(prefix, new SimpleImmutableEntry<>(clazz, instance));
+  @Deprecated
+  public void registerListeners(final String path, final Class<?> clazz, final Object instance) {
+    registerListeners(path, new SimpleImmutableEntry<>(clazz, instance));
   }
 
+  @Deprecated
   @SafeVarargs
-  public final void registerListeners(final String prefix, final Entry<Class<?>, Object>... entries) {
+  public final void registerListeners(final String path, final Entry<Class<?>, Object>... entries) {
     try {
       final Class<?>[] parameters = Arrays.stream(entries)
           .map(Entry::getKey)
@@ -60,7 +93,7 @@ public abstract class AbstractBungeePlugin extends Plugin {
           .map(Entry::getValue)
           .toArray();
 
-      final Reflections reflections = new Reflections(prefix);
+      final Reflections reflections = new Reflections(path);
 
       for (final Class<? extends Listener> clazz : reflections.getSubTypesOf(Listener.class)) {
         final Constructor<? extends Listener>[] constructors = Reflection.getConstructors(clazz);
@@ -81,12 +114,14 @@ public abstract class AbstractBungeePlugin extends Plugin {
     }
   }
 
-  public void registerCommands(final String prefix, final Class<?> clazz, final Object instance) {
-    registerCommands(prefix, new SimpleImmutableEntry<>(clazz, instance));
+  @Deprecated
+  public void registerCommands(final String path, final Class<?> clazz, final Object instance) {
+    registerCommands(path, new SimpleImmutableEntry<>(clazz, instance));
   }
 
+  @Deprecated
   @SafeVarargs
-  public final void registerCommands(final String prefix, final Entry<Class<?>, Object>... entries) {
+  public final void registerCommands(final String path, final Entry<Class<?>, Object>... entries) {
     try {
       final Class<?>[] parameters = Arrays.stream(entries)
           .map(Entry::getKey)
@@ -96,7 +131,7 @@ public abstract class AbstractBungeePlugin extends Plugin {
           .map(Entry::getValue)
           .toArray();
 
-      final Reflections reflections = new Reflections(prefix);
+      final Reflections reflections = new Reflections(path);
 
       final BungeeFrame frame = new BungeeFrame(this);
       final MessageHolder holder = frame.getMessageHolder();
