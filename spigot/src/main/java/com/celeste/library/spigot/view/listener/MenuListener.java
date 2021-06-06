@@ -3,6 +3,7 @@ package com.celeste.library.spigot.view.listener;
 import com.celeste.library.spigot.model.menu.MenuHolder;
 import com.celeste.library.spigot.view.event.wrapper.impl.InventoryRenderEvent;
 import lombok.NoArgsConstructor;
+import org.bukkit.Bukkit;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
@@ -10,9 +11,23 @@ import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.inventory.InventoryDragEvent;
 import org.bukkit.event.inventory.InventoryOpenEvent;
 import org.bukkit.inventory.Inventory;
+import org.bukkit.plugin.Plugin;
 
 @NoArgsConstructor
 public final class MenuListener implements Listener {
+
+  private static boolean register;
+
+  static {
+    register = false;
+  }
+
+  public MenuListener(final Plugin plugin) {
+    if (!register) {
+      Bukkit.getPluginManager().registerEvents(this, plugin);
+      register = true;
+    }
+  }
 
   /**
    * Registers menu InventoryClick event.
