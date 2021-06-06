@@ -95,8 +95,7 @@ public final class DateFormatter {
     }
 
     if (seconds > 0) {
-      builder.append(
-          days > 0 || hours > 0 || minutes > 0 ? " and " : builder.length() > 0 ? ", " : "");
+      builder.append(days > 0 || hours > 0 || minutes > 0 ? " and " : builder.length() > 0 ? ", " : "");
       builder.append(seconds);
       builder.append(seconds == 1 ? " second" : "seconds");
     }

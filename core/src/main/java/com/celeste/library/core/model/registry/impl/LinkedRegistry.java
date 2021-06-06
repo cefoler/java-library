@@ -27,7 +27,7 @@ public class LinkedRegistry<T, U> extends AbstractRegistry<T, U> {
    * Creates a LinkedAbstractRegistry with specific size and density
    *
    * @param initialSize int
-   * @param density     float
+   * @param density float
    */
   public LinkedRegistry(final int initialSize, final float density) {
     super(new LinkedHashMap<>(initialSize, density));
@@ -37,7 +37,7 @@ public class LinkedRegistry<T, U> extends AbstractRegistry<T, U> {
    * Creates a LinkedAbstractRegistry with specific size, density and access order
    *
    * @param initialSize int
-   * @param density     float
+   * @param density float
    * @param accessOrder boolean
    */
   public LinkedRegistry(final int initialSize, final float density, final boolean accessOrder) {
