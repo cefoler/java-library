@@ -73,7 +73,7 @@ public final class MenuHolder implements InventoryHolder {
     this.menu = menu;
     this.properties = properties;
 
-    properties.putIfAbsent("page", 0);
+    properties.putIfAbsent("page", 1);
   }
 
   /**
@@ -119,7 +119,7 @@ public final class MenuHolder implements InventoryHolder {
     this.properties = properties;
 
     inventory.clear();
-    properties.putIfAbsent("page", 0);
+    properties.putIfAbsent("page", 1);
 
     final Object entityPlayer = Reflection.invoke(GET_HANDLE, player);
     final Object container = Reflection.get(ACTIVE_CONTAINER, entityPlayer);

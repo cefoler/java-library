@@ -32,14 +32,14 @@ public final class MenuPaginator<T> extends PaginatorImpl<T> {
    * @param next Next page slot
    */
   public void setup(final int previous, final int next) {
-    if (getCurrentPage() > 0) {
+    if (!isFirst()) {
       holder.slot(previous, getDefaultPreviousItem())
           .action((holder, event) -> previous())
           .cancel()
           .update();
     }
 
-    if (getItems(getCurrentPage()).size() > (getCurrentPage() + 1) * getShape().length) {
+    if (!isLast()) {
       holder.slot(next, getDefaultNextItem())
           .action((holder, event) -> next())
           .cancel()
