@@ -112,8 +112,8 @@ public final class ItemBuilder implements Cloneable {
 
       // SPAWNERS
       SPAWNER = ReflectionNms.isEqualsOrMoreRecent(13) ?
-          Enum.valueOf(Material.class, "MOB_SPAWNER") :
-          Enum.valueOf(Material.class, "SPAWNER");
+          Enum.valueOf(Material.class, "SPAWNER") :
+          Enum.valueOf(Material.class, "MOB_SPAWNER");
     } catch (Exception exception) {
       throw new ServerStartError(exception);
     }
