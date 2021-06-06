@@ -13,7 +13,6 @@ import org.bukkit.event.inventory.InventoryOpenEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.plugin.Plugin;
 
-@NoArgsConstructor
 public final class MenuListener implements Listener {
 
   private static boolean register;

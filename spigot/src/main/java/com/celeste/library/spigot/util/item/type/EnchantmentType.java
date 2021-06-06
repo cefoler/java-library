@@ -5,6 +5,7 @@ import java.util.Arrays;
 import java.util.List;
 import lombok.Getter;
 import org.bukkit.enchantments.Enchantment;
+import org.jetbrains.annotations.Nullable;
 
 @Getter
 public enum EnchantmentType {
@@ -60,6 +61,14 @@ public enum EnchantmentType {
         .filter(type -> type.getNames().contains(enchantment.toUpperCase()))
         .findFirst()
         .orElseThrow(() -> new IllegalArgumentException("Invalid enchantment: " + enchantment));
+  }
+
+  public static EnchantmentType getEnchantment(final String enchantment,
+      final @Nullable EnchantmentType orElse) {
+    return Arrays.stream(values())
+        .filter(type -> type.getNames().contains(enchantment.toUpperCase()))
+        .findFirst()
+        .orElse(orElse);
   }
 
   public static Enchantment getRealEnchantment(final String enchantment) {
