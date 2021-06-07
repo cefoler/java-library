@@ -28,14 +28,8 @@ subprojects {
         compileOnly 'org.projectlombok:lombok:1.18.20'
         annotationProcessor 'org.projectlombok:lombok:1.18.20'
 
-        compileOnly 'org.jetbrains:annotations:20.1.0'
-        annotationProcessor 'org.jetbrains:annotations:20.1.0'
-
-        /**
-         * TEST FRAMEWORK
-         */
-        testCompileOnly 'org.junit.jupiter:junit-jupiter-api:5.7.0'
-        testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.7.0'
+        compileOnly 'org.jetbrains:annotations:21.0.1'
+        annotationProcessor 'org.jetbrains:annotations:21.0.1'
     }
 
     jar {
@@ -49,5 +43,4 @@ subprojects {
     tasks.withType(Jar) {
         destinationDirectory.set(file("$rootDir/target/"))
     }
-
 }
