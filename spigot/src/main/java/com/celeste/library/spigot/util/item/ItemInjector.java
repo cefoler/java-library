@@ -79,21 +79,18 @@ public final class ItemInjector {
 
   private final ItemStack item;
 
-  private String getString(final String key) {
+  public String getString(final String key) {
     final Object object = get(GET_STRING, key);
-
     return object != null ? (String) object : "";
   }
 
-  private double getDouble(final String key) {
+  public double getDouble(final String key) {
     final Object object = get(GET_DOUBLE, key);
-
     return object != null ? (double) object : 0;
   }
 
-  private int getInteger(final String key) {
+  public int getInteger(final String key) {
     final Object object = get(GET_INT, key);
-
     return object != null ? (int) object : 0;
   }
 
@@ -141,7 +138,7 @@ public final class ItemInjector {
   }
 
   @SneakyThrows
-  private void remove(final String key) {
+  public void remove(final String key) {
     final Object nmsItem = Reflection.invokeStatic(AS_NMS_COPY, item);
     final boolean containsTag = (boolean) Reflection.invoke(HAS_TAG, nmsItem);
 
