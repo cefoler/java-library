@@ -24,8 +24,8 @@ import org.bukkit.event.inventory.InventoryOpenEvent;
 @Getter
 public abstract class AbstractMenu {
 
-  private final String title;
-  private final int size;
+  private String title;
+  private int size;
 
   private MenuItem[] items;
 
