@@ -4,6 +4,7 @@ import com.celeste.library.core.util.Reflection;
 import com.celeste.library.core.util.Validation;
 import com.celeste.library.spigot.error.ServerStartError;
 import com.celeste.library.spigot.exception.InvalidPropertyException;
+import com.celeste.library.spigot.exception.MenuException;
 import com.celeste.library.spigot.model.menu.entity.Context;
 import com.celeste.library.spigot.view.event.wrapper.impl.InventoryRenderEvent;
 import com.celeste.library.spigot.util.ReflectionNms;
@@ -82,7 +83,14 @@ public final class MenuHolder implements InventoryHolder {
    * @param player Player that will open the inventory
    */
   public void show(final Player player) {
-    this.inventory = Bukkit.createInventory(this, menu.getSize(), menu.getTitle());
+    final int size = menu.getSize();
+    final String title = menu.getTitle();
+    if (size == 0)
+      throw new MenuException(menu.getClass().getSimpleName() + " menu size has not been set");
+    if (title == null)
+      throw new MenuException("menu title has not been set");
+
+      this.inventory = Bukkit.createInventory(this, size, title);
 
     final InventoryRenderEvent event = new InventoryRenderEvent(player, inventory);
     Bukkit.getPluginManager().callEvent(event);
