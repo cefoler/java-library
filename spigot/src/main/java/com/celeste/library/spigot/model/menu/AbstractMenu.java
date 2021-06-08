@@ -29,6 +29,8 @@ public abstract class AbstractMenu {
 
   private MenuItem[] items;
 
+  protected boolean cancelOnClick;
+
   /**
    * Creates the AbstractMenu with the title and size specified.
    */

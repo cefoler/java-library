@@ -191,6 +191,9 @@ public final class MenuHolder implements InventoryHolder {
   }
 
   public void handleClick(final InventoryClickEvent event) {
+    if (menu.cancelOnClick)
+      event.setCancelled(true);
+
     final int slot = event.getSlot();
 
     if (slot < 0) {
