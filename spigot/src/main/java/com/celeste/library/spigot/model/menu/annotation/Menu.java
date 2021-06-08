@@ -15,4 +15,6 @@ public @interface Menu {
 
   int size();
 
+  boolean cancelOnClick() default false;
+
 }

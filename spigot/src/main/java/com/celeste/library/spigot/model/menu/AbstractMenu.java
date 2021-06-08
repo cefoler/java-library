@@ -29,21 +29,21 @@ public abstract class AbstractMenu {
 
   private MenuItem[] items;
 
+  protected boolean cancelOnClick;
+
   /**
    * Creates the AbstractMenu with the title and size specified.
    */
   public AbstractMenu() {
     final Class<? extends AbstractMenu> clazz = getClass();
 
-    if (!Reflection.containsAnnotation(clazz, Menu.class)) {
-      throw new MenuException("The menu " + clazz.getSimpleName()
-          + " doesn't have a @Menu annotation");
+    if (Reflection.containsAnnotation(clazz, Menu.class)) {
+      final Menu annotation = Reflection.getAnnotation(clazz, Menu.class);
+
+      this.title = annotation.title();
+      this.size = annotation.size();
+      this.cancelOnClick = annotation.cancelOnClick();
     }
-
-    final Menu annotation = Reflection.getAnnotation(clazz, Menu.class);
-
-    this.title = annotation.title();
-    this.size = annotation.size();
 
     this.items = new MenuItem[size];
   }
