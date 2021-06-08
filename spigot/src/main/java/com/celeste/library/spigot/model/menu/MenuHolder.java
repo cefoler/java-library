@@ -8,11 +8,13 @@ import com.celeste.library.spigot.exception.MenuException;
 import com.celeste.library.spigot.model.menu.entity.Context;
 import com.celeste.library.spigot.view.event.wrapper.impl.InventoryRenderEvent;
 import com.celeste.library.spigot.util.ReflectionNms;
+
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.Arrays;
 import java.util.Properties;
+
 import lombok.Getter;
 import lombok.SneakyThrows;
 import org.bukkit.Bukkit;
@@ -67,7 +69,7 @@ public final class MenuHolder implements InventoryHolder {
   /**
    * AbstractMenu holder constructor.
    *
-   * @param menu AbstractMenu
+   * @param menu       AbstractMenu
    * @param properties ImmutableMap of the properties.
    */
   public MenuHolder(final AbstractMenu menu, final Properties properties) {
@@ -85,12 +87,8 @@ public final class MenuHolder implements InventoryHolder {
   public void show(final Player player) {
     final int size = menu.getSize();
     final String title = menu.getTitle();
-    if (size == 0)
-      throw new MenuException(menu.getClass().getSimpleName() + " menu size has not been set");
-    if (title == null)
-      throw new MenuException("menu title has not been set");
 
-      this.inventory = Bukkit.createInventory(this, size, title);
+    this.inventory = Bukkit.createInventory(this, size, title);
 
     final InventoryRenderEvent event = new InventoryRenderEvent(player, inventory);
     Bukkit.getPluginManager().callEvent(event);
@@ -249,7 +247,7 @@ public final class MenuHolder implements InventoryHolder {
   /**
    * Sets the properties with that Key on the Properties.
    *
-   * @param key Key for the value
+   * @param key   Key for the value
    * @param value Property object
    */
   public void setProperty(final String key, final Object value) {

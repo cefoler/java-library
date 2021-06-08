@@ -11,9 +11,9 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 public @interface Menu {
 
-  String title();
+  String title() default " ";
 
-  int size();
+  int size() default 54;
 
   boolean cancelOnClick() default false;
 

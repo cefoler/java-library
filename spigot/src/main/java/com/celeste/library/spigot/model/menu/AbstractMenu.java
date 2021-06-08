@@ -43,7 +43,14 @@ public abstract class AbstractMenu {
       this.title = annotation.title();
       this.size = annotation.size();
       this.cancelOnClick = annotation.cancelOnClick();
+
+      this.items = new MenuItem[size];
+      return;
     }
+
+    this.title = " ";
+    this.size = 54;
+    this.cancelOnClick = false;
 
     this.items = new MenuItem[size];
   }
