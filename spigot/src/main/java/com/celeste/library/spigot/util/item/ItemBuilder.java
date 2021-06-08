@@ -168,11 +168,11 @@ public final class ItemBuilder implements Cloneable {
     return this;
   }
 
-  public ItemBuilder setLore(final String... lore) {
-    return setLore(ImmutableList.copyOf(lore));
+  public ItemBuilder lore(final String... lore) {
+    return lore(ImmutableList.copyOf(lore));
   }
 
-  public ItemBuilder setLore(final List<String> lore) {
+  public ItemBuilder lore(final List<String> lore) {
     if (lore.size() == 0) {
       return this;
     }
