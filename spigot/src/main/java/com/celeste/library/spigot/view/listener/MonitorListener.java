@@ -26,14 +26,15 @@ public final class MonitorListener implements Listener {
     }
   }
 
-  @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
+  @EventHandler(priority = EventPriority.LOWEST)
   public void onAsyncPlayerChat(final AsyncPlayerChatEvent event) {
     final Player player = event.getPlayer();
-    if (!ChatMonitor.MAP.containsKey(player.getUniqueId())) return;
+
+    final ChatMonitor chatMonitor = ChatMonitor.MAP.remove(player.getUniqueId());
+    if (chatMonitor == null) return;
 
     event.setCancelled(true);
 
-    final ChatMonitor chatMonitor = ChatMonitor.MAP.remove(player.getUniqueId());
     final String message = event.getMessage();
 
     // Starts the cancel consumer
