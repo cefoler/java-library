@@ -36,12 +36,12 @@ public class PaginatorImpl<T> extends AbstractPaginator<T> {
    */
   @Override
   public boolean hasPage(final int page) {
-    return page >= 1 && page <= totalPages();
+    return page >= 0 && page <= totalPages();
   }
 
   @Override
   public boolean isFirst() {
-    return currentPage == 1;
+    return currentPage == 0;
   }
 
   @Override
@@ -51,7 +51,7 @@ public class PaginatorImpl<T> extends AbstractPaginator<T> {
 
   @Override
   public Paginator<T> first() {
-    this.currentPage = 1;
+    this.currentPage = 0;
     holder.setProperty("page", currentPage);
     return this;
   }
@@ -65,7 +65,7 @@ public class PaginatorImpl<T> extends AbstractPaginator<T> {
 
   @Override
   public Paginator<T> page(final int page) {
-    this.currentPage = page < 1 ? 1 : page > totalPages() ? totalPages() : page;
+    this.currentPage = page < 0 ? 0 : page > totalPages() ? totalPages() : page;
     holder.setProperty("page", currentPage);
     return this;
   }
@@ -121,7 +121,7 @@ public class PaginatorImpl<T> extends AbstractPaginator<T> {
       return new ArrayList<>(source);
     }
 
-    if (page < 1 || page > totalPages()) {
+    if (page < 0 || page > totalPages()) {
       throw new ArrayIndexOutOfBoundsException("The page must be more than 1 to a maximum of "
           + totalPages() + ", given: " + page);
     }
