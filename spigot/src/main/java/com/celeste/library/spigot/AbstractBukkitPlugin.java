@@ -118,6 +118,7 @@ public abstract class AbstractBukkitPlugin extends JavaPlugin {
     }
   }
 
+  @Deprecated
   public void registerCommands(final String path, final Class<?> clazz, final Object instance) {
     registerCommands(path, new SimpleImmutableEntry<>(clazz, instance));
   }
