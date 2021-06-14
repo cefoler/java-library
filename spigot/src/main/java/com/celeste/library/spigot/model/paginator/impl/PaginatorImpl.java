@@ -46,7 +46,7 @@ public class PaginatorImpl<T> extends AbstractPaginator<T> {
 
   @Override
   public boolean isLast() {
-    return currentPage == totalPages();
+    return currentPage == totalPages() - 1;
   }
 
   @Override
