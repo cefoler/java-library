@@ -26,14 +26,17 @@ public final class MonitorListener implements Listener {
     }
   }
 
-  @EventHandler(priority = EventPriority.LOWEST)
+  @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
   public void onAsyncPlayerChat(final AsyncPlayerChatEvent event) {
     final Player player = event.getPlayer();
 
     final ChatMonitor chatMonitor = ChatMonitor.MAP.remove(player.getUniqueId());
-    if (chatMonitor == null) return;
+    if (chatMonitor == null) {
+      return;
+    }
 
     event.setCancelled(true);
+    event.setMessage(null);
 
     final String message = event.getMessage();
 
