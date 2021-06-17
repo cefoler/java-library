@@ -361,6 +361,7 @@ public final class ItemBuilder implements Cloneable {
     if (glow) {
       itemStack.addUnsafeEnchantment(Enchantment.DURABILITY, 1);
       meta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
+      return this;
     }
 
     if (!itemStack.containsEnchantment(Enchantment.DURABILITY)) {
