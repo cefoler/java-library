@@ -87,9 +87,9 @@ public final class ItemBuilder implements Cloneable {
       SET_BOOLEAN = Reflection.getMethod(compoundClazz, "setBoolean", String.class, boolean.class);
 
       // SKULL
-      SKULL = ReflectionNms.isEqualsOrMoreRecent(13) ?
-          Enum.valueOf(Material.class, "PLAYER_HEAD") :
-          Enum.valueOf(Material.class, "SKULL_ITEM");
+      SKULL = ReflectionNms.isEqualsOrMoreRecent(13)
+          ? Enum.valueOf(Material.class, "PLAYER_HEAD")
+          : Enum.valueOf(Material.class, "SKULL_ITEM");
 
       final Class<?> profileClazz = Reflection.getClazz("com.mojang.authlib.GameProfile");
       final Class<?> propertyClazz = Reflection.getClazz("com.mojang.authlib.properties.Property");
@@ -107,13 +107,13 @@ public final class ItemBuilder implements Cloneable {
 
       // SKULL OWNER
       SET_OWNER = ReflectionNms.isEqualsOrMoreRecent(13)
-          ? Reflection.getMethod(metaSkullClazz, "setOwningPlayer", OfflinePlayer.class)
-          : Reflection.getMethod(metaSkullClazz, "setOwner", String.class);
+          ? Reflection.getDcMethod(metaSkullClazz, "setOwningPlayer", OfflinePlayer.class)
+          : Reflection.getDcMethod(metaSkullClazz, "setOwner", String.class);
 
       // SPAWNERS
-      SPAWNER = ReflectionNms.isEqualsOrMoreRecent(13) ?
-          Enum.valueOf(Material.class, "SPAWNER") :
-          Enum.valueOf(Material.class, "MOB_SPAWNER");
+      SPAWNER = ReflectionNms.isEqualsOrMoreRecent(13)
+          ? Enum.valueOf(Material.class, "SPAWNER")
+          : Enum.valueOf(Material.class, "MOB_SPAWNER");
     } catch (Exception exception) {
       throw new ServerStartError(exception);
     }
