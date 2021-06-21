@@ -35,6 +35,10 @@ public final class Context<T extends Event> {
     player.closeInventory();
   }
 
+  public int getPage() {
+    return holder.getProperty("page");
+  }
+
   public Properties getProperties() {
     return holder.getProperties();
   }
