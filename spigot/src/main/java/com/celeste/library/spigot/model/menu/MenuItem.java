@@ -4,6 +4,7 @@ import com.celeste.library.spigot.model.menu.action.ClickAction;
 import java.util.Properties;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
@@ -109,8 +110,15 @@ public final class MenuItem {
     return action((holder, event) -> event.setCancelled(true));
   }
 
-  public MenuItem message(final String[] message) {
+  public MenuItem message(final String... message) {
     return action(((holder, event) -> event.getWhoClicked().sendMessage(message)));
+  }
+
+  public MenuItem sound(final Sound sound, final float volume, final float pitch) {
+    return action(((holder, event) -> {
+      final Player player = (Player) event.getWhoClicked();
+      player.playSound(player.getLocation(), sound, volume, pitch);
+    }));
   }
 
   /**
