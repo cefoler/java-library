@@ -109,6 +109,10 @@ public final class MenuItem {
     return action((holder, event) -> event.setCancelled(true));
   }
 
+  public MenuItem message(final String[] message) {
+    return action(((holder, event) -> event.getWhoClicked().sendMessage(message)));
+  }
+
   /**
    * After the item is clicked, it sets a property into the holder.
    *
