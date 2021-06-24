@@ -7,6 +7,7 @@ import org.bukkit.inventory.ItemStack;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
 public final class InventoryInjector {
@@ -24,11 +25,17 @@ public final class InventoryInjector {
         .collect(Collectors.toList());
   }
 
-  public void removeItemsFromMaterial(final Material material, final Player player) {
+  public int removeItemsFromMaterial(final Material material, final Player player) {
+    final AtomicInteger count = new AtomicInteger();
     Arrays.stream(player.getInventory().getContents())
         .filter(Objects::nonNull)
         .filter(item -> item.getType() == material)
-        .forEach(item -> player.getInventory().remove(item));
+        .forEach(item -> {
+          count.set(count.get() + item.getAmount());
+          player.getInventory().remove(item);
+        });
+
+    return count.get();
   }
 
 }
