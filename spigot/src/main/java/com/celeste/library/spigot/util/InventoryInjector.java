@@ -1,4 +1,4 @@
-package com.celeste.library.spigot.util.item;
+package com.celeste.library.spigot.util;
 
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
