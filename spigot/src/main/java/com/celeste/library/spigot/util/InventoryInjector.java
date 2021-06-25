@@ -1,5 +1,6 @@
 package com.celeste.library.spigot.util;
 
+import com.celeste.library.spigot.util.item.ItemBuilder;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -31,6 +32,16 @@ public final class InventoryInjector {
         .filter(Objects::nonNull)
         .filter(item -> item.getType() == material)
         .filter(item -> item.getDurability() == data)
+        .collect(Collectors.toList());
+  }
+
+  public List<ItemStack> getItemsFromModelData(final Material material, int data, final Player player) {
+    return Arrays.stream(player.getInventory().getContents())
+        .filter(Objects::nonNull)
+        .filter(item -> item.getType() == material)
+        .map(ItemBuilder::new)
+        .filter(item -> item.hasModelData(data))
+        .map(ItemBuilder::build)
         .collect(Collectors.toList());
   }
 

@@ -36,13 +36,13 @@ public final class EntityInjector {
       GET_HANDLE = Reflection.getMethod(entityClazz, "getHandle");
       GET_NBT_TAG = Reflection.getMethod(entityClazz, "getNBTTag");
 
-      GET_STRING = entityClazz.getMethod("getString", String.class);
-      GET_INT = entityClazz.getMethod("getInt", String.class);
-      GET_DOUBLE = entityClazz.getMethod("getDouble", String.class);
+      GET_STRING = TAG_CLASS.getMethod("getString", String.class);
+      GET_INT = TAG_CLASS.getMethod("getInt", String.class);
+      GET_DOUBLE = TAG_CLASS.getMethod("getDouble", String.class);
 
-      SET_STRING = entityClazz.getMethod("setString", String.class, String.class);
-      SET_INT = entityClazz.getMethod("setInt", String.class, int.class);
-      SET_DOUBLE = entityClazz.getMethod("setDouble", String.class, double.class);
+      SET_STRING = TAG_CLASS.getMethod("setString", String.class, String.class);
+      SET_INT = TAG_CLASS.getMethod("setInt", String.class, int.class);
+      SET_DOUBLE = TAG_CLASS.getMethod("setDouble", String.class, double.class);
 
       C = Reflection.getDcMethod(entityClazz, "c", TAG_CLASS);
       F = Reflection.getDcMethod(entityClazz, "f", TAG_CLASS);
@@ -78,6 +78,16 @@ public final class EntityInjector {
   }
 
   @SneakyThrows
+  public Object get(final Method method, final Entity entity, final String key) {
+    final Object handle = GET_HANDLE.invoke(entity);
+    final Object tag = GET_NBT_TAG.invoke(handle) == null
+        ? TAG_CLASS.getConstructor().newInstance()
+        : GET_NBT_TAG.invoke(handle);
+
+    return method.invoke(tag, key);
+  }
+
+  @SneakyThrows
   public void setInt(final Entity entity, final String key, int value) {
     set(SET_INT, entity, key, value);
   }
@@ -105,16 +115,6 @@ public final class EntityInjector {
   @SneakyThrows
   public double getDouble(final Entity entity, final String key) {
     return (double) get(GET_DOUBLE, entity, key);
-  }
-
-  @SneakyThrows
-  public Object get(final Method method, final Entity entity, final String key) {
-    final Object handle = GET_HANDLE.invoke(entity);
-    final Object tag = GET_NBT_TAG.invoke(handle) == null
-        ? TAG_CLASS.getConstructor().newInstance()
-        : GET_NBT_TAG.invoke(handle);
-
-    return method.invoke(tag, key);
   }
 
 }

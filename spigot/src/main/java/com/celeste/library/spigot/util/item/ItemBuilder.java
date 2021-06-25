@@ -49,6 +49,7 @@ public final class ItemBuilder implements Cloneable {
   private static final Method GET_ITEM_META;
 
   private static final Method SET_CUSTOM_MODEL_DATA;
+  private static final Method HAS_CUSTOM_MODEL_DATA;
 
   private static final Method SET_BOOLEAN;
 
@@ -81,6 +82,10 @@ public final class ItemBuilder implements Cloneable {
       final Class<?> metaItemClazz = ReflectionNms.getObc("inventory.CraftMetaItem");
       SET_CUSTOM_MODEL_DATA = ReflectionNms.isEqualsOrMoreRecent(13)
           ? Reflection.getDcMethod(metaItemClazz, "setCustomModelData")
+          : null;
+
+      HAS_CUSTOM_MODEL_DATA = ReflectionNms.isEqualsOrMoreRecent(13)
+          ? Reflection.getDcMethod(metaItemClazz, "hasCustomModelData")
           : null;
 
       // UNBREAKABLE
@@ -156,6 +161,11 @@ public final class ItemBuilder implements Cloneable {
   public ItemBuilder modelData(final int data) {
     SET_CUSTOM_MODEL_DATA.invoke(meta, data);
     return this;
+  }
+
+  @SneakyThrows
+  public boolean hasModelData(final int data) {
+    return (boolean) HAS_CUSTOM_MODEL_DATA.invoke(meta, data);
   }
 
   public ItemBuilder amount(final int amount) {

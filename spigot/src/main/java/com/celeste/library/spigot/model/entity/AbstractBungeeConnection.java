@@ -70,8 +70,6 @@ public abstract class AbstractBungeeConnection<T extends Plugin> implements Plug
   }
 
   @Override
-  public void onPluginMessageReceived(final String s, final Player player, final byte[] bytes) {
-
-  }
+  public void onPluginMessageReceived(final String s, final Player player, final byte[] bytes) {}
 
 }
