@@ -1,6 +1,8 @@
 package com.celeste.library.core.model.entity;
 
 import java.util.Properties;
+
+import com.celeste.library.core.util.Validation;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 
@@ -12,21 +14,20 @@ public class Data extends Properties {
   }
 
   public synchronized Data setData(final Object key, final Object value) {
-    put(String.valueOf(key), String.valueOf(value));
-
+    put(String.valueOf(key), value);
     return this;
   }
 
-  public synchronized String getData(final String key) {
-    final Object value = get(key);
-
-    return value instanceof String ? String.valueOf(value) : null;
+  @SuppressWarnings("unchecked")
+  public synchronized <T> T getData(final String key) {
+    final Object object = get(key);
+    return (T) object;
   }
 
-  public synchronized String getData(final String key, final String orElse) {
-    final String value = getData(key);
-
-    return value != null ? value : orElse;
+  @SuppressWarnings("unchecked")
+  public synchronized <T> T getData(final String key, final Object orElse) {
+    final T value = getData(key);
+    return value != null ? value : (T) orElse;
   }
 
   public static synchronized Data create() {

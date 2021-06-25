@@ -2,6 +2,8 @@ package com.celeste.library.core.util.formatter;
 
 import java.text.DecimalFormat;
 import java.util.Arrays;
+
+import com.celeste.library.core.util.pattern.RegexPattern;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
@@ -39,7 +41,6 @@ public enum PrefixFormatter {
     }
 
     value = Math.round(value * 100.0) / 100.0;
-
     return String.valueOf(value) + values()[index];
   }
 
@@ -53,7 +54,7 @@ public enum PrefixFormatter {
       return Double.parseDouble(number);
     }
 
-    final String numbers = number.replaceAll("[A-Z|a-z]", "");
+    final String numbers = number.replaceAll(RegexPattern.LETTERS.getPattern(), "");
     final double value = Double.parseDouble(numbers);
 
     return value * Math.pow(1000, prefix.getMultiplier());

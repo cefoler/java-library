@@ -3,6 +3,8 @@ package com.celeste.library.core.util.formatter;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
+import java.util.Arrays;
+
 @Getter
 @RequiredArgsConstructor
 public enum RomanFormatter {
@@ -25,29 +27,19 @@ public enum RomanFormatter {
   private final int arabic;
 
   public static String serialize(final int arabic) {
-    for (final RomanFormatter type : values()) {
-      if (arabic < type.getArabic()) {
-        continue;
-      }
-
-      final int newArabic = arabic - type.getArabic();
-      return type.getRoman() + serialize(newArabic);
-    }
-
-    return "";
+    return Arrays.stream(values())
+        .filter(type -> type.getArabic() < arabic)
+        .map(type -> type.getRoman() + serialize(arabic - type.getArabic()))
+        .findFirst()
+        .orElse("");
   }
 
   public static int deserialize(final String roman) {
-    for (final RomanFormatter type : values()) {
-      if (!roman.startsWith(type.getRoman())) {
-        continue;
-      }
-
-      final String newRoman = roman.replaceFirst(type.getRoman(), "");
-      return type.getArabic() + deserialize(newRoman);
-    }
-
-    return 0;
+    return Arrays.stream(values())
+        .filter(type -> roman.startsWith(type.getRoman()))
+        .map(type -> type.getArabic() + deserialize(roman.replaceFirst(type.getRoman(), "")))
+        .findFirst()
+        .orElse(0);
   }
 
 }

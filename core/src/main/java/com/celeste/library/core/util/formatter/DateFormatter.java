@@ -5,6 +5,8 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.TimeZone;
 import java.util.concurrent.TimeUnit;
+
+import com.celeste.library.core.util.pattern.RegexPattern;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 
@@ -48,8 +50,8 @@ public final class DateFormatter {
     long totalTime = 0;
 
     for (final String date : dates) {
-      final String prefix = date.replaceAll("[0-9]", "");
-      final int time = Integer.parseInt(date.replaceAll("[A-Z|a-z]", ""));
+      final String prefix = date.replaceAll(RegexPattern.NUMBERS.getPattern(), "");
+      final int time = Integer.parseInt(date.replaceAll(RegexPattern.LETTERS.getPattern(), ""));
 
       final TimeType type = TimeType.getType(prefix);
       totalTime += type.getMultiplier() * time;

@@ -11,16 +11,9 @@ import com.celeste.library.core.util.Validation;
  *
  * @param <T> Object
  */
-public class Cooldown<T> extends TreeRegistry<T, Long> {
+public final class Cooldown<T> extends TreeRegistry<T, Long> {
 
-  /**
-   * Check if the cooldown from the Object is currently active.
-   *
-   * @param key T
-   * @return Boolean
-   */
   public boolean isActive(final T key) {
-
     if (!contains(key)) {
       return false;
     }

@@ -2,7 +2,6 @@ package com.celeste.library.spigot.view.listener;
 
 import com.celeste.library.spigot.model.menu.MenuHolder;
 import com.celeste.library.spigot.view.event.wrapper.impl.InventoryRenderEvent;
-import lombok.NoArgsConstructor;
 import org.bukkit.Bukkit;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -50,7 +49,8 @@ public final class MenuListener implements Listener {
   public void onInventoryRender(final InventoryRenderEvent event) {
     final Inventory inventory = event.getInventory();
     if (inventory.getHolder() instanceof MenuHolder) {
-      ((MenuHolder) (inventory.getHolder())).handleRender(event);
+      final MenuHolder holder = (MenuHolder) inventory.getHolder();
+      holder.handleRender(event);
     }
   }
 
@@ -63,7 +63,8 @@ public final class MenuListener implements Listener {
   public void onInventoryOpen(final InventoryOpenEvent event) {
     final Inventory inventory = event.getInventory();
     if (inventory.getHolder() instanceof MenuHolder) {
-      ((MenuHolder) (inventory.getHolder())).handleOpen(event);
+      final MenuHolder holder = (MenuHolder) inventory.getHolder();
+      holder.handleOpen(event);
     }
   }
 
@@ -76,7 +77,8 @@ public final class MenuListener implements Listener {
   public void onInventoryClose(final InventoryCloseEvent event) {
     final Inventory inventory = event.getInventory();
     if (inventory.getHolder() instanceof MenuHolder) {
-      ((MenuHolder) (inventory.getHolder())).handleClose(event);
+      final MenuHolder holder = (MenuHolder) inventory.getHolder();
+      holder.handleClose(event);
     }
   }
 
@@ -89,7 +91,8 @@ public final class MenuListener implements Listener {
   public void onInventoryDrag(final InventoryDragEvent event) {
     final Inventory inventory = event.getInventory();
     if (inventory.getHolder() instanceof MenuHolder) {
-      ((MenuHolder) (inventory.getHolder())).handleDrag(event);
+      final MenuHolder holder = (MenuHolder) inventory.getHolder();
+      holder.handleDrag(event);
     }
   }
 
