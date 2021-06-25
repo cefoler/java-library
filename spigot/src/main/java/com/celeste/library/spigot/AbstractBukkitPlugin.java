@@ -1,5 +1,6 @@
 package com.celeste.library.spigot;
 
+import com.celeste.library.core.factory.ThreadingFactory;
 import com.celeste.library.core.util.Reflection;
 import com.celeste.library.spigot.annotation.CommandHolder;
 import com.celeste.library.spigot.exception.InvalidCommandException;
@@ -25,18 +26,20 @@ import org.reflections.Reflections;
 @Getter
 public abstract class AbstractBukkitPlugin extends JavaPlugin {
 
+  private static final ExecutorService EXECUTOR;
+  private static final ScheduledExecutorService SCHEDULED;
+
+  static {
+    EXECUTOR = ThreadingFactory.threadPool();
+    SCHEDULED = ThreadingFactory.scheduledThreadPool();
+  }
+
   private final PluginManager manager;
   private final ServicesManager service;
-
-  private final ExecutorService executor;
-  private final ScheduledExecutorService scheduledExecutor;
 
   public AbstractBukkitPlugin() {
     this.manager = Bukkit.getServer().getPluginManager();
     this.service = Bukkit.getServer().getServicesManager();
-
-    this.executor = Executors.newCachedThreadPool();
-    this.scheduledExecutor = Executors.newSingleThreadScheduledExecutor();
   }
 
   public void registerListeners(final Listener... listeners) {
@@ -162,6 +165,14 @@ public abstract class AbstractBukkitPlugin extends JavaPlugin {
     } catch (Exception exception) {
       throw new InvalidCommandException("Unable to register command: ", exception);
     }
+  }
+
+  public static ExecutorService getExecutor() {
+    return EXECUTOR;
+  }
+
+  public static ScheduledExecutorService getScheduled() {
+    return SCHEDULED;
   }
 
 }

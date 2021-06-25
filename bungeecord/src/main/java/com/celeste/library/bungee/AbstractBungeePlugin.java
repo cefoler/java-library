@@ -3,6 +3,7 @@ package com.celeste.library.bungee;
 import com.celeste.library.bungee.annotation.CommandHolder;
 import com.celeste.library.bungee.exception.InvalidCommandException;
 import com.celeste.library.bungee.exception.InvalidListenerException;
+import com.celeste.library.core.factory.ThreadingFactory;
 import com.celeste.library.core.util.Reflection;
 import java.lang.reflect.Constructor;
 import java.util.AbstractMap.SimpleImmutableEntry;
@@ -23,16 +24,18 @@ import org.reflections.Reflections;
 @Getter
 public abstract class AbstractBungeePlugin extends Plugin {
 
-  private final PluginManager manager;
+  private static final ExecutorService EXECUTOR;
+  private static final ScheduledExecutorService SCHEDULED;
 
-  private final ExecutorService executor;
-  private final ScheduledExecutorService scheduledExecutor;
+  static {
+    EXECUTOR = ThreadingFactory.threadPool();
+    SCHEDULED = ThreadingFactory.scheduledThreadPool();
+  }
+
+  private final PluginManager manager;
 
   public AbstractBungeePlugin() {
     this.manager = getProxy().getPluginManager();
-
-    this.executor = Executors.newCachedThreadPool();
-    this.scheduledExecutor = Executors.newSingleThreadScheduledExecutor();
   }
 
   public void registerListeners(final Listener... listeners) {
@@ -158,6 +161,14 @@ public abstract class AbstractBungeePlugin extends Plugin {
     } catch (Exception exception) {
       throw new InvalidCommandException("Unable to register command: ", exception);
     }
+  }
+
+  public static ExecutorService getExecutor() {
+    return EXECUTOR;
+  }
+
+  public static ScheduledExecutorService getScheduled() {
+    return SCHEDULED;
   }
 
 }
