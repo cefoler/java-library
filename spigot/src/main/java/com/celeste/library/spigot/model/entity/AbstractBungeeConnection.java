@@ -3,6 +3,7 @@ package com.celeste.library.spigot.model.entity;
 import java.io.ByteArrayOutputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
+
 import lombok.Getter;
 import lombok.SneakyThrows;
 import org.bukkit.entity.Player;
@@ -13,7 +14,7 @@ import org.bukkit.plugin.messaging.PluginMessageListener;
 /**
  * Creates a connection between the Bukkit plugin with the Bungeecord.
  *
- * <p>This factory auxiliaries
+ * <p>This factory auxiliates
  * to send the player to another servers connected into the Bungeecord
  *
  * @param <T> AbstractBukkitPlugin
@@ -26,20 +27,12 @@ public abstract class AbstractBungeeConnection<T extends Plugin> implements Plug
 
   private boolean connected;
 
-  /**
-   * Creates the instance of the factory
-   *
-   * @param plugin LobbyPlugin
-   */
   public AbstractBungeeConnection(final T plugin) {
     this.plugin = plugin;
     this.messenger = plugin.getServer().getMessenger();
     this.connected = false;
   }
 
-  /**
-   * Loads the Bungeecord channel
-   */
   public void load() {
     messenger.registerIncomingPluginChannel(plugin, "BungeeCord", this);
     messenger.registerOutgoingPluginChannel(plugin, "BungeeCord");
@@ -47,9 +40,6 @@ public abstract class AbstractBungeeConnection<T extends Plugin> implements Plug
     connected = true;
   }
 
-  /**
-   * Unloads the Bungeecord channel
-   */
   public void unload() {
     messenger.unregisterIncomingPluginChannel(plugin, "BungeeCord", this);
     messenger.unregisterOutgoingPluginChannel(plugin, "BungeeCord");
@@ -75,9 +65,13 @@ public abstract class AbstractBungeeConnection<T extends Plugin> implements Plug
 
       player.sendPluginMessage(plugin, "BungeeCord", byteOutput.toByteArray());
     } catch (IOException exception) {
-      throw new UnsupportedOperationException("Unable to connect server: " + server
-          + " through Bungeecord", exception);
+      throw new UnsupportedOperationException("Unable to connect server: " + server + " through Bungeecord", exception);
     }
+  }
+
+  @Override
+  public void onPluginMessageReceived(final String s, final Player player, final byte[] bytes) {
+
   }
 
 }

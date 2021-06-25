@@ -1,8 +1,8 @@
 package com.celeste.library.spigot.util.monitor;
 
-import lombok.Builder;
+import com.celeste.library.core.model.registry.Registry;
+import com.celeste.library.core.model.registry.impl.ConcurrentRegistry;
 import lombok.Data;
-import org.bukkit.Bukkit;
 
 import java.util.Map;
 import java.util.UUID;
@@ -10,18 +10,36 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Consumer;
 
 @Data
-@Builder
 public final class ChatMonitor {
 
-  public static final Map<UUID, ChatMonitor> MAP;
+  public static final Registry<UUID, ChatMonitor> MAP;
 
   static {
-    MAP = new ConcurrentHashMap<>();
+    MAP = new ConcurrentRegistry<>();
   }
 
-  private final UUID playerId;
+  private UUID playerId;
 
-  private final Consumer<String> message;
-  private final Consumer<Void> cancel;
+  private Consumer<String> message;
+  private Consumer<Void> cancel;
+
+  private ChatMonitor player(final UUID playerId) {
+    this.playerId = playerId;
+    return this;
+  }
+
+  private ChatMonitor message(final Consumer<String> message) {
+    this.message = message;
+    return this;
+  }
+
+  private ChatMonitor cancel(final Consumer<Void> cancel) {
+    this.cancel = cancel;
+    return this;
+  }
+
+  private void build() {
+    MAP.register(playerId, this);
+  }
 
 }

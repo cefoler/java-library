@@ -7,18 +7,15 @@ import com.celeste.library.spigot.util.message.type.ClickEventType;
 import com.celeste.library.spigot.util.message.type.HoverEventType;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
-import lombok.Builder;
 import lombok.Data;
 import lombok.SneakyThrows;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
 @Data
-@Builder
 public final class Json {
 
   private static final Constructor<?> PACKET_CHAT_CONSTRUCTOR;
-
   private static final Method A;
 
   static {
@@ -34,7 +31,7 @@ public final class Json {
 
       PACKET_CHAT_CONSTRUCTOR = Reflection.getConstructor(packetChatClazz, componentClazz,
           byte.class);
-    } catch (Exception exception) {
+    } catch (ReflectiveOperationException exception) {
       throw new ServerStartError(exception);
     }
   }

@@ -237,6 +237,7 @@ public final class MenuHolder implements InventoryHolder {
    * @param <T> Property class
    * @return Class of the property
    */
+  @SuppressWarnings("unchecked")
   public <T> T getProperty(final String key) {
     final Object object = properties.get(key);
     Validation.notNull(object, InvalidPropertyException.class);

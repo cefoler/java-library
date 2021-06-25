@@ -51,7 +51,7 @@ public final class Title {
       TIME = Reflection.getStatic(times);
       TITLE = Reflection.getStatic(title);
       SUBTITLE = Reflection.getStatic(subtitle);
-    } catch (Exception exception) {
+    } catch (ReflectiveOperationException exception) {
       throw new ServerStartError(exception);
     }
   }

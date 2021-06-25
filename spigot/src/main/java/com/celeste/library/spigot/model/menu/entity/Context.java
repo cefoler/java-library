@@ -7,6 +7,7 @@ import java.util.Properties;
 import java.util.UUID;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
 import org.bukkit.inventory.ItemStack;
@@ -27,20 +28,24 @@ public final class Context<T extends Event> {
     return player.getName();
   }
 
-  public void sendMessage(final String message) {
+  public void message(final String message) {
     player.sendMessage(message.replace("&", "§"));
   }
 
-  public void close() {
-    player.closeInventory();
+  public void sound(final Sound sound, float volume, float pitch) {
+    player.playSound(player.getLocation(), sound, volume, pitch);
   }
 
   public int getPage() {
-    return holder.getProperty("page");
+    return getProperty("page");
   }
 
   public Properties getProperties() {
     return holder.getProperties();
+  }
+
+  public <P> P getProperty(final String key) {
+    return holder.getProperty(key);
   }
 
   public MenuItem slot(final int slot, final ItemStack item) {
@@ -65,6 +70,10 @@ public final class Context<T extends Event> {
 
   public void update(final Player player) {
     holder.update(player);
+  }
+
+  public void close() {
+    player.closeInventory();
   }
 
 }
