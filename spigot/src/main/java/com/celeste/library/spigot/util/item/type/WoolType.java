@@ -39,7 +39,7 @@ public enum WoolType {
     return Arrays.stream(values())
         .filter(woolType -> woolType.getData() == data)
         .findFirst()
-        .orElseThrow(() -> new UnsupportedOperationException("The used wool type was not found."));
+        .orElseThrow(() -> new IllegalArgumentException("The used wool type was not found."));
   }
 
 }

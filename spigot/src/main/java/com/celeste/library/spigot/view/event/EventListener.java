@@ -30,16 +30,17 @@ public final class EventListener<T extends Event> implements Listener, EventExec
       action.accept(newEvent);
     }
 
-    if (builder.isExpire()) {
-      final int executions = builder.getExecutions();
-
-      if (executions == 0) {
-        unregister();
-        return;
-      }
-
-      builder.setExecutions(executions - 1);
+    if (!builder.isExpire()) {
+      return;
     }
+
+    final int executions = builder.getExecutions();
+    if (executions == 0) {
+      unregister();
+      return;
+    }
+
+    builder.setExecutions(executions - 1);
   }
 
   /**

@@ -2,6 +2,7 @@ package com.celeste.library.spigot.util.item.type;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.Arrays;
 
@@ -28,6 +29,7 @@ public enum DyeType {
 
   private final int data;
 
+  @Nullable
   public static DyeType get(final int data) {
     return Arrays.stream(values())
         .filter(dyeType -> dyeType.getData() == data)

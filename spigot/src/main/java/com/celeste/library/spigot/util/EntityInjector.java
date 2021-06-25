@@ -25,33 +25,42 @@ public final class EntityInjector {
   private static Method C;
   private static Method F;
 
+  public static Method SET_INVISIBLE;
+
   static {
     try {
       TAG_CLASS = ReflectionNms.getNms("NBTTagCompound");
 
-      final Class<?> craftEntityClazz = ReflectionNms.getObc("entity.CraftEntity");
+      final Class<?> entityClazz = ReflectionNms.getNms("Entity");
 
-      GET_HANDLE = Reflection.getDcMethod(craftEntityClazz, "getHandle");
-      GET_NBT_TAG = Reflection.getDcMethod(GET_HANDLE.getClass(), "getNBTTag");
+      GET_HANDLE = Reflection.getMethod(entityClazz, "getHandle");
+      GET_NBT_TAG = Reflection.getMethod(entityClazz, "getNBTTag");
 
-      GET_STRING = TAG_CLASS.getMethod("getString", String.class);
-      GET_INT = TAG_CLASS.getMethod("getInt", String.class);
-      GET_DOUBLE = TAG_CLASS.getMethod("getDouble", String.class);
+      GET_STRING = entityClazz.getMethod("getString", String.class);
+      GET_INT = entityClazz.getMethod("getInt", String.class);
+      GET_DOUBLE = entityClazz.getMethod("getDouble", String.class);
 
-      SET_STRING = TAG_CLASS.getMethod("setString", String.class, String.class);
-      SET_INT = TAG_CLASS.getMethod("setInt", String.class, int.class);
-      SET_DOUBLE = TAG_CLASS.getMethod("setDouble", String.class, double.class);
+      SET_STRING = entityClazz.getMethod("setString", String.class, String.class);
+      SET_INT = entityClazz.getMethod("setInt", String.class, int.class);
+      SET_DOUBLE = entityClazz.getMethod("setDouble", String.class, double.class);
 
-      C = Reflection.getDcMethod(GET_HANDLE.getClass(), "c", TAG_CLASS);
-      F = Reflection.getDcMethod(GET_HANDLE.getClass(), "f", TAG_CLASS);
+      C = Reflection.getDcMethod(entityClazz, "c", TAG_CLASS);
+      F = Reflection.getDcMethod(entityClazz, "f", TAG_CLASS);
+
+      SET_INVISIBLE = Reflection.getMethod(entityClazz, "setInvisible", boolean.class);
     } catch (ReflectiveOperationException exception) {
       exception.printStackTrace();
     }
   }
 
   @SneakyThrows
-  public void setAI(final LivingEntity entity) {
-    setInt(entity, "NoAI", 1);
+  public void setAI(final LivingEntity entity, final boolean active) {
+    setInt(entity, "NoAI", active ? 0 : 1);
+  }
+
+  @SneakyThrows
+  public void setInvisible(final Entity entity, final boolean active) {
+    Reflection.invoke(SET_INVISIBLE, entity, active);
   }
 
   @SneakyThrows
