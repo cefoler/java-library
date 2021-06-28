@@ -23,17 +23,17 @@ public final class ChatMonitor {
   private Consumer<String> message;
   private Consumer<Void> cancel;
 
-  private ChatMonitor player(final UUID playerId) {
+  public ChatMonitor player(final UUID playerId) {
     this.playerId = playerId;
     return this;
   }
 
-  private ChatMonitor message(final Consumer<String> message) {
+  public ChatMonitor message(final Consumer<String> message) {
     this.message = message;
     return this;
   }
 
-  private ChatMonitor cancel(final Consumer<Void> cancel) {
+  public ChatMonitor cancel(final Consumer<Void> cancel) {
     this.cancel = cancel;
     return this;
   }
