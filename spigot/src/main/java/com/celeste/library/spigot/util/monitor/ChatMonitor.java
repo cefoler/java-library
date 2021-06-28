@@ -23,6 +23,10 @@ public final class ChatMonitor {
   private Consumer<String> message;
   private Consumer<Void> cancel;
 
+  public static ChatMonitor builder() {
+    return new ChatMonitor();
+  }
+
   public ChatMonitor player(final UUID playerId) {
     this.playerId = playerId;
     return this;
@@ -38,8 +42,9 @@ public final class ChatMonitor {
     return this;
   }
 
-  private void build() {
+  private ChatMonitor build() {
     MAP.register(playerId, this);
+    return this;
   }
 
 }
