@@ -42,7 +42,7 @@ public final class ChatMonitor {
     return this;
   }
 
-  private ChatMonitor build() {
+  public ChatMonitor build() {
     MAP.register(playerId, this);
     return this;
   }
