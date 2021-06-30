@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
+import java.util.function.BiConsumer;
 import java.util.function.BiFunction;
 import java.util.function.Function;
 import org.jetbrains.annotations.Nullable;
@@ -15,11 +16,15 @@ public interface Registry<T, U> extends Serializable, Cloneable {
 
   U register(final T key, final U value);
 
+  Registry<T, U> put(final T key, final U value);
+
   U registerIfAbsent(final T key, final U value);
 
-  void registerAll(final Map<T, U> values);
+  Registry<T, U> putIfAbsent(final T key, final U value);
 
-  void registerAllIfAbsent(final Map<T, U> values);
+  Registry<T, U> registerAll(final Map<T, U> values);
+
+  Registry<T, U> registerAllIfAbsent(final Map<T, U> values);
 
   U compute(final T key, final BiFunction<T, U, U> function);
 
@@ -46,8 +51,10 @@ public interface Registry<T, U> extends Serializable, Cloneable {
 
   boolean isEmpty();
 
-  void wipe();
+  Registry<T, U> wipe();
 
   Map<T, U> getMap();
+
+  Registry<T, U> forEach(final BiConsumer<? super T, ? super U> action);
 
 }

@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
+import java.util.function.BiConsumer;
 import java.util.function.BiFunction;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -26,18 +27,32 @@ public abstract class AbstractRegistry<T, U> implements Registry<T, U> {
   }
 
   @Override
+  public Registry<T, U> put(final T key, final U value) {
+    map.put(key, value);
+    return this;
+  }
+
+  @Override
   public U registerIfAbsent(final T key, final U value) {
     return map.putIfAbsent(key, value);
   }
 
   @Override
-  public void registerAll(final Map<T, U> values) {
-    map.putAll(values);
+  public Registry<T, U> putIfAbsent(final T key, final U value) {
+    map.putIfAbsent(key, value);
+    return this;
   }
 
   @Override
-  public void registerAllIfAbsent(final Map<T, U> values) {
+  public Registry<T, U> registerAll(final Map<T, U> values) {
+    map.putAll(values);
+    return this;
+  }
+
+  @Override
+  public Registry<T, U> registerAllIfAbsent(final Map<T, U> values) {
     values.forEach(this::registerIfAbsent);
+    return this;
   }
 
   @Override
@@ -105,8 +120,15 @@ public abstract class AbstractRegistry<T, U> implements Registry<T, U> {
   }
 
   @Override
-  public void wipe() {
+  public Registry<T, U> wipe() {
     map.clear();
+    return this;
+  }
+
+  @Override
+  public Registry<T, U> forEach(final BiConsumer<? super T, ? super U> action) {
+    map.forEach(action);
+    return this;
   }
 
   @Override
