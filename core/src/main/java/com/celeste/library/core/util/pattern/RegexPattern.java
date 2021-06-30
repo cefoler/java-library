@@ -11,8 +11,18 @@ public enum RegexPattern {
   LOWER_LETTERS("[a-z]"),
   LETTERS("[A-Z|a-z]"),
   NUMBERS("[0-9]"),
-  SPECIAL_LETTERS("/[!@#$%^&*]/g");
+  SPECIAL_LETTERS("[!@#$%^&*]"),
+  REMOVE_GROUP("?:");
 
   private final String pattern;
+
+  /**
+   * Returns a Regex that gets only the String
+   * by the start position to the
+   * end position.
+   */
+  public static String fromLimit(int start, int end) {
+    return "{3,20}";
+  }
 
 }
