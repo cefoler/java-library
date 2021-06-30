@@ -21,7 +21,7 @@ public enum RegexPattern {
    * by the start position to the
    * end position.
    */
-  public static String fromLimit(int start, int end) {
+  public static String fromLimit(final int start, final int end) {
     return "{" + start + "," + end + "}";
   }
 
@@ -29,7 +29,7 @@ public enum RegexPattern {
    * Returns a pattern that gets only
    * the characters after the char provided
    */
-  public static String startingFrom(char str) {
+  public static String startingFrom(final char str) {
     return "^([^" + str + "])+";
   }
 

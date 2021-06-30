@@ -43,12 +43,16 @@ public final class StringFormatter {
     return string.substring(0, string.length() - size);
   }
 
-  public static String get(final String string, final int startArg) {
-    return string.substring(startArg);
+  public static String startAtIndex(final String string, final int index) {
+    return string.substring(index);
   }
 
-  public static String remove(final RegexPattern pattern, final String string) {
+  public static String remove(final String string, final RegexPattern pattern) {
    return string.replaceAll(pattern.getPattern(), "");
+  }
+
+  public static String[] split(final String string, final RegexPattern pattern) {
+    return string.split(pattern.getPattern());
   }
 
 }
