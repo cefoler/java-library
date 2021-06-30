@@ -17,12 +17,20 @@ public enum RegexPattern {
   private final String pattern;
 
   /**
-   * Returns a Regex that gets only the String
+   * Returns a pattern that gets only the String
    * by the start position to the
    * end position.
    */
   public static String fromLimit(int start, int end) {
-    return "{3,20}";
+    return "{" + start + "," + end + "}";
+  }
+
+  /**
+   * Returns a pattern that gets only
+   * the characters after the char provided
+   */
+  public static String startingFrom(char str) {
+    return "^([^" + str + "])+";
   }
 
 }
