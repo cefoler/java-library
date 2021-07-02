@@ -1,8 +1,6 @@
 package com.celeste.library.core.model.entity;
 
 import java.util.Properties;
-
-import com.celeste.library.core.util.Validation;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 

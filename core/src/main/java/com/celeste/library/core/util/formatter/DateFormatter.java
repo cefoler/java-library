@@ -1,12 +1,11 @@
 package com.celeste.library.core.util.formatter;
 
 import com.celeste.library.core.util.formatter.type.TimeType;
+import com.celeste.library.core.util.pattern.RegexPattern;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.TimeZone;
 import java.util.concurrent.TimeUnit;
-
-import com.celeste.library.core.util.pattern.RegexPattern;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 
@@ -97,7 +96,8 @@ public final class DateFormatter {
     }
 
     if (seconds > 0) {
-      builder.append(days > 0 || hours > 0 || minutes > 0 ? " and " : builder.length() > 0 ? ", " : "");
+      builder.append(days > 0 || hours > 0 || minutes > 0 ? " and " : builder.length() > 0 ? ", "
+          : "");
       builder.append(seconds);
       builder.append(seconds == 1 ? " second" : "seconds");
     }

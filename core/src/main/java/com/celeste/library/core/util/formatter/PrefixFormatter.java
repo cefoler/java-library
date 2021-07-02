@@ -1,9 +1,8 @@
 package com.celeste.library.core.util.formatter;
 
+import com.celeste.library.core.util.pattern.RegexPattern;
 import java.text.DecimalFormat;
 import java.util.Arrays;
-
-import com.celeste.library.core.util.pattern.RegexPattern;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 

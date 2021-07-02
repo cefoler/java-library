@@ -52,7 +52,8 @@ public final class JacksonAdapter implements Json {
   }
 
   public JsonNode get(final ObjectNode node, final String key) {
-    return Validation.notNull(node.get(key), () -> new NullPointerException("The key specified cannot be null"));
+    return Validation.notNull(node.get(key), () ->
+        new NullPointerException("The key specified cannot be null"));
   }
 
   public String getString(final ObjectNode node, final String key) {

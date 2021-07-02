@@ -1,7 +1,6 @@
 package com.celeste.library.spigot.model.menu;
 
 import com.celeste.library.core.util.Reflection;
-import com.celeste.library.spigot.exception.MenuException;
 import com.celeste.library.spigot.model.menu.annotation.Menu;
 import com.celeste.library.spigot.model.menu.entity.Context;
 import com.celeste.library.spigot.view.event.wrapper.impl.InventoryRenderEvent;

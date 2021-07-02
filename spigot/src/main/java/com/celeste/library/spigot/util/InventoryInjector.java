@@ -1,15 +1,14 @@
 package com.celeste.library.spigot.util;
 
 import com.celeste.library.spigot.util.item.ItemBuilder;
-import org.bukkit.Material;
-import org.bukkit.entity.Player;
-import org.bukkit.inventory.ItemStack;
-
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
+import org.bukkit.Material;
+import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
 
 public final class InventoryInjector {
 
@@ -27,7 +26,8 @@ public final class InventoryInjector {
   }
 
   @Deprecated
-  public List<ItemStack> getItemsFromOldData(final Material material, int data, final Player player) {
+  public List<ItemStack> getItemsFromOldData(final Material material, int data,
+      final Player player) {
     return Arrays.stream(player.getInventory().getContents())
         .filter(Objects::nonNull)
         .filter(item -> item.getType() == material)
@@ -35,7 +35,8 @@ public final class InventoryInjector {
         .collect(Collectors.toList());
   }
 
-  public List<ItemStack> getItemsFromModelData(final Material material, int data, final Player player) {
+  public List<ItemStack> getItemsFromModelData(final Material material, int data,
+      final Player player) {
     return Arrays.stream(player.getInventory().getContents())
         .filter(Objects::nonNull)
         .filter(item -> item.getType() == material)
