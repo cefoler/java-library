@@ -25,16 +25,16 @@ import org.reflections.Reflections;
 @Getter
 public abstract class AbstractBukkitPlugin extends JavaPlugin {
 
-  private static final ExecutorService EXECUTOR;
-  private static final ScheduledExecutorService SCHEDULED;
+  protected static final ExecutorService EXECUTOR;
+  protected static final ScheduledExecutorService SCHEDULED;
 
   static {
     EXECUTOR = ThreadingFactory.threadPool();
     SCHEDULED = ThreadingFactory.scheduledThreadPool();
   }
 
-  private final PluginManager manager;
-  private final ServicesManager service;
+  protected final PluginManager manager;
+  protected final ServicesManager service;
 
   public AbstractBukkitPlugin() {
     this.manager = Bukkit.getServer().getPluginManager();
