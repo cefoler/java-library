@@ -23,15 +23,15 @@ import org.reflections.Reflections;
 @Getter
 public abstract class AbstractBungeePlugin extends Plugin {
 
-  private static final ExecutorService EXECUTOR;
-  private static final ScheduledExecutorService SCHEDULED;
+  protected static final ExecutorService EXECUTOR;
+  protected static final ScheduledExecutorService SCHEDULED;
 
   static {
     EXECUTOR = ThreadingFactory.threadPool();
     SCHEDULED = ThreadingFactory.scheduledThreadPool();
   }
 
-  private final PluginManager manager;
+  protected final PluginManager manager;
 
   public AbstractBungeePlugin() {
     this.manager = getProxy().getPluginManager();
