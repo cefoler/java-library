@@ -1,7 +1,6 @@
 package com.celeste.library.core.util.formatter;
 
 import com.celeste.library.core.util.pattern.RegexPattern;
-
 import java.util.Arrays;
 import java.util.StringJoiner;
 
@@ -39,16 +38,16 @@ public final class StringFormatter {
     return joiner.toString();
   }
 
+  public static String remove(final String string, final RegexPattern pattern) {
+    return string.replaceAll(pattern.getPattern(), "");
+  }
+
   public static String remove(final String string, final int size) {
     return string.substring(0, string.length() - size);
   }
 
   public static String startAtIndex(final String string, final int index) {
     return string.substring(index);
-  }
-
-  public static String remove(final String string, final RegexPattern pattern) {
-   return string.replaceAll(pattern.getPattern(), "");
   }
 
   public static String[] split(final String string, final RegexPattern pattern) {

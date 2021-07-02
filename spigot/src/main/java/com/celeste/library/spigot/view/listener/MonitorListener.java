@@ -39,7 +39,8 @@ public final class MonitorListener implements Listener {
     final String message = event.getMessage();
 
     // Starts the cancel consumer
-    if (message.equalsIgnoreCase("cancelar") || message.equalsIgnoreCase("cancel") || message.contains("cancelar") || message.contains("cancel")) {
+    if (message.equalsIgnoreCase("cancelar") || message.equalsIgnoreCase("cancel")
+        || message.contains("cancelar") || message.contains("cancel")) {
       monitor.getCancel().accept(null);
       return;
     }

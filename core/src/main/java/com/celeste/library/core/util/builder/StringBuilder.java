@@ -34,6 +34,11 @@ public final class StringBuilder {
     return this;
   }
 
+  public StringBuilder remove(final RegexPattern pattern) {
+    this.str = str.replaceAll(pattern.getPattern(), "");
+    return this;
+  }
+
   public StringBuilder remove(final int size) {
     this.str = str.substring(0, str.length() - size);
     return this;
@@ -41,11 +46,6 @@ public final class StringBuilder {
 
   public StringBuilder startAtIndex(final int index) {
     this.str = str.substring(index);
-    return this;
-  }
-
-  public StringBuilder remove(final RegexPattern pattern) {
-    this.str = str.replaceAll(pattern.getPattern(), "");
     return this;
   }
 

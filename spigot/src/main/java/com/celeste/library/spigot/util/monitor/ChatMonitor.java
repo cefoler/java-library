@@ -2,12 +2,9 @@ package com.celeste.library.spigot.util.monitor;
 
 import com.celeste.library.core.model.registry.Registry;
 import com.celeste.library.core.model.registry.impl.ConcurrentRegistry;
-import lombok.Data;
-
-import java.util.Map;
 import java.util.UUID;
-import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Consumer;
+import lombok.Data;
 
 @Data
 public final class ChatMonitor {

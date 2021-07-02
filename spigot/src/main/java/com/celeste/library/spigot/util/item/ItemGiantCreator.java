@@ -26,7 +26,7 @@ public final class ItemGiantCreator {
 
     final EntityInjector injector = new EntityInjector();
 
-    injector.setAI(giant, false);
+    injector.setAi(giant, false);
     injector.setInvisible(giant, true);
   }
 

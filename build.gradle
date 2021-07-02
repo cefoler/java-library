@@ -2,10 +2,13 @@ subprojects {
     apply plugin: 'java'
 
     group 'com.celeste'
-    version '3.2.0-SNAPSHOT'
+    version '3.2.2-SNAPSHOT'
 
     sourceCompatibility = 1.8
     targetCompatibility = 1.8
+
+    def lombokVersion = "1.18.20"
+    def jetbrainsVersion = "21.0.1"
 
     repositories {
         mavenLocal()
@@ -14,9 +17,6 @@ subprojects {
         maven { url 'https://jitpack.io' }
         maven { url 'https://oss.sonatype.org/content/repositories/snapshots' }
     }
-
-    def lombokVersion = "1.18.20"
-    def jetbrainsVersion = "21.0.1"
 
     dependencies {
         /**

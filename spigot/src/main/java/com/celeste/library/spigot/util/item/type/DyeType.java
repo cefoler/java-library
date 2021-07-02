@@ -1,10 +1,9 @@
 package com.celeste.library.spigot.util.item.type;
 
+import java.util.Arrays;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import org.jetbrains.annotations.Nullable;
-
-import java.util.Arrays;
 
 @Getter
 @AllArgsConstructor
@@ -50,9 +49,11 @@ public enum DyeType {
 
     switch (type) {
       case RED:
-        return secondary == YELLOW.getData() ? ORANGE : secondary == WHITE.getData() ? PINK : PURPLE;
+        return secondary == YELLOW.getData() ? ORANGE : secondary == WHITE.getData() ? PINK
+            : PURPLE;
       case LAPIS_LAZULI:
-        return secondary == RED.getData() ? PURPLE : secondary == GREEN.getData() ? CYAN : LIGHT_BLUE;
+        return secondary == RED.getData() ? PURPLE : secondary == GREEN.getData() ? CYAN
+            : LIGHT_BLUE;
       case WHITE:
         return secondary == GRAY.getData() ? LIGHT_GRAY
             : secondary == RED.getData() ? PINK
