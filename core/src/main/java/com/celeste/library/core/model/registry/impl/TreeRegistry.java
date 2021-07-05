@@ -1,6 +1,8 @@
 package com.celeste.library.core.model.registry.impl;
 
 import com.celeste.library.core.model.registry.AbstractRegistry;
+import com.celeste.library.core.model.registry.type.KeyType;
+
 import java.util.Comparator;
 import java.util.Map;
 import java.util.SortedMap;
@@ -8,38 +10,28 @@ import java.util.TreeMap;
 
 public class TreeRegistry<T, U> extends AbstractRegistry<T, U> {
 
-  /**
-   * Creates a new TreeAbstractRegistry
-   */
   public TreeRegistry() {
-    super(new TreeMap<>());
+    super(new TreeMap<>(), KeyType.STANDARD);
   }
 
-  /**
-   * Creates a new TreeAbstractRegistry with the specific Comparator
-   *
-   * @param comparator Comparator
-   */
+  public TreeRegistry(final KeyType type) {
+    super(new TreeMap<>(), type);
+  }
+
   public TreeRegistry(final Comparator<? super T> comparator) {
-    super(new TreeMap<>(comparator));
+    super(new TreeMap<>(comparator), KeyType.STANDARD);
   }
 
-  /**
-   * Creates a new TreeAbstractRegistry with the specific SortedMap
-   *
-   * @param sorted SortedMap
-   */
-  public TreeRegistry(final SortedMap<T, ? extends U> sorted) {
-    super(new TreeMap<>(sorted));
+  public TreeRegistry(final Comparator<? super T> comparator, final KeyType type) {
+    super(new TreeMap<>(comparator), type);
   }
 
-  /**
-   * Creates a new TreeAbstractRegistry from another map
-   *
-   * @param map Map
-   */
-  public TreeRegistry(final Map<T, U> map) {
-    super(new TreeMap<>(map));
+  public TreeRegistry(final SortedMap<T, ? extends U> sorted, final KeyType type) {
+    super(new TreeMap<>(sorted), type);
+  }
+
+  public TreeRegistry(final Map<T, U> map, final KeyType type) {
+    super(new TreeMap<>(map), type);
   }
 
 }

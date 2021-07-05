@@ -1,43 +1,43 @@
 package com.celeste.library.core.model.registry.impl;
 
 import com.celeste.library.core.model.registry.AbstractRegistry;
+import com.celeste.library.core.model.registry.type.KeyType;
+
 import java.util.Map;
 import java.util.WeakHashMap;
 
 public class WeakRegistry<T, U> extends AbstractRegistry<T, U> {
 
-  /**
-   * Creates a new WeakAbstractRegistry
-   */
   public WeakRegistry() {
-    super(new WeakHashMap<>());
+    super(new WeakHashMap<>(), KeyType.STANDARD);
   }
 
-  /**
-   * Creates a new WeakAbstractRegistry with specific size
-   *
-   * @param initialSize int
-   */
+  public WeakRegistry(final KeyType type) {
+    super(new WeakHashMap<>(), type);
+  }
+
   public WeakRegistry(final int initialSize) {
-    super(new WeakHashMap<>(initialSize));
+    super(new WeakHashMap<>(initialSize), KeyType.STANDARD);
   }
 
-  /**
-   * Creates a new WeakAbstractRegistry with specific size and density
-   *
-   * @param initialSize int
-   * @param density float
-   */
+  public WeakRegistry(final int initialSize, final KeyType type) {
+    super(new WeakHashMap<>(initialSize), type);
+  }
+
   public WeakRegistry(final int initialSize, final float density) {
-    super(new WeakHashMap<>(initialSize, density));
+    super(new WeakHashMap<>(initialSize, density), KeyType.STANDARD);
   }
 
-  /**
-   * Creates a new WeakAbstractRegistry from another map
-   *
-   * @param map Map
-   */
-  public WeakRegistry(final Map<T, U> map) {
-    super(new WeakHashMap<>(map));
+  public WeakRegistry(final int initialSize, final float density, final KeyType type) {
+    super(new WeakHashMap<>(initialSize, density), type);
   }
+
+  public WeakRegistry(final Map<T, U> map) {
+    super(new WeakHashMap<>(map), KeyType.STANDARD);
+  }
+
+  public WeakRegistry(final Map<T, U> map, final KeyType type) {
+    super(new WeakHashMap<>(map), type);
+  }
+  
 }

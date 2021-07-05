@@ -1,56 +1,44 @@
 package com.celeste.library.core.model.registry.impl;
 
 import com.celeste.library.core.model.registry.AbstractRegistry;
+import com.celeste.library.core.model.registry.type.KeyType;
+
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class LinkedRegistry<T, U> extends AbstractRegistry<T, U> {
 
-  /**
-   * Creates a LinkedAbstractRegistry
-   */
   public LinkedRegistry() {
-    super(new LinkedHashMap<>());
+    super(new LinkedHashMap<>(), KeyType.STANDARD);
   }
 
-  /**
-   * Creates a LinkedAbstractRegistry with specific size
-   *
-   * @param initialSize int
-   */
+  public LinkedRegistry(final KeyType type) {
+    super(new LinkedHashMap<>(), type);
+  }
+
   public LinkedRegistry(final int initialSize) {
-    super(new ConcurrentHashMap<>(initialSize));
+    super(new LinkedHashMap<>(initialSize), KeyType.STANDARD);
   }
 
-  /**
-   * Creates a LinkedAbstractRegistry with specific size and density
-   *
-   * @param initialSize int
-   * @param density float
-   */
+  public LinkedRegistry(final int initialSize, final KeyType type) {
+    super(new LinkedHashMap<>(initialSize), type);
+  }
+
   public LinkedRegistry(final int initialSize, final float density) {
-    super(new LinkedHashMap<>(initialSize, density));
+    super(new LinkedHashMap<>(initialSize, density), KeyType.STANDARD);
   }
 
-  /**
-   * Creates a LinkedAbstractRegistry with specific size, density and access order
-   *
-   * @param initialSize int
-   * @param density float
-   * @param accessOrder boolean
-   */
-  public LinkedRegistry(final int initialSize, final float density, final boolean accessOrder) {
-    super(new LinkedHashMap<>(initialSize, density, accessOrder));
+  public LinkedRegistry(final int initialSize, final float density, final KeyType type) {
+    super(new LinkedHashMap<>(initialSize, density), type);
   }
 
-  /**
-   * Creates a LinkedAbstractRegistry from a map
-   *
-   * @param map Map
-   */
   public LinkedRegistry(final Map<T, U> map) {
-    super(new LinkedHashMap<>(map));
+    super(new LinkedHashMap<>(map), KeyType.STANDARD);
+  }
+
+  public LinkedRegistry(final Map<T, U> map, final KeyType type) {
+    super(new LinkedHashMap<>(map), type);
   }
 
 }

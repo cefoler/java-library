@@ -1,44 +1,43 @@
 package com.celeste.library.core.model.registry.impl;
 
 import com.celeste.library.core.model.registry.AbstractRegistry;
+import com.celeste.library.core.model.registry.type.KeyType;
+
 import java.util.HashMap;
 import java.util.Map;
 
 public class MapRegistry<T, U> extends AbstractRegistry<T, U> {
 
-  /**
-   * Creates a new MapAbstractRegistry
-   */
   public MapRegistry() {
-    super(new HashMap<>());
+    super(new HashMap<>(), KeyType.STANDARD);
   }
 
-  /**
-   * Creates a new MapAbstractRegistry with specific size
-   *
-   * @param initialSize int
-   */
+  public MapRegistry(final KeyType type) {
+    super(new HashMap<>(), type);
+  }
+
   public MapRegistry(final int initialSize) {
-    super(new HashMap<>(initialSize));
+    super(new HashMap<>(initialSize), KeyType.STANDARD);
   }
 
-  /**
-   * Creates a new MapAbstractRegistry with specific size and density
-   *
-   * @param initialSize int
-   * @param density float
-   */
+  public MapRegistry(final int initialSize, final KeyType type) {
+    super(new HashMap<>(initialSize), type);
+  }
+
   public MapRegistry(final int initialSize, final float density) {
-    super(new HashMap<>(initialSize, density));
+    super(new HashMap<>(initialSize, density), KeyType.STANDARD);
   }
 
-  /**
-   * Creates a new MapAbstractRegistry from another map
-   *
-   * @param map Map
-   */
+  public MapRegistry(final int initialSize, final float density, final KeyType type) {
+    super(new HashMap<>(initialSize, density), type);
+  }
+
   public MapRegistry(final Map<T, U> map) {
-    super(new HashMap<>(map));
+    super(new HashMap<>(map), KeyType.STANDARD);
+  }
+
+  public MapRegistry(final Map<T, U> map, final KeyType type) {
+    super(new HashMap<>(map), type);
   }
 
 }

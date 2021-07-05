@@ -1,55 +1,51 @@
 package com.celeste.library.core.model.registry.impl;
 
 import com.celeste.library.core.model.registry.AbstractRegistry;
+import com.celeste.library.core.model.registry.type.KeyType;
+
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class ConcurrentRegistry<T, U> extends AbstractRegistry<T, U> {
 
-  /**
-   * Creates ConcurrentAbstractRegistry
-   */
   public ConcurrentRegistry() {
-    super(new ConcurrentHashMap<>());
+    super(new ConcurrentHashMap<>(), KeyType.STANDARD);
   }
 
-  /**
-   * Creates ConcurrentAbstractRegistry with specific size
-   *
-   * @param initialSize int
-   */
+  public ConcurrentRegistry(final KeyType type) {
+    super(new ConcurrentHashMap<>(), type);
+  }
+
   public ConcurrentRegistry(final int initialSize) {
-    super(new ConcurrentHashMap<>(initialSize));
+    super(new ConcurrentHashMap<>(initialSize), KeyType.STANDARD);
   }
 
-  /**
-   * Creates ConcurrentAbstractRegistry with specific size and density
-   *
-   * @param initialSize int
-   * @param density float
-   */
+  public ConcurrentRegistry(final int initialSize, final KeyType type) {
+    super(new ConcurrentHashMap<>(initialSize), type);
+  }
+
   public ConcurrentRegistry(final int initialSize, final float density) {
-    super(new ConcurrentHashMap<>(initialSize, density));
+    super(new ConcurrentHashMap<>(initialSize, density), KeyType.STANDARD);
   }
 
-  /**
-   * Creates ConcurrentAbstractRegistry with specific size, density and threads
-   *
-   * @param initialSize int
-   * @param density float
-   * @param threads int
-   */
+  public ConcurrentRegistry(final int initialSize, final float density, final KeyType type) {
+    super(new ConcurrentHashMap<>(initialSize, density), type);
+  }
+
   public ConcurrentRegistry(final int initialSize, final float density, final int threads) {
-    super(new ConcurrentHashMap<>(initialSize, density, threads));
+    super(new ConcurrentHashMap<>(initialSize, density, threads), KeyType.STANDARD);
   }
 
-  /**
-   * Creates ConcurrentAbstractRegistry from another map
-   *
-   * @param map Map
-   */
+  public ConcurrentRegistry(final int initialSize, final float density, final int threads, final KeyType type) {
+    super(new ConcurrentHashMap<>(initialSize, density, threads), type);
+  }
+
   public ConcurrentRegistry(final Map<T, U> map) {
-    super(new ConcurrentHashMap<>(map));
+    super(new ConcurrentHashMap<>(map), KeyType.STANDARD);
+  }
+
+  public ConcurrentRegistry(final Map<T, U> map, final KeyType type) {
+    super(new ConcurrentHashMap<>(map), type);
   }
 
 }

@@ -10,6 +10,8 @@ import java.util.function.BiConsumer;
 import java.util.function.BiFunction;
 import java.util.function.Function;
 import java.util.stream.Collectors;
+
+import com.celeste.library.core.model.registry.type.KeyType;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
@@ -20,32 +22,33 @@ import org.jetbrains.annotations.Nullable;
 public abstract class AbstractRegistry<T, U> implements Registry<T, U> {
 
   private final Map<T, U> map;
+  private final KeyType keyType;
 
   @Override
   public U register(final T key, final U value) {
-    return map.put(key, value);
+    return map.put(keyType.format(key), value);
   }
 
   @Override
   public Registry<T, U> put(final T key, final U value) {
-    map.put(key, value);
+    register(key, value);
     return this;
   }
 
   @Override
   public U registerIfAbsent(final T key, final U value) {
-    return map.putIfAbsent(key, value);
+    return map.putIfAbsent(keyType.format(key), value);
   }
 
   @Override
   public Registry<T, U> putIfAbsent(final T key, final U value) {
-    map.putIfAbsent(key, value);
+    map.putIfAbsent(keyType.format(key), value);
     return this;
   }
 
   @Override
   public Registry<T, U> registerAll(final Map<T, U> values) {
-    map.putAll(values);
+    values.forEach(this::register);
     return this;
   }
 
@@ -57,33 +60,33 @@ public abstract class AbstractRegistry<T, U> implements Registry<T, U> {
 
   @Override
   public U compute(final T key, final BiFunction<T, U, U> function) {
-    return map.compute(key, function);
+    return map.compute(keyType.format(key), function);
   }
 
   @Override
   public U computeIfAbsent(final T key, final Function<T, U> function) {
-    return map.computeIfAbsent(key, function);
+    return map.computeIfAbsent(keyType.format(key), function);
   }
 
   @Override
   public U remove(final T key) {
-    return map.remove(key);
+    return map.remove(keyType.format(key));
   }
 
   @Override
   public U replace(final T key, final U value) {
-    return map.replace(key, value);
+    return map.replace(keyType.format(key), value);
   }
 
   @Override
   @Nullable
   public U get(final T key) {
-    return map.get(key);
+    return map.get(keyType.format(key));
   }
 
   @Override
   public boolean contains(final T key) {
-    return map.containsKey(key);
+    return map.containsKey(keyType.format(key));
   }
 
   @Override
