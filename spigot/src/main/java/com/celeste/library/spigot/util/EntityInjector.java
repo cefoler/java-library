@@ -31,8 +31,9 @@ public final class EntityInjector {
       TAG_CLASS = ReflectionNms.getNms("NBTTagCompound");
 
       final Class<?> entityClazz = ReflectionNms.getNms("Entity");
+      final Class<?> obcEntityClazz = ReflectionNms.getObc("CraftEntity");
 
-      GET_HANDLE = Reflection.getMethod(entityClazz, "getHandle");
+      GET_HANDLE = Reflection.getMethod(obcEntityClazz, "getHandle");
       GET_NBT_TAG = Reflection.getMethod(entityClazz, "getNBTTag");
 
       GET_STRING = TAG_CLASS.getMethod("getString", String.class);
@@ -43,10 +44,10 @@ public final class EntityInjector {
       SET_INT = TAG_CLASS.getMethod("setInt", String.class, int.class);
       SET_DOUBLE = TAG_CLASS.getMethod("setDouble", String.class, double.class);
 
+      SET_INVISIBLE = Reflection.getMethod(entityClazz, "setInvisible", boolean.class);
+
       C = Reflection.getDcMethod(entityClazz, "c", TAG_CLASS);
       F = Reflection.getDcMethod(entityClazz, "f", TAG_CLASS);
-
-      SET_INVISIBLE = Reflection.getMethod(entityClazz, "setInvisible", boolean.class);
     } catch (ReflectiveOperationException exception) {
       exception.printStackTrace();
     }
@@ -59,11 +60,11 @@ public final class EntityInjector {
 
   @SneakyThrows
   public void setInvisible(final Entity entity, final boolean active) {
-    Reflection.invoke(SET_INVISIBLE, entity, active);
+    set(SET_INVISIBLE, entity, "setInvisible", active);
   }
 
   @SneakyThrows
-  public void set(final Method method, final Entity entity, final String key, Object value) {
+  private void set(final Method method, final Entity entity, final String key, Object value) {
     final Object handle = GET_HANDLE.invoke(entity);
     final Class<?> nmsEntity = handle.getClass();
 
@@ -77,7 +78,7 @@ public final class EntityInjector {
   }
 
   @SneakyThrows
-  public Object get(final Method method, final Entity entity, final String key) {
+  private Object get(final Method method, final Entity entity, final String key) {
     final Object handle = GET_HANDLE.invoke(entity);
     final Object tag = GET_NBT_TAG.invoke(handle) == null
         ? TAG_CLASS.getConstructor().newInstance()
