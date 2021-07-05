@@ -31,7 +31,7 @@ public final class EntityInjector {
       TAG_CLASS = ReflectionNms.getNms("NBTTagCompound");
 
       final Class<?> entityClazz = ReflectionNms.getNms("Entity");
-      final Class<?> obcEntityClazz = ReflectionNms.getObc("CraftEntity");
+      final Class<?> obcEntityClazz = ReflectionNms.getObc("entity.CraftEntity");
 
       GET_HANDLE = Reflection.getMethod(obcEntityClazz, "getHandle");
       GET_NBT_TAG = Reflection.getMethod(entityClazz, "getNBTTag");
