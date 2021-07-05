@@ -5,6 +5,7 @@ import com.celeste.library.core.model.registry.impl.ConcurrentRegistry;
 import java.util.UUID;
 import java.util.function.Consumer;
 import lombok.Data;
+import org.jetbrains.annotations.NotNull;
 
 @Data
 public final class ChatMonitor {
@@ -24,17 +25,17 @@ public final class ChatMonitor {
     return new ChatMonitor();
   }
 
-  public ChatMonitor player(final UUID playerId) {
+  public ChatMonitor player(@NotNull final UUID playerId) {
     this.playerId = playerId;
     return this;
   }
 
-  public ChatMonitor message(final Consumer<String> message) {
+  public ChatMonitor message(@NotNull final Consumer<String> message) {
     this.message = message;
     return this;
   }
 
-  public ChatMonitor cancel(final Consumer<Void> cancel) {
+  public ChatMonitor cancel(@NotNull final Consumer<Void> cancel) {
     this.cancel = cancel;
     return this;
   }
