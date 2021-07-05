@@ -3,7 +3,6 @@ package com.celeste.library.spigot.model.entity;
 import java.io.ByteArrayOutputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
-
 import lombok.Getter;
 import lombok.SneakyThrows;
 import org.bukkit.entity.Player;
@@ -65,7 +64,8 @@ public abstract class AbstractBungeeConnection<T extends Plugin> implements Plug
 
       player.sendPluginMessage(plugin, "BungeeCord", byteOutput.toByteArray());
     } catch (IOException exception) {
-      throw new UnsupportedOperationException("Unable to connect server: " + server + " through Bungeecord", exception);
+      throw new UnsupportedOperationException("Unable to connect server: " + server
+          + " through Bungeecord", exception);
     }
   }
 

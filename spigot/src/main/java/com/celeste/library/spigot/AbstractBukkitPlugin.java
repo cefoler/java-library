@@ -10,7 +10,6 @@ import java.util.AbstractMap.SimpleImmutableEntry;
 import java.util.Arrays;
 import java.util.Map.Entry;
 import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import lombok.Getter;
 import me.saiintbrisson.bukkit.command.BukkitFrame;
@@ -26,16 +25,16 @@ import org.reflections.Reflections;
 @Getter
 public abstract class AbstractBukkitPlugin extends JavaPlugin {
 
-  private static final ExecutorService EXECUTOR;
-  private static final ScheduledExecutorService SCHEDULED;
+  protected static final ExecutorService EXECUTOR;
+  protected static final ScheduledExecutorService SCHEDULED;
 
   static {
     EXECUTOR = ThreadingFactory.threadPool();
     SCHEDULED = ThreadingFactory.scheduledThreadPool();
   }
 
-  private final PluginManager manager;
-  private final ServicesManager service;
+  protected final PluginManager manager;
+  protected final ServicesManager service;
 
   public AbstractBukkitPlugin() {
     this.manager = Bukkit.getServer().getPluginManager();

@@ -1,11 +1,10 @@
 package com.celeste.library.spigot.util;
 
 import com.celeste.library.core.util.Reflection;
+import java.lang.reflect.Method;
 import lombok.SneakyThrows;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
-
-import java.lang.reflect.Method;
 
 public final class EntityInjector {
 
@@ -54,7 +53,7 @@ public final class EntityInjector {
   }
 
   @SneakyThrows
-  public void setAI(final LivingEntity entity, final boolean active) {
+  public void setAi(final LivingEntity entity, final boolean active) {
     setInt(entity, "NoAI", active ? 0 : 1);
   }
 

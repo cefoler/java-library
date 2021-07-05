@@ -13,9 +13,9 @@ public final class MenuPaginator<T> extends PaginatorImpl<T> {
   private static final Material SKULL;
 
   static {
-    SKULL = ReflectionNms.isEqualsOrMoreRecent(13) ?
-        Enum.valueOf(Material.class, "PLAYER_HEAD") :
-        Enum.valueOf(Material.class, "SKULL_ITEM");
+    SKULL = ReflectionNms.isEqualsOrMoreRecent(13)
+        ? Enum.valueOf(Material.class, "PLAYER_HEAD")
+        : Enum.valueOf(Material.class, "SKULL_ITEM");
   }
 
   private final MenuHolder holder;

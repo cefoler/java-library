@@ -4,17 +4,14 @@ import com.celeste.library.core.util.Reflection;
 import com.celeste.library.core.util.Validation;
 import com.celeste.library.spigot.error.ServerStartError;
 import com.celeste.library.spigot.exception.InvalidPropertyException;
-import com.celeste.library.spigot.exception.MenuException;
 import com.celeste.library.spigot.model.menu.entity.Context;
-import com.celeste.library.spigot.view.event.wrapper.impl.InventoryRenderEvent;
 import com.celeste.library.spigot.util.ReflectionNms;
-
+import com.celeste.library.spigot.view.event.wrapper.impl.InventoryRenderEvent;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.Arrays;
 import java.util.Properties;
-
 import lombok.Getter;
 import lombok.SneakyThrows;
 import org.bukkit.Bukkit;
@@ -69,8 +66,8 @@ public final class MenuHolder implements InventoryHolder {
   /**
    * AbstractMenu holder constructor.
    *
-   * @param menu       AbstractMenu
-   * @param properties ImmutableMap of the properties.
+   * @param menu AbstractMenu
+   * @param properties ImmutableMap of the properties
    */
   public MenuHolder(final AbstractMenu menu, final Properties properties) {
     this.menu = menu;
@@ -106,7 +103,7 @@ public final class MenuHolder implements InventoryHolder {
 
   /**
    * Reopens the AbstractMenu provided with the items, title and slot without flicking (Via
-   * packets)
+   * packets).
    */
   public void show(final AbstractMenu menu, final int page, final Player player) {
     final Properties properties = new Properties();
@@ -117,7 +114,7 @@ public final class MenuHolder implements InventoryHolder {
 
   /**
    * Reopens the AbstractMenu provided with the items, title and slot without flicking (Via
-   * packets)
+   * packets).
    */
   @SneakyThrows
   public void show(final AbstractMenu menu, final Properties properties, final Player player) {
@@ -126,6 +123,10 @@ public final class MenuHolder implements InventoryHolder {
 
     inventory.clear();
     properties.putIfAbsent("page", 1);
+
+    final ItemStack[] contents = player.getInventory().getContents();
+    final ItemStack[] armor = player.getInventory().getArmorContents();
+    player.getInventory().clear();
 
     final Object entityPlayer = Reflection.invoke(GET_HANDLE, player);
     final Object container = Reflection.get(ACTIVE_CONTAINER, entityPlayer);
@@ -141,6 +142,9 @@ public final class MenuHolder implements InventoryHolder {
     final InventoryRenderEvent event = new InventoryRenderEvent(player, inventory);
     Bukkit.getPluginManager().callEvent(event);
 
+    player.getInventory().setContents(contents);
+    player.getInventory().setArmorContents(armor);
+
     if (event.isCancelled()) {
       return;
     }
@@ -151,7 +155,7 @@ public final class MenuHolder implements InventoryHolder {
   }
 
   /**
-   * Reopens the AbstractMenu again with the new items set in the holder
+   * Reopens the AbstractMenu again with the new items set in the holder.
    */
   public void reopen() {
     inventory.clear();
@@ -162,7 +166,7 @@ public final class MenuHolder implements InventoryHolder {
   }
 
   /**
-   * Reopens the AbstractMenu again with the new items set in the holder
+   * Reopens the AbstractMenu again with the new items set in the holder.
    */
   public void update(final Player player) {
     inventory.clear();
@@ -197,8 +201,9 @@ public final class MenuHolder implements InventoryHolder {
   }
 
   public void handleClick(final InventoryClickEvent event) {
-    if (menu.cancelOnClick)
+    if (menu.cancelOnClick) {
       event.setCancelled(true);
+    }
 
     final int slot = event.getSlot();
 
