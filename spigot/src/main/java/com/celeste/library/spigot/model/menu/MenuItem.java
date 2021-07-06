@@ -1,5 +1,6 @@
 package com.celeste.library.spigot.model.menu;
 
+import com.celeste.library.core.model.entity.Data;
 import com.celeste.library.spigot.model.menu.action.ClickAction;
 import java.util.Properties;
 
@@ -50,10 +51,7 @@ public final class MenuItem {
    * @return MenuItem
    */
   public MenuItem open(final AbstractMenu menu, final int page) {
-    final Properties properties = new Properties();
-    properties.put("page", page);
-
-    return open(menu, properties);
+    return open(menu, Data.create().setData("page", page));
   }
 
   /**
