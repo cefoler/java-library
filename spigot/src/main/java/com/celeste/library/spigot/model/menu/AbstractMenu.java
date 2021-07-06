@@ -68,8 +68,11 @@ public abstract class AbstractMenu {
         }
 
         final Item annotation = method.getAnnotation(Item.class);
-        final MenuItem item = (MenuItem) method.invoke(this);
-        getItems()[annotation.slot()] = (MenuItem) method.invoke(this);
+
+        final MenuItem item = Reflection.invoke(method, this);
+        item.setSlot(annotation.slot());
+
+        getItems()[annotation.slot()] = item;
       }
     } catch (ReflectiveOperationException exception) {
       exception.printStackTrace();

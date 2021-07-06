@@ -3,10 +3,7 @@ package com.celeste.library.spigot.model.menu;
 import com.celeste.library.spigot.model.menu.action.ClickAction;
 import java.util.Properties;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.RequiredArgsConstructor;
+import lombok.*;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -20,23 +17,16 @@ import org.jetbrains.annotations.NotNull;
  */
 @Getter
 @AllArgsConstructor
-@RequiredArgsConstructor
 public final class MenuItem {
 
-  private final int slot;
+  @Setter
+  private int slot;
 
   private ItemStack item;
   private ClickAction action;
 
-  public MenuItem(@NotNull final ItemStack item, @NotNull final ClickAction action) {
-    this.slot = 0;
-    this.item = item;
-    this.action = action;
-  }
-
-  public MenuItem(@NotNull final ItemStack item) {
-    this.slot = 0;
-    this.item = item;
+  public MenuItem(final int slot) {
+    this.slot = slot;
   }
 
   public MenuItem() {
