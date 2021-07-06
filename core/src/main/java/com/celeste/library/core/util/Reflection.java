@@ -285,33 +285,39 @@ public final class Reflection {
     return field.getAnnotation(annotation);
   }
 
-  public static Object instance(final Constructor<?> constructor)
+  @SuppressWarnings("unchecked")
+  public static <T> T instance(final Constructor<?> constructor)
       throws IllegalAccessException, InvocationTargetException, InstantiationException {
-    return constructor.newInstance();
+    return (T) constructor.newInstance();
   }
 
-  public static Object instance(final Constructor<?> constructor, final Object... args)
+  @SuppressWarnings("unchecked")
+  public static <T> T instance(final Constructor<?> constructor, final Object... args)
       throws IllegalAccessException, InvocationTargetException, InstantiationException {
-    return constructor.newInstance(args);
+    return (T) constructor.newInstance(args);
   }
 
-  public static Object invoke(final Method method, final Object instance, final Object... args)
+  @SuppressWarnings("unchecked")
+  public static <T> T invoke(final Method method, final Object instance, final Object... args)
       throws InvocationTargetException, IllegalAccessException {
-    return method.invoke(instance, args);
+    return (T) method.invoke(instance, args);
   }
 
-  public static Object invokeStatic(final Method method, final Object... args)
+  @SuppressWarnings("unchecked")
+  public static <T> T invokeStatic(final Method method, final Object... args)
       throws InvocationTargetException, IllegalAccessException {
-    return method.invoke(null, args);
+    return (T) method.invoke(null, args);
   }
 
-  public static Object get(final Field field, final Object instance)
+  @SuppressWarnings("unchecked")
+  public static <T> T get(final Field field, final Object instance)
       throws IllegalAccessException {
-    return field.get(instance);
+    return (T) field.get(instance);
   }
 
-  public static Object getStatic(final Field field) throws IllegalAccessException {
-    return field.get(null);
+  @SuppressWarnings("unchecked")
+  public static <T> T getStatic(final Field field) throws IllegalAccessException {
+    return (T) field.get(null);
   }
 
 }

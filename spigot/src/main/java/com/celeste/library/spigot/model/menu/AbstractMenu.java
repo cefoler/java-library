@@ -1,9 +1,12 @@
 package com.celeste.library.spigot.model.menu;
 
 import com.celeste.library.core.util.Reflection;
+import com.celeste.library.spigot.model.menu.annotation.Item;
 import com.celeste.library.spigot.model.menu.annotation.Menu;
 import com.celeste.library.spigot.model.menu.entity.Context;
 import com.celeste.library.spigot.view.event.wrapper.impl.InventoryRenderEvent;
+
+import java.lang.reflect.Method;
 import java.util.Properties;
 import lombok.Getter;
 import lombok.Setter;
@@ -34,24 +37,43 @@ public abstract class AbstractMenu {
    * Creates the AbstractMenu with the title and size specified.
    */
   public AbstractMenu() {
-    final Class<? extends AbstractMenu> clazz = getClass();
+    try {
+      final Class<? extends AbstractMenu> clazz = getClass();
 
-    if (Reflection.containsAnnotation(clazz, Menu.class)) {
-      final Menu annotation = Reflection.getAnnotation(clazz, Menu.class);
+      if (Reflection.containsAnnotation(clazz, Menu.class)) {
+        final Menu annotation = Reflection.getAnnotation(clazz, Menu.class);
 
-      this.title = annotation.title();
-      this.size = annotation.size();
-      this.cancelOnClick = annotation.cancelOnClick();
+        this.title = annotation.title();
+        this.size = annotation.size();
+        this.cancelOnClick = annotation.cancelOnClick();
+      } else {
+        this.title = " ";
+        this.size = 54;
+        this.cancelOnClick = false;
+      }
 
       this.items = new MenuItem[size];
-      return;
+
+      for (final Method method : Reflection.getDcMethods(clazz)) {
+        if (!method.isAnnotationPresent(Item.class)) {
+          continue;
+        }
+
+        if (method.getReturnType() != MenuItem.class) {
+          continue;
+        }
+
+        if (method.getParameterCount() != 0) {
+          continue;
+        }
+
+        final Item annotation = method.getAnnotation(Item.class);
+        final MenuItem item = (MenuItem) method.invoke(this);
+        getItems()[annotation.slot()] = (MenuItem) method.invoke(this);
+      }
+    } catch (ReflectiveOperationException exception) {
+      exception.printStackTrace();
     }
-
-    this.title = " ";
-    this.size = 54;
-    this.cancelOnClick = false;
-
-    this.items = new MenuItem[size];
   }
 
   /**

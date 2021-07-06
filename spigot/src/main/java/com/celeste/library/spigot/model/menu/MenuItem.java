@@ -2,11 +2,15 @@ package com.celeste.library.spigot.model.menu;
 
 import com.celeste.library.spigot.model.menu.action.ClickAction;
 import java.util.Properties;
+
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * The MenuItem is the object where the Item, Slot and Action will be storage.
@@ -15,6 +19,7 @@ import org.bukkit.inventory.ItemStack;
  * reopen and set property after the item has been clicked.</p>
  */
 @Getter
+@AllArgsConstructor
 @RequiredArgsConstructor
 public final class MenuItem {
 
@@ -22,6 +27,21 @@ public final class MenuItem {
 
   private ItemStack item;
   private ClickAction action;
+
+  public MenuItem(@NotNull final ItemStack item, @NotNull final ClickAction action) {
+    this.slot = 0;
+    this.item = item;
+    this.action = action;
+  }
+
+  public MenuItem(@NotNull final ItemStack item) {
+    this.slot = 0;
+    this.item = item;
+  }
+
+  public MenuItem() {
+    this.slot = 0;
+  }
 
   /**
    * When clicked, opens a new AbstractMenu without properties
