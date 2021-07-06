@@ -196,6 +196,15 @@ public final class MenuHolder implements InventoryHolder {
     return menuItem;
   }
 
+  /**
+   * Puts the item on the specific slot.
+   * @return MenuItem
+   */
+  public MenuItem slot(final MenuItem item) {
+    menu.getItems()[item.getSlot()] = item;
+    return item;
+  }
+
   public void handleClick(final InventoryClickEvent event) {
     if (menu.cancelOnClick) {
       event.setCancelled(true);

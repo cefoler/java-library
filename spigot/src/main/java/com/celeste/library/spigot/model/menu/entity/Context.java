@@ -52,6 +52,10 @@ public final class Context<T extends Event> {
     return holder.slot(slot, item);
   }
 
+  public MenuItem slot(final MenuItem menuItem) {
+    return holder.slot(menuItem);
+  }
+
   public void show(final AbstractMenu menu) {
     holder.show(menu, new Properties(), player);
   }
