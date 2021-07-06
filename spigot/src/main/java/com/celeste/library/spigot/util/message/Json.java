@@ -7,12 +7,11 @@ import com.celeste.library.spigot.util.message.type.ClickEventType;
 import com.celeste.library.spigot.util.message.type.HoverEventType;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
-import lombok.Data;
 import lombok.SneakyThrows;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
+import org.jetbrains.annotations.NotNull;
 
-@Data
 public final class Json {
 
   private static final Constructor<?> PACKET_CHAT_CONSTRUCTOR;
@@ -46,18 +45,18 @@ public final class Json {
   private ClickEventType clickType;
 
   public Json build() {
-    if (getClick() == null && getHover() == null) {
+    if (click == null && hover == null) {
       this.json = "{\"text\":\"" + text + "\"}";
       return this;
     }
 
-    if (getClick() != null && getHover() == null) {
+    if (click != null && hover == null) {
       this.json = "{\"text\":\"" + text + "\",\"clickEvent\":{\"action\":\"" + clickType.getName()
           + "\",\"value\":\"" + click + "\"}}";
       return this;
     }
 
-    if (getClick() == null && getHover() != null) {
+    if (click == null && hover != null) {
       this.json = "{\"text\":\"" + text + "\",\"hoverEvent\":{\"action\":\"" + hoverType.getName()
           + "\",\"value\":\"" + hover + "\"}}";
       return this;
@@ -94,6 +93,35 @@ public final class Json {
     for (final Player player : Bukkit.getOnlinePlayers()) {
       ReflectionNms.sendPacket(player, packet);
     }
+  }
+
+  public static Json builder() {
+    return new Json();
+  }
+
+  public Json text(@NotNull final String text) {
+    this.text = text;
+    return this;
+  }
+
+  public Json hover(@NotNull final String hover) {
+    this.hover = hover;
+    return this;
+  }
+
+  public Json click(@NotNull final String click) {
+    this.hover = hover;
+    return this;
+  }
+
+  public Json hoverType(@NotNull final HoverEventType hoverType) {
+    this.hoverType = hoverType;
+    return this;
+  }
+
+  public Json clickType(@NotNull final ClickEventType clickType) {
+    this.clickType = clickType;
+    return this;
   }
 
 }

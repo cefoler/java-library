@@ -2,10 +2,13 @@ package com.celeste.library.spigot.util;
 
 import com.celeste.library.core.util.Reflection;
 import java.lang.reflect.Method;
+
+import com.google.common.annotations.Beta;
 import lombok.SneakyThrows;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 
+@Beta
 public final class EntityInjector {
 
   private static Class<?> TAG_CLASS;
