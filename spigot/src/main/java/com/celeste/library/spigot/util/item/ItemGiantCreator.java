@@ -1,6 +1,7 @@
 package com.celeste.library.spigot.util.item;
 
 import com.celeste.library.spigot.util.EntityInjector;
+import com.google.common.annotations.Beta;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import lombok.SneakyThrows;
@@ -9,6 +10,7 @@ import org.bukkit.entity.Giant;
 import org.bukkit.inventory.EntityEquipment;
 import org.bukkit.inventory.ItemStack;
 
+@Beta
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public final class ItemGiantCreator {
 
