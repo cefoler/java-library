@@ -29,25 +29,22 @@ public final class MonitorListener implements Listener {
     }
   }
 
-  @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
+  @EventHandler(priority = EventPriority.LOWEST)
   public void onAsyncPlayerChat(final AsyncPlayerChatEvent event) {
-    final UUID id = event.getPlayer().getUniqueId();
-    if (!MAP.contains(id)) {
+    final ChatMonitor chatMonitor = ChatMonitor.MAP.remove(event.getPlayer().getUniqueId());
+    if (chatMonitor == null) {
       return;
     }
 
     event.setCancelled(true);
 
-    final ChatMonitor monitor = MAP.remove(event.getPlayer().getUniqueId());
     final String message = event.getMessage();
-
-    if (message.equalsIgnoreCase("cancelar") || message.equalsIgnoreCase("cancel")
-        || message.contains("cancelar") || message.contains("cancel")) {
-      monitor.getCancel().accept(null);
+    if (message.equalsIgnoreCase("cancelar") || message.equalsIgnoreCase("cancel")) {
+      chatMonitor.getCancel().accept(null);
       return;
     }
 
-    monitor.getMessage().accept(message);
+    chatMonitor.getMessage().accept(message);
   }
 
   @EventHandler

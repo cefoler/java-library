@@ -120,7 +120,7 @@ public final class MenuHolder implements InventoryHolder {
     this.properties = properties;
 
     inventory.clear();
-    properties.putIfAbsent("page", 1);
+    properties.putIfAbsent("page", 0);
 
     final ItemStack[] contents = player.getInventory().getContents();
     final ItemStack[] armor = player.getInventory().getArmorContents();
@@ -137,11 +137,11 @@ public final class MenuHolder implements InventoryHolder {
         title, menu.getSize());
     ReflectionNms.sendPacket(player, packet);
 
-    final InventoryRenderEvent event = new InventoryRenderEvent(player, inventory);
-    Bukkit.getPluginManager().callEvent(event);
-
     player.getInventory().setContents(contents);
     player.getInventory().setArmorContents(armor);
+
+    final InventoryRenderEvent event = new InventoryRenderEvent(player, inventory);
+    Bukkit.getPluginManager().callEvent(event);
 
     if (event.isCancelled()) {
       return;
