@@ -74,7 +74,7 @@ public final class MenuHolder implements InventoryHolder {
     this.menu = menu;
     this.properties = properties;
 
-    properties.putIfAbsent("page", 1);
+    properties.putIfAbsent("page", 0);
   }
 
   /**

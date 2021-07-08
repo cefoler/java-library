@@ -16,10 +16,14 @@ public class Data extends Properties {
     return this;
   }
 
+  public synchronized Data setDataIfAbsent(final Object key, final Object value) {
+    putIfAbsent(String.valueOf(key), value);
+    return this;
+  }
+
   @SuppressWarnings("unchecked")
   public synchronized <T> T getData(final String key) {
-    final Object object = get(key);
-    return (T) object;
+    return (T) get(key);
   }
 
   @SuppressWarnings("unchecked")
@@ -30,6 +34,10 @@ public class Data extends Properties {
 
   public static synchronized Data create() {
     return new Data();
+  }
+
+  public static synchronized Data create(final Properties properties) {
+    return new Data(properties);
   }
 
 }

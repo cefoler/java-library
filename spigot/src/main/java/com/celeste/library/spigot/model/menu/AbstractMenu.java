@@ -56,19 +56,10 @@ public abstract class AbstractMenu {
       this.items = new MenuItem[size];
 
       for (final Method method : Reflection.getDcMethods(clazz)) {
-        if (!method.isAnnotationPresent(Item.class)) {
+        final Item annotation = method.getDeclaredAnnotation(Item.class);
+        if (annotation == null || method.getReturnType() != MenuItem.class || method.getParameterCount() != 0) {
           continue;
         }
-
-        if (method.getReturnType() != MenuItem.class) {
-          continue;
-        }
-
-        if (method.getParameterCount() != 0) {
-          continue;
-        }
-
-        final Item annotation = method.getAnnotation(Item.class);
 
         final MenuItem item = Reflection.invoke(method, this);
         item.setSlot(annotation.slot());
