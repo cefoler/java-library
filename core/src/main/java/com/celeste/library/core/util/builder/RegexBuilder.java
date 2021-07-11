@@ -14,18 +14,28 @@ public final class RegexBuilder {
     return new RegexBuilder("");
   }
 
+  public RegexBuilder append(final RegexPattern pattern) {
+    this.pattern = pattern + pattern.getPattern();
+    return this;
+  }
+
+  public RegexBuilder append(final String pattern) {
+    this.pattern = pattern + pattern;
+    return this;
+  }
+
   public RegexBuilder limit(final int start, final int end) {
-    pattern = pattern + RegexPattern.fromLimit(start, end);
+    this.pattern = pattern + RegexPattern.limit(start, end);
     return this;
   }
 
   public RegexBuilder amount(final int amount) {
-    pattern = pattern + RegexPattern.amount(amount);
+    this.pattern = pattern + RegexPattern.amount(amount);
     return this;
   }
 
   public RegexBuilder startsFrom(final char from) {
-    pattern = pattern + RegexPattern.startingFrom(from);
+    this.pattern = pattern + RegexPattern.startingFrom(from);
     return this;
   }
 

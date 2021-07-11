@@ -14,7 +14,8 @@ public enum RegexPattern {
   LETTERS("[A-Z|a-z]"),
   NUMBERS("[0-9]"),
   SPECIAL_LETTERS("[!@#$%^&*]"),
-  REMOVE_GROUP("?:");
+  REMOVE_GROUP("?:"),
+  HEXADECIMAL("^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$");
 
   private final String pattern;
 
@@ -23,12 +24,16 @@ public enum RegexPattern {
    * by the start position to the
    * end position.
    */
-  public static String fromLimit(final int start, final int end) {
+  public static String limit(final int start, final int end) {
     return "{" + start + "," + end + "}";
   }
 
   public static String amount(final int amount) {
     return "{" + amount + "}";
+  }
+
+  public static String contains(final String str) {
+    return ".*" + str + ".*";
   }
 
   /**
