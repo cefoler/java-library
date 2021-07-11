@@ -2,6 +2,7 @@ package com.celeste.library.core.util.builder;
 
 import com.celeste.library.core.util.formatter.StringFormatter;
 import com.celeste.library.core.util.pattern.RegexPattern;
+import com.google.common.base.Strings;
 import lombok.AllArgsConstructor;
 
 @AllArgsConstructor
@@ -50,7 +51,7 @@ public final class StringBuilder {
   }
 
   public StringBuilder onlyWith(final RegexPattern pattern) {
-    this.str = str.replaceAll("(" + RegexPattern.REMOVE_GROUP + pattern.getPattern(), "" + ")");
+    this.str = str.replaceAll("(" + RegexPattern.REMOVE_GROUP + pattern.getPattern() + ")", "");
     return this;
   }
 
