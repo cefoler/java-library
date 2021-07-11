@@ -3,14 +3,12 @@ package com.celeste.library.core.util.builder;
 import com.celeste.library.core.model.registry.type.KeyType;
 import com.celeste.library.core.util.formatter.StringFormatter;
 import com.celeste.library.core.util.pattern.RegexPattern;
-import com.google.common.base.Strings;
 import lombok.AllArgsConstructor;
 
 @AllArgsConstructor
 public final class StringBuilder {
 
   private String str;
-
   private KeyType keyType;
 
   public StringBuilder(final String str) {
@@ -79,7 +77,7 @@ public final class StringBuilder {
   }
 
   public String build() {
-    return str;
+    return keyType.convert(str);
   }
 
 }
