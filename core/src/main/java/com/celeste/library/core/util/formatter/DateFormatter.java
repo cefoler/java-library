@@ -1,5 +1,6 @@
 package com.celeste.library.core.util.formatter;
 
+import com.celeste.library.core.util.formatter.type.TimeLanguage;
 import com.celeste.library.core.util.formatter.type.TimeType;
 import com.celeste.library.core.util.pattern.RegexPattern;
 import java.text.SimpleDateFormat;
@@ -19,22 +20,18 @@ public final class DateFormatter {
     DATE_FORMAT.setTimeZone(TimeZone.getDefault());
   }
 
-  /**
-   * Converts the timestamp into a String of the date.
-   *
-   * @param time Long
-   * @return String
-   */
+  public static String convertToString(final long time, final SimpleDateFormat dateFormat) {
+    return dateFormat.format(time);
+  }
+
   public static String convertToString(final long time) {
     return DATE_FORMAT.format(time);
   }
 
-  /**
-   * Transforms the date into the format
-   *
-   * @param date Date
-   * @return String
-   */
+  public static String convertToString(final Date date, final SimpleDateFormat dateFormat) {
+    return dateFormat.format(date.getTime());
+  }
+
   public static String convertToString(final Date date) {
     return DATE_FORMAT.format(date.getTime());
   }
@@ -52,8 +49,7 @@ public final class DateFormatter {
       final String prefix = date.replaceAll(RegexPattern.NUMBERS.getPattern(), "");
       final int time = Integer.parseInt(date.replaceAll(RegexPattern.LETTERS.getPattern(), ""));
 
-      final TimeType type = TimeType.getType(prefix);
-      totalTime += type.getMultiplier() * time;
+      totalTime += TimeType.getType(prefix).getMultiplier() * time;
     }
 
     return totalTime;
@@ -65,7 +61,7 @@ public final class DateFormatter {
    * @param time long
    * @return String
    */
-  public static String format(final long time) {
+  public static String format(final long time, final TimeLanguage language) {
     final long differenceTime = System.currentTimeMillis() - time;
 
     final long days = TimeUnit.MILLISECONDS.toDays(differenceTime);
@@ -80,29 +76,41 @@ public final class DateFormatter {
 
     if (days > 0) {
       builder.append(days);
-      builder.append(days == 1 ? " day" : "days");
+      builder.append(days == 1 ? format(language.getDay()) : format(language.getDays()));
     }
 
     if (hours > 0) {
-      builder.append(days > 0 && (minutes > 0 || seconds > 0) ? ", " : " and ");
+      builder.append(days > 0 && (minutes > 0 || seconds > 0) ? ", " : and(language));
       builder.append(hours);
-      builder.append(hours == 1 ? "hour" : "hours");
+      builder.append(hours == 1 ? format(language.getHour()) : format(language.getHours()));
     }
 
     if (minutes > 0) {
-      builder.append(days > 0 || hours > 0 && (seconds > 0) ? ", " : " and ");
+      builder.append(days > 0 || hours > 0 && (seconds > 0) ? ", " : and(language));
       builder.append(minutes);
-      builder.append(minutes == 1 ? " minute" : " minutes");
+      builder.append(minutes == 1 ? format(language.getMinute()) : format(language.getMinutes()));
     }
 
     if (seconds > 0) {
-      builder.append(days > 0 || hours > 0 || minutes > 0 ? " and " : builder.length() > 0 ? ", "
+      builder.append(days > 0 || hours > 0 || minutes > 0 ? and(language) : builder.length() > 0 ? ", "
           : "");
       builder.append(seconds);
-      builder.append(seconds == 1 ? " second" : "seconds");
+      builder.append(seconds == 1 ? format(language.getSecond()) : format(language.getSeconds()));
     }
 
     return builder.toString();
+  }
+
+  public static String format(final long time) {
+    return format(time, TimeLanguage.ENGLISH);
+  }
+
+  private static String format(final String str) {
+    return " " + str;
+  }
+
+  private static String and(final TimeLanguage language) {
+    return " " + language.getAnd() + " ";
   }
 
 }
