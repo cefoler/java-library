@@ -3,6 +3,8 @@ package com.celeste.library.core.util.pattern;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
+import java.util.regex.Pattern;
+
 @Getter
 @RequiredArgsConstructor
 public enum RegexPattern {
@@ -25,12 +27,24 @@ public enum RegexPattern {
     return "{" + start + "," + end + "}";
   }
 
+  public static String amount(final int amount) {
+    return "{" + amount + "}";
+  }
+
   /**
    * Returns a pattern that gets only
    * the characters after the char provided
    */
   public static String startingFrom(final char str) {
     return "^([^" + str + "])+";
+  }
+
+  public static Pattern from(final RegexPattern pattern) {
+    return Pattern.compile(pattern.getPattern());
+  }
+
+  public static boolean matches(final String str, final RegexPattern pattern) {
+    return str.matches(pattern.getPattern());
   }
 
 }
