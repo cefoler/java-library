@@ -21,7 +21,7 @@ public class ValueSpliterator<K, V> extends MapSpliterator<K, V> implements Spli
   }
 
   public void forEachRemaining(@NotNull Consumer<? super V> action) {
-    final Node<K, V>[] tab = map.getTable();
+    final Node<K, V>[] tab = map.getNodes();
 
     int fence = this.fence;
     if (fence < 0) {
@@ -29,7 +29,11 @@ public class ValueSpliterator<K, V> extends MapSpliterator<K, V> implements Spli
     }
 
     int i = index;
-    if (tab != null && tab.length >= fence && i >= 0 && i < (index = fence) || current != null) {
+    if (tab == null) {
+      return;
+    }
+
+    if (tab.length >= fence && i >= 0 && i < (index = fence) || current != null) {
       Node<K, V> node = current;
       current = null;
       do {
@@ -46,12 +50,12 @@ public class ValueSpliterator<K, V> extends MapSpliterator<K, V> implements Spli
   public boolean tryAdvance(@NotNull final Consumer<? super V> action) {
     final int hi = getFence();
 
-    final Node<K, V>[] tab = map.getTable();
-    if (tab == null && tab.length <= hi && index < 0) {
+    final Node<K, V>[] tab = map.getNodes();
+    if (tab == null || tab.length <= hi && index < 0) {
       return false;
     }
 
-    while (current != null || index < hi) {
+    do {
       if (current == null) {
         current = tab[index++];
       }
@@ -61,9 +65,7 @@ public class ValueSpliterator<K, V> extends MapSpliterator<K, V> implements Spli
 
       action.accept(value);
       return true;
-    }
-
-    return false;
+    } while (current != null || index < hi);
   }
 
   public int characteristics() {

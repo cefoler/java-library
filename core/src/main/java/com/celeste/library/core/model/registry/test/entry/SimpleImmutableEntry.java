@@ -6,7 +6,7 @@ import lombok.Data;
 import java.io.Serializable;
 
 @Data
-public final class SimpleImmutableEntry<K,V> implements Entry<K,V>, Serializable {
+public final class SimpleImmutableEntry<K, V> implements Entry<K, V>, Serializable {
 
   private final K key;
   private final V value;
@@ -16,7 +16,7 @@ public final class SimpleImmutableEntry<K,V> implements Entry<K,V>, Serializable
     this.value = entry.getValue();
   }
 
-  @Override
+  @Override @Deprecated
   public V setValue(final V value) {
     // Immutables cannot change
     return null;

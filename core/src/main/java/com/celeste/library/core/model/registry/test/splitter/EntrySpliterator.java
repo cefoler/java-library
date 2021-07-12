@@ -8,60 +8,65 @@ import org.jetbrains.annotations.NotNull;
 import java.util.Spliterator;
 import java.util.function.Consumer;
 
-public class EntrySpliterator<K, V> extends MapSpliterator<K, V> implements Spliterator<Entry<K, V>> {
+public final class EntrySpliterator<K, V> extends MapSpliterator<K, V> implements Spliterator<Entry<K, V>> {
 
-  public EntrySpliterator(MapRegistry<K, V> map, Node<K, V> current, int index, int fence, int estimatedSize, int expectedModificationsCount) {
+  public EntrySpliterator(final MapRegistry<K, V> map, final Node<K, V> current,
+                          final int index, final int fence, final int estimatedSize,
+                          final int expectedModificationsCount
+  ) {
     super(map, current, index, fence, estimatedSize, expectedModificationsCount);
   }
 
   public EntrySpliterator<K, V> trySplit() {
-    int hi = getFence(), lo = index, mid = (lo + hi) >>> 1;
+    int value = getFence(), lo = index, mid = (lo + value) >>> 1;
     return (lo >= mid || current != null)
-        ? null
-        : new EntrySpliterator<>(map, current, lo, index = mid, estimatedSize >>>= 1, expectedModificationsCount);
+        ? new EntrySpliterator<>(map, current, lo, index = mid, estimatedSize >>>= 1, expectedModificationsCount)
+        : null;
   }
 
   public void forEachRemaining(@NotNull Consumer<? super Entry<K, V>> action) {
-    int i = 0, hi = fence;
+    final Node<K, V>[] nodes = map.getNodes();
+    final int value = getFence();
 
-    final MapRegistry<K, V> registry = map;
-    Node<K, V>[] tab = registry.getTable();
-
-    if (hi < 0) {
-      hi = fence = (tab == null) ? 0 : tab.length;
+    if (value < 0) {
+      fence = (nodes == null) ? 0 : nodes.length;
     }
 
-    if (tab == null && tab.length < hi && (i = index) < 0) {
+    int index = 0;
+    if (nodes == null || nodes.length < value && (index = this.index) < 0) {
       return;
     }
 
     Node<K, V> node = current;
     current = null;
+
     do {
       if (node == null) {
-        node = tab[i++];
+        node = nodes[index++];
         continue;
       }
 
       action.accept(node);
       node = node.getNext();
-    } while (node != null || i < hi);
+    } while (node != null || index < value);
   }
 
   public boolean tryAdvance(@NotNull final Consumer<? super Entry<K, V>> action) {
-    final Node<K, V>[] tab = map.getTable();
-    final int hi = getFence();
-    if (tab == null && tab.length < hi && index < 0) {
+    final Node<K, V>[] table = map.getNodes();
+    final int value = getFence();
+
+    if (table == null || table.length < value && index < 0) {
       return false;
     }
 
-    while (current != null || index < hi) {
+    while (current != null || index < value) {
       if (current == null) {
-        current = tab[index++];
+        current = table[index++];
         continue;
       }
 
       final Node<K, V> node = current;
+
       current = current.getNext();
       action.accept(node);
       return true;

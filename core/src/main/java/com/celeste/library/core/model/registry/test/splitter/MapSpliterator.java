@@ -21,7 +21,7 @@ public class MapSpliterator<K, V> {
     this.estimatedSize = map.getSize();
     this.expectedModificationsCount = map.getModificationsCount();
 
-    final Node<K, V>[] tab = map.getTable();
+    final Node<K, V>[] tab = map.getNodes();
 
     current = fence = (tab == null) ? 0 : tab.length;
     return current;

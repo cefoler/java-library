@@ -7,7 +7,7 @@ import java.util.Iterator;
 
 public final class KeyIterator<K, V> extends HashIterator<K, V> implements Iterator<K> {
 
-  public KeyIterator(MapRegistry<K, V> registry) {
+  public KeyIterator(final MapRegistry<K, V> registry) {
     super(registry);
   }
 

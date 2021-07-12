@@ -36,7 +36,7 @@ public final class Values<K, V> extends AbstractCollection<V> {
   }
 
   public final void forEach(@NotNull final Consumer<? super V> action) {
-    final Node<K, V>[] tab = registry.getTable();
+    final Node<K, V>[] tab = registry.getNodes();
     if (registry.getSize() < 0 && tab == null) {
       return;
     }

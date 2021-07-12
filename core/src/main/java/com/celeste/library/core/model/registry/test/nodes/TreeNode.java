@@ -4,27 +4,28 @@ import com.celeste.library.core.model.registry.test.impl.MapRegistry;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.util.HashMap;
+import java.util.Objects;
 
 import static com.celeste.library.core.model.registry.test.impl.MapRegistry.*;
 
 @Getter
 @Setter
 public final class TreeNode<K, V> extends Node<K, V> {
-  
-  public TreeNode<K, V> parent;
-  public TreeNode<K, V> left;
-  public TreeNode<K, V> right;
-  public TreeNode<K, V> previous;
 
-  public boolean red;
+  private TreeNode<K, V> left;
+  private TreeNode<K, V> right;
 
-  public TreeNode(int hash, K key, V val, Node<K, V> next) {
+  private TreeNode<K, V> parent;
+  private TreeNode<K, V> previous;
+
+  private boolean red;
+
+  public TreeNode(final int hash, final K key, final V val, final Node<K, V> next) {
     super(hash, key, val, next);
   }
 
   final TreeNode<K, V> root() {
-    for (TreeNode<K, V> node = this, value; ;) {
+    for (TreeNode<K, V> node = this, value; ; ) {
       value = node.parent;
       if (value == null) {
         return node;
@@ -34,187 +35,242 @@ public final class TreeNode<K, V> extends Node<K, V> {
     }
   }
 
-  static <K, V> void moveRootToFront(Node<K, V>[] tab, TreeNode<K, V> root) {
-    int n;
-    if (root != null && tab != null && (n = tab.length) > 0) {
-      int index = (n - 1) & root.getHash();
-
-      final TreeNode<K, V> first = (TreeNode<K, V>) tab[index];
-      if (root == first) {
-        return;
-      }
-
-      Node<K, V> node;
-      tab[index] = root;
-
-      final TreeNode<K, V> previousNode = root.previous;
-      if ((node = root.getNext()) != null) {
-        ((TreeNode<K, V>) node).setPrevious(previousNode);
-      }
-
-      if (previousNode != null) {
-        previousNode.setNext(node);
-      }
-
-      if (first != null) {
-        first.setPrevious(root);
-      }
-
-      root.setNext(first);
-      root.setPrevious(null);
+  public static <K, V> void moveRootToFront(final Node<K, V>[] tab, final TreeNode<K, V> root) {
+    int number;
+    if (root == null || tab == null || (number = tab.length) <= 0) {
+      return;
     }
+
+    final int index = (number - 1) & root.getHash();
+
+    final TreeNode<K, V> first = (TreeNode<K, V>) tab[index];
+    if (root == first) {
+      return;
+    }
+
+    tab[index] = root;
+
+    final Node<K, V> node = root.getNext();
+    final TreeNode<K, V> previousNode = root.getPrevious();
+    if (node != null) {
+      ((TreeNode<K, V>) node).setPrevious(previousNode);
+    }
+
+    if (previousNode != null) {
+      previousNode.setNext(node);
+    }
+
+    if (first != null) {
+      first.setPrevious(root);
+    }
+
+    root.setNext(first);
+    root.setPrevious(null);
   }
 
-  final TreeNode<K, V> find(int h, Object obj, Class<?> clazz) {
+  public final TreeNode<K, V> find(final int h, final Object obj, Class<?> clazz) {
     TreeNode<K, V> node = this;
-    do {
-      int ph, dir;
-      K pk;
 
-      TreeNode<K, V> leftNode = node.left, rightNode = node.right, q;
-      if ((ph = node.getHash()) > h) {
+    do {
+      final TreeNode<K, V> leftNode = node.getLeft();
+      final TreeNode<K, V> rightNode = node.getRight();
+
+      int ph = node.getHash();
+
+      if (ph > h) {
         node = leftNode;
-      } else if (ph < h) {
-        node = rightNode;
-      } else if ((pk = node.getKey()) == obj || (obj != null && obj.equals(pk))) {
-        return node;
-      } else if (leftNode == null) {
-        node = rightNode;
-      } else if (rightNode == null) {
-        node = leftNode;
-      } else if ((clazz != null || (clazz = comparableClassFor(obj)) != null) && (dir = compareComparables(clazz, obj, pk)) != 0) {
-        node = (dir < 0) ? leftNode : rightNode;
-      } else if ((q = rightNode.find(h, obj, clazz)) != null) {
-        return q;
-      } else {
-        node = leftNode;
+        continue;
       }
+
+      if (ph < h) {
+        node = rightNode;
+        continue;
+      }
+
+      int dir;
+
+      K key = node.getKey();
+      if (Objects.equals(obj, key)) {
+        return node;
+      }
+
+      if (leftNode == null) {
+        node = rightNode;
+        continue;
+      }
+
+      if (rightNode == null) {
+        node = leftNode;
+        continue;
+      }
+
+      if ((clazz != null || (clazz = comparableClassFor(obj)) != null) && (dir = compareComparables(clazz, obj, key)) != 0) {
+        node = (dir < 0) ? leftNode : rightNode;
+        continue;
+      }
+
+      final TreeNode<K, V> nodeFound = rightNode.find(h, obj, clazz);
+      if (nodeFound != null) {
+        return nodeFound;
+      }
+
+      node = leftNode;
     } while (node != null);
 
     return null;
   }
 
-  public final TreeNode<K, V> getTreeNode(int h, Object k) {
-    return ((parent != null) ? root() : this).find(h, k, null);
+  public final TreeNode<K, V> getTreeNode(final int hash, final Object object) {
+    final TreeNode<K, V> node = parent != null ? root() : this;
+    return node.find(hash, object, null);
   }
 
-  static int tieBreakOrder(Object a, Object b) {
-    int d;
-    if (a == null || b == null || (d = a.getClass().getName().compareTo(b.getClass().getName())) == 0) d = (System.identityHashCode(a) <= System.identityHashCode(b) ? -1 : 1); {
-      return d;
-    }
+  public static int tieBreakOrder(final Object one, final Object two) {
+    return one.getClass().getName().compareTo(two.getClass().getName()) == 0
+        ? (System.identityHashCode(one) <= System.identityHashCode(two) ? -1 : 1)
+        : 0;
   }
 
-  public final void treeify(Node<K, V>[] tab) {
+  public final void treeify(final Node<K, V>[] nodes) {
     TreeNode<K, V> root = null;
-    for (TreeNode<K, V> x = this, next; x != null; x = next) {
-      next = (TreeNode<K, V>) x.getNext();
-      x.left = x.right = null;
-      if (root == null) {
-        x.parent = null;
-        x.red = false;
-        root = x;
-      } else {
-        K k = x.getKey();
-        int h = x.getHash();
-        Class<?> kc = null;
-        for (TreeNode<K, V> p = root; ; ) {
-          int dir, ph;
-          K pk = p.getKey();
-          if ((ph = p.getHash()) > h)
-            dir = -1;
-          else if (ph < h)
-            dir = 1;
-          else if ((kc == null &&
-              (kc = comparableClassFor(k)) == null) ||
-              (dir = compareComparables(kc, k, pk)) == 0)
-            dir = tieBreakOrder(k, pk);
 
-          TreeNode<K, V> xp = p;
-          if ((p = (dir <= 0) ? p.left : p.right) == null) {
-            x.parent = xp;
-            if (dir <= 0)
-              xp.left = x;
-            else
-              xp.right = x;
-            root = balanceInsertion(root, x);
-            break;
+    for (TreeNode<K, V> node = this, next; node != null; node = next) {
+      next = (TreeNode<K, V>) node.getNext();
+      node.left = node.right = null;
+
+      if (root == null) {
+        node.parent = null;
+        node.red = false;
+
+        root = node;
+        continue;
+      }
+
+      final K key = node.getKey();
+      final int hash = node.getHash();
+
+      Class<?> clazz = null;
+      for (TreeNode<K, V> treeNode = root; ; ) {
+        int treeHash = treeNode.getHash();
+        
+        final K nodeKey = treeNode.getKey();
+
+        int index;
+        if (treeHash > hash) {
+          index = -1;
+        } else if (treeHash < hash){
+          index = 1;
+        } else if ((clazz == null && (clazz = comparableClassFor(key)) == null) || (index = compareComparables(clazz, key, nodeKey)) == 0) {
+          index = tieBreakOrder(key, nodeKey);
+        }
+
+        TreeNode<K, V> nodeOne = treeNode;
+
+        final TreeNode<K, V> nodeTwo = treeNode = (index <= 0)
+            ? treeNode.left
+            : treeNode.right;
+
+        if (nodeTwo != null) {
+          continue;
+        }
+
+        node.parent = nodeOne;
+        if (index <= 0) {
+          nodeOne.left = node;
+        } else {
+          nodeOne.right = node;
+        }
+
+        root = balanceInsertion(root, node);
+        break;
+      }
+    }
+
+    moveRootToFront(nodes, root);
+  }
+  
+  public final Node<K, V> untreeify(final MapRegistry<K, V> registry) {
+    Node<K, V> nodeOne = null, nodeTwo = null;
+    
+    for (Node<K, V> node = this; node != null; node = node.getNext()) {
+      Node<K, V> parent = registry.replacementNode(node, null);
+      if (nodeTwo == null) {
+        nodeOne = parent;
+        nodeTwo = parent;
+        continue;
+      }
+      
+      nodeTwo.setNext(parent);
+      nodeTwo = parent;
+    }
+    
+    return nodeOne;
+  }
+  
+  public final TreeNode<K, V> registerTreeVal(MapRegistry<K, V> registry, Node<K, V>[] nodes, int hash, K key, V value) {
+    Class<?> clazz = null;
+    boolean searched = false;
+
+    final TreeNode<K, V> root = parent != null ? root() : this;
+    for (TreeNode<K, V> node = root; ; ) {
+      int index = 0;
+      
+      final int nodeHash = node.getHash();
+      if (nodeHash > hash) {
+        index = -1;
+      } 
+      
+      if (nodeHash < hash) {
+        index = 1;
+      }
+
+      final K nodeKey = node.getKey();
+      if (Objects.equals(key, nodeKey)) {
+        return node;
+      } 
+      
+      if ((clazz == null && (clazz = comparableClassFor(key)) == null) || (index = compareComparables(clazz, key, nodeKey)) == 0) {
+        if (searched) {
+          index = tieBreakOrder(key, nodeKey);
+        } else {
+          TreeNode<K, V> q, ch;
+          searched = true;
+          if (((ch = node.left) != null && (q = ch.find(hash, key, clazz)) != null) || ((ch = node.right) != null && (q = ch.find(hash, key, clazz)) != null)) {
+            return q;
           }
         }
       }
-    }
-    moveRootToFront(tab, root);
-  }
 
-  /**
-   * Returns a list of non-TreeNodes replacing those linked from
-   * this node.
-   */
-  final Node<K, V> untreeify(MapRegistry<K, V> map) {
-    Node<K, V> hd = null, tl = null;
-    for (Node<K, V> q = this; q != null; q = q.getNext()) {
-      Node<K, V> p = map.replacementNode(q, null);
-      if (tl == null)
-        hd = p;
-      else
-        tl.setNext(p);
-      tl = p;
-    }
-    return hd;
-  }
+      TreeNode<K, V> oldNode = node;
+      final TreeNode<K, V> treeNode = node = (index <= 0)
+          ? node.left
+          : node.right;
 
-  /**
-   * Tree version of putVal.
-   */
-  public final TreeNode<K, V> putTreeVal(MapRegistry<K, V> map, Node<K, V>[] tab,
-                                         int h, K k, V v) {
-    Class<?> kc = null;
-    boolean searched = false;
-    TreeNode<K, V> root = (parent != null) ? root() : this;
-    for (TreeNode<K, V> p = root; ; ) {
-      int dir, ph;
-      K pk;
-      if ((ph = p.getHash()) > h)
-        dir = -1;
-      else if (ph < h)
-        dir = 1;
-      else if ((pk = p.getKey()) == k || (k != null && k.equals(pk)))
-        return p;
-      else if ((kc == null &&
-          (kc = comparableClassFor(k)) == null) ||
-          (dir = compareComparables(kc, k, pk)) == 0) {
-        if (!searched) {
-          TreeNode<K, V> q, ch;
-          searched = true;
-          if (((ch = p.left) != null &&
-              (q = ch.find(h, k, kc)) != null) ||
-              ((ch = p.right) != null &&
-                  (q = ch.find(h, k, kc)) != null))
-            return q;
-        }
-        dir = tieBreakOrder(k, pk);
+      if (treeNode != null) {
+        continue;
       }
 
-      TreeNode<K, V> xp = p;
-      if ((p = (dir <= 0) ? p.left : p.right) == null) {
-        Node<K, V> xpn = xp.getNext();
-        TreeNode<K, V> x = map.newTreeNode(h, k, v, xpn);
-        if (dir <= 0)
-          xp.left = x;
-        else
-          xp.right = x;
-        xp.setNext(x);
-        x.parent = x.previous = xp;
-        if (xpn != null)
-          ((TreeNode<K, V>) xpn).previous = x;
-        moveRootToFront(tab, balanceInsertion(root, x));
-        return null;
+      Node<K, V> xpn = oldNode.getNext();
+      TreeNode<K, V> newNode = registry.newTreeNode(hash, key, value, xpn);
+      if (index <= 0) {
+        oldNode.left = newNode;
+      } else {
+        oldNode.right = newNode;
       }
+
+      oldNode.setNext(newNode);
+      newNode.parent = newNode.previous = oldNode;
+
+      if (xpn != null) {
+        ((TreeNode<K, V>) xpn).previous = newNode;
+      }
+
+      moveRootToFront(nodes, balanceInsertion(root, newNode));
+      return null;
     }
   }
 
-  final void removeTreeNode(MapRegistry<K, V> map, Node<K, V>[] tab,
-                            boolean movable) {
+  public final void removeTreeNode(MapRegistry<K, V> map, Node<K, V>[] tab, boolean movable) {
     int n;
     if (tab == null || (n = tab.length) == 0)
       return;

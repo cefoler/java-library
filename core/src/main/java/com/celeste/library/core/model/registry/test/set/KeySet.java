@@ -44,7 +44,7 @@ public final class KeySet<K, V> extends AbstractSet<K> {
   }
 
   public final void forEach(@NotNull final Consumer<? super K> action) {
-    final Node<K,V>[] tab = registry.getTable();
+    final Node<K,V>[] tab = registry.getNodes();
     if (registry.size() < 0 && tab == null) {
       return;
     }

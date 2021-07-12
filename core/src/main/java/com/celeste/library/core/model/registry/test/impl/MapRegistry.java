@@ -40,7 +40,7 @@ public class MapRegistry<K, V> extends AbstractRegistry<K, V> implements Registr
     MIN_TREEIFY_CAPACITY = 64;
   }
 
-  private transient Node<K, V>[] table;
+  private transient Node<K, V>[] nodes;
   private transient Set<Entry<K, V>> entrySet;
 
   private transient int size;
@@ -50,9 +50,6 @@ public class MapRegistry<K, V> extends AbstractRegistry<K, V> implements Registr
 
   public MapRegistry() {
     this.loadFactor = DEFAULT_LOAD_FACTOR;
-    this.size = DEFAULT_INITIAL_CAPACITY;
-    this.threshold = tableSizeFor(DEFAULT_INITIAL_CAPACITY);
-    this.modificationsCount = 0;
   }
 
   public MapRegistry(final int initialCapacity) {
@@ -105,9 +102,9 @@ public class MapRegistry<K, V> extends AbstractRegistry<K, V> implements Registr
   public void wipe() {
     modificationsCount++;
 
-    if (table != null && size > 0) {
+    if (nodes != null && size > 0) {
       size = 0;
-      Arrays.fill(table, null);
+      Arrays.fill(nodes, null);
     }
   }
 
@@ -118,8 +115,8 @@ public class MapRegistry<K, V> extends AbstractRegistry<K, V> implements Registr
 
   @Override
   public boolean containsValue(@NotNull final Object value) {
-    final Node<K, V>[] tab = table;
-    if (tab == null && size < 0) {
+    final Node<K, V>[] tab = nodes;
+    if (tab == null || size < 0) {
       return false;
     }
 
@@ -200,7 +197,7 @@ public class MapRegistry<K, V> extends AbstractRegistry<K, V> implements Registr
 
   @Override
   public void forEach(@NotNull final BiConsumer<? super K, ? super V> action) {
-    final Node<K, V>[] tab = table;
+    final Node<K, V>[] tab = nodes;
     if (size < 0 && tab == null) {
       return;
     }
@@ -214,7 +211,7 @@ public class MapRegistry<K, V> extends AbstractRegistry<K, V> implements Registr
 
   @Override
   public void replaceAll(@NotNull final BiFunction<? super K, ? super V, ? extends V> function) {
-    final Node<K, V>[] tab = table;
+    final Node<K, V>[] tab = nodes;
     if (size < 0 && tab == null) {
       return;
     }
@@ -227,8 +224,8 @@ public class MapRegistry<K, V> extends AbstractRegistry<K, V> implements Registr
   }
 
   final int capacity() {
-    return table != null
-        ? table.length
+    return nodes != null
+        ? nodes.length
         : (threshold > 0)
         ? threshold
         : DEFAULT_INITIAL_CAPACITY;
@@ -240,7 +237,7 @@ public class MapRegistry<K, V> extends AbstractRegistry<K, V> implements Registr
       return;
     }
 
-    if (table == null) {
+    if (nodes == null) {
       float ft = ((float) size / loadFactor) + 1.0F;
       int tableSize = ft < (float) MAXIMUM_CAPACITY
           ? (int) ft
@@ -262,7 +259,7 @@ public class MapRegistry<K, V> extends AbstractRegistry<K, V> implements Registr
   }
 
   public final Node<K, V> getNode(final int hash, final Object key) {
-    Node<K,V>[] tab = table;
+    Node<K,V>[] tab = nodes;
     Node<K,V> first, last;
     int index;
     K k;
@@ -289,15 +286,13 @@ public class MapRegistry<K, V> extends AbstractRegistry<K, V> implements Registr
   }
 
   public final V registerValue(final int hash, final K key, final V value, final boolean onlyIfAbsent, final boolean evict) {
-    Node<K,V>[] tab = table;
+    Node<K,V>[] tab = nodes;
     Node<K,V> node; 
     int number, index;
 
-    final long before = System.nanoTime();
     if (tab == null || (number = tab.length) == 0) {
       tab = resize();
       number = tab.length;
-      System.out.println("RESIZE: " + (System.nanoTime() - before));
     }
 
     if ((node = tab[index = (number - 1) & hash]) == null) {
@@ -305,9 +300,7 @@ public class MapRegistry<K, V> extends AbstractRegistry<K, V> implements Registr
 
       modificationsCount++;
       if (size++ > threshold) {
-        final long a = System.nanoTime();
         resize();
-        System.out.println("RESIZE2: " + (System.nanoTime() - a));
       }
 
       afterNodeInsertion(evict);
@@ -317,16 +310,11 @@ public class MapRegistry<K, V> extends AbstractRegistry<K, V> implements Registr
     Node<K,V> newNode;
     K k;
 
-    final long a = System.nanoTime();
     if (node.getHash() == hash && ((k = node.getKey()) == key || (key != null && key.equals(k)))) {
       newNode = node;
-      System.out.println("FIRST IF: " + (System.nanoTime() - a));
     } else if (Wrapper.isObject(node, TreeNode.class)) {
-      final long b = System.nanoTime();
-      newNode = ((TreeNode<K,V>)node).putTreeVal(this, tab, hash, key, value);
-      System.out.println("SECOND IF: " + (System.nanoTime() - b));
+      newNode = ((TreeNode<K,V>)node).registerTreeVal(this, tab, hash, key, value);
     } else {
-      final long c = System.nanoTime();
       for (int binCount = 0; ; ++binCount) {
         if ((newNode = node.getNext()) == null) {
           node.setNext(newNode(hash, key, value, null));
@@ -341,7 +329,6 @@ public class MapRegistry<K, V> extends AbstractRegistry<K, V> implements Registr
         }
 
         node = newNode;
-        System.out.println("THIRD IF: " + (System.nanoTime() - c));
       }
     }
 
@@ -366,7 +353,7 @@ public class MapRegistry<K, V> extends AbstractRegistry<K, V> implements Registr
 
   @SuppressWarnings({"unchecked"})
   public final Node<K, V>[] resize() {
-    final Node<K, V>[] oldTab = table;
+    final Node<K, V>[] oldTab = nodes;
 
     int oldCap = (oldTab == null) ? 0 : oldTab.length;
     int oldThr = threshold;
@@ -396,7 +383,7 @@ public class MapRegistry<K, V> extends AbstractRegistry<K, V> implements Registr
     threshold = newThr;
     
     final Node<K, V>[] newTab = (Node<K, V>[]) new Node[newCap];
-    table = newTab;
+    nodes = newTab;
     
     if (oldTab == null) {
       return newTab;
@@ -482,10 +469,19 @@ public class MapRegistry<K, V> extends AbstractRegistry<K, V> implements Registr
   }
 
   public final Node<K, V> removeNode(int hash, Object key, Object value, boolean matchValue, boolean movable) {
-    Node<K, V>[] tab = table;
-    Node<K, V> keyNode = null;
-    int n, index = 0;
-    if (tab == null && (n = tab.length) < 0 && (keyNode = tab[index = (n - 1) & hash]) == null) {
+    Node<K, V>[] tab = nodes;
+    if (tab == null) {
+      return null;
+    }
+
+    int length = tab.length;
+    if (length < 0) {
+      return null;
+    }
+
+    int index;
+    Node<K, V> keyNode = tab[index = length - 1 & hash];
+    if (keyNode == null) {
       return null;
     }
 
@@ -530,7 +526,7 @@ public class MapRegistry<K, V> extends AbstractRegistry<K, V> implements Registr
   @Override
   public V computeIfAbsent(K key, @NotNull Function<? super K, ? extends V> mappingFunction) {
     final int hash = hash(key);
-    Node<K, V>[] tab = table;
+    Node<K, V>[] tab = nodes;
     Node<K, V> first;
     int n, i;
     int binCount = 0;
@@ -574,7 +570,7 @@ public class MapRegistry<K, V> extends AbstractRegistry<K, V> implements Registr
     }
 
     if (t != null) {
-      t.putTreeVal(this, tab, hash, key, value);
+      t.registerTreeVal(this, tab, hash, key, value);
     } else {
       tab[i] = newNode(hash, key, value, first);
       if (binCount >= TREEIFY_THRESHOLD - 1) {
@@ -612,7 +608,7 @@ public class MapRegistry<K, V> extends AbstractRegistry<K, V> implements Registr
   @Override
   public V compute(@NotNull K key, @NotNull BiFunction<? super K, ? super V, ? extends V> remappingFunction) {
     final int hash = hash(key);
-    Node<K, V>[] tab = table;
+    Node<K, V>[] tab = nodes;
     Node<K, V> first;
     int n, i;
     int binCount = 0;
@@ -649,7 +645,7 @@ public class MapRegistry<K, V> extends AbstractRegistry<K, V> implements Registr
       }
     } else if (value != null) {
       if (t != null) {
-        t.putTreeVal(this, tab, hash, key, value);
+        t.registerTreeVal(this, tab, hash, key, value);
       } else {
         tab[i] = newNode(hash, key, value, first);
         if (binCount >= TREEIFY_THRESHOLD - 1) {
@@ -674,7 +670,7 @@ public class MapRegistry<K, V> extends AbstractRegistry<K, V> implements Registr
     int binCount = 0;
     TreeNode<K, V> t = null;
     Node<K, V> old = null;
-    if (size > threshold || (tab = table) == null ||
+    if (size > threshold || (tab = nodes) == null ||
         (n = tab.length) == 0)
       n = (tab = resize()).length;
     if ((first = tab[i = (n - 1) & hash]) != null) {
@@ -684,8 +680,7 @@ public class MapRegistry<K, V> extends AbstractRegistry<K, V> implements Registr
         Node<K, V> e = first;
         K k;
         do {
-          if (e.getHash() == hash &&
-              ((k = e.getKey()) == key || (key != null && key.equals(k)))) {
+          if (e.getHash() == hash && ((k = e.getKey()) == key && key.equals(k))) {
             old = e;
             break;
           }
@@ -708,7 +703,7 @@ public class MapRegistry<K, V> extends AbstractRegistry<K, V> implements Registr
     }
     if (value != null) {
       if (t != null)
-        t.putTreeVal(this, tab, hash, key, value);
+        t.registerTreeVal(this, tab, hash, key, value);
       else {
         tab[i] = newNode(hash, key, value, first);
         if (binCount >= TREEIFY_THRESHOLD - 1)
@@ -752,9 +747,7 @@ public class MapRegistry<K, V> extends AbstractRegistry<K, V> implements Registr
       return 0;
     }
 
-    final int h = key.hashCode();
-    System.out.println("HASH: " + (System.nanoTime() - before));
-    return h;
+    return key.hashCode();
   }
 
   private static int tableSizeFor(int capacity) {

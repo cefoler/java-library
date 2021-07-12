@@ -6,7 +6,7 @@ import lombok.Data;
 import java.io.Serializable;
 
 @Data
-public final class SimpleEntry<K,V> implements Entry<K,V>, Serializable {
+public final class SimpleEntry<K, V> implements Entry<K, V>, Serializable {
 
   private final K key;
   private V value;
