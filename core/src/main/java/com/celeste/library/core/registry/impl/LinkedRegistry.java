@@ -30,6 +30,10 @@ public class LinkedRegistry<K,V> extends MapRegistry<K,V> implements Registry<K,
     accessOrder = false;
   }
 
+  public LinkedRegistry() {
+    super(KeyType.STANDARD);
+  }
+
   public LinkedRegistry(final KeyType type) {
     super(type);
   }
