@@ -1,11 +1,10 @@
 package com.celeste.library.core.model.registry.impl;
 
 import com.celeste.library.core.model.registry.AbstractRegistry;
-import com.celeste.library.core.model.registry.type.KeyType;
+import com.celeste.library.core.registry.type.KeyType;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
 
 public class LinkedRegistry<T, U> extends AbstractRegistry<T, U> {
 
