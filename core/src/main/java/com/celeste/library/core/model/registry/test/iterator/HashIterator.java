@@ -1,0 +1,69 @@
+package com.celeste.library.core.model.registry.test.iterator;
+
+import com.celeste.library.core.model.registry.test.impl.MapRegistry;
+import com.celeste.library.core.model.registry.test.nodes.Node;
+
+import java.util.Iterator;
+import java.util.NoSuchElementException;
+
+import static com.celeste.library.core.model.registry.test.impl.MapRegistry.hash;
+
+public abstract class HashIterator<K, V> {
+
+  private final MapRegistry<K, V> registry;
+
+  Node<K, V> next;
+  Node<K, V> current;
+  int expectedModificationCount;
+  int index;
+
+  public HashIterator(final MapRegistry<K, V> registry) {
+    this.registry = registry;
+
+    expectedModificationCount = registry.getModificationsCount();
+    Node<K, V>[] node = registry.getTable();
+    current = next = null;
+    index = 0;
+    if (node != null && registry.getSize() > 0) {
+      do {
+      } while (index < node.length && (next = node[index++]) == null);
+    }
+  }
+
+  public final boolean hasNext() {
+    return next != null;
+  }
+
+  protected final Node<K, V> nextNode() {
+    Node<K, V>[] nodes;
+    Node<K, V> node = next;
+    if (node == null) {
+      throw new NoSuchElementException();
+    }
+
+    if ((next = (current = node).getNext()) == null && (nodes = registry.getTable()) != null) {
+      do {
+      } while (index < nodes.length && (next = nodes[index++]) == null);
+    }
+
+    return node;
+  }
+
+  public final void remove() {
+    Node<K, V> node = current;
+    if (node == null) {
+      throw new IllegalStateException();
+    }
+
+    current = null;
+
+    final K key = node.getKey();
+    registry.removeNode(hash(key), key, null, false, false);
+  }
+}
+
+//  public final class EntryIterator extends HashIterator implements Iterator<Entry<K, V>> {
+//    public final Entry<K, V> next() {
+//      return nextNode();
+//    }
+//  }
