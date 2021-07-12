@@ -6,7 +6,6 @@ import java.lang.reflect.Type;
 import java.util.*;
 import java.util.function.BiConsumer;
 import java.util.function.BiFunction;
-import java.util.function.Function;
 
 import com.celeste.library.core.model.registry.test.AbstractRegistry;
 import com.celeste.library.core.model.registry.test.Entry;
@@ -18,11 +17,14 @@ import com.celeste.library.core.model.registry.test.set.KeySet;
 import com.celeste.library.core.model.registry.test.set.Values;
 import com.celeste.library.core.util.Wrapper;
 import lombok.Getter;
+import lombok.Setter;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+@Setter
 @Getter
-public class MapRegistry<K, V> extends AbstractRegistry<K, V> implements Registry<K, V>, Cloneable, Serializable {
+public class MapRegistry<K, V> extends AbstractRegistry<K, V>
+    implements Registry<K, V>, Cloneable, Serializable {
 
   public static final int DEFAULT_INITIAL_CAPACITY;
   public static final int MAXIMUM_CAPACITY;
@@ -41,10 +43,10 @@ public class MapRegistry<K, V> extends AbstractRegistry<K, V> implements Registr
   }
 
   private transient Node<K, V>[] nodes;
-  private transient Set<Entry<K, V>> entrySet;
+  public transient Set<Entry<K, V>> entrySet;
 
   private transient int size;
-  private transient int modificationsCount;
+  public transient int modificationsCount;
   private int threshold;
   private float loadFactor;
 
@@ -109,11 +111,6 @@ public class MapRegistry<K, V> extends AbstractRegistry<K, V> implements Registr
   }
 
   @Override
-  public Set<K> getKeys() {
-    return null;
-  }
-
-  @Override
   public boolean containsValue(@NotNull final Object value) {
     final Node<K, V>[] tab = nodes;
     if (tab == null || size < 0) {
@@ -131,19 +128,20 @@ public class MapRegistry<K, V> extends AbstractRegistry<K, V> implements Registr
     return false;
   }
 
-  public Set<K> keySet() {
-    final Set<K> set = getKeys();
+  @Override
+  public Set<K> getKeys() {
+    final Set<K> set = super.getKeys();
     return set == null ? new KeySet<>(this) : set;
   }
 
-  @SuppressWarnings({"rawtypes", "unchecked"})
-  public Collection<V> values() {
-    final Collection<V> values = getAll();
+  @Override @SuppressWarnings({"rawtypes", "unchecked"})
+  public Collection<V> getAll() {
+    final Collection<V> values = super.getAll();
     return values == null ? new Values(this) : values;
   }
 
   @SuppressWarnings({"rawtypes", "unchecked"})
-  public Set<Entry<K, V>> entrySet() {
+  public Set<Entry<K, V>> getEntrySet() {
     return entrySet == null
         ? new EntrySet(this)
         : entrySet;
@@ -223,7 +221,7 @@ public class MapRegistry<K, V> extends AbstractRegistry<K, V> implements Registr
     }
   }
 
-  final int capacity() {
+  public final int capacity() {
     return nodes != null
         ? nodes.length
         : (threshold > 0)
@@ -231,7 +229,7 @@ public class MapRegistry<K, V> extends AbstractRegistry<K, V> implements Registr
         : DEFAULT_INITIAL_CAPACITY;
   }
 
-  final void registerMapEntries(final Registry<? extends K, ? extends V> registry, boolean evict) {
+  public final void registerMapEntries(final Registry<? extends K, ? extends V> registry, boolean evict) {
     final int size = registry.size();
     if (size < 0) {
       return;
@@ -259,28 +257,38 @@ public class MapRegistry<K, V> extends AbstractRegistry<K, V> implements Registr
   }
 
   public final Node<K, V> getNode(final int hash, final Object key) {
-    Node<K,V>[] tab = nodes;
-    Node<K,V> first, last;
-    int index;
-    K k;
-
-    if (tab != null && (index = tab.length) > 0 && (first = tab[(index - 1) & hash]) != null) {
-      if (first.getHash() == hash && ((k = first.getKey()) == key || (key != null && key.equals(k)))) {
-        return first;
-      }
-
-      if ((last = first.getNext()) != null) {
-        if (Wrapper.isObject(first, TreeNode.class)) {
-          return ((TreeNode<K,V>)first).getTreeNode(hash, key);
-        }
-
-        do {
-          if (last.getHash() == hash && ((k = last.getKey()) == key || (key != null && key.equals(k)))) {
-            return last;
-          }
-        } while ((last = last.getNext()) != null);
-      }
+    final Node<K,V>[] tab = nodes;
+    if (tab == null) {
+      return null;
     }
+
+    int index = tab.length;
+
+    final Node<K,V> first = tab[(index - 1) & hash];
+    if (first == null) {
+      return null;
+    }
+
+    K firstKey = first.getKey();
+    if (first.getHash() == hash && Objects.equals(key, firstKey)) {
+      return first;
+    }
+
+    Node<K,V> last = first.getNext();
+    if (last == null) {
+      return null;
+    }
+
+    if (Wrapper.isObject(first, TreeNode.class)) {
+      return ((TreeNode<K,V>)first).getTreeNode(hash, key);
+    }
+
+    do {
+      firstKey = last.getKey();
+      if (last.getHash() == hash && Objects.equals(key, firstKey)) {
+        return last;
+      }
+    } while ((last = last.getNext()) != null);
 
     return null;
   }
@@ -295,7 +303,8 @@ public class MapRegistry<K, V> extends AbstractRegistry<K, V> implements Registr
       number = tab.length;
     }
 
-    if ((node = tab[index = (number - 1) & hash]) == null) {
+    node = tab[index = (number - 1) & hash];
+    if (node == null) {
       tab[index] = newNode(hash, key, value, null);
 
       modificationsCount++;
@@ -355,7 +364,7 @@ public class MapRegistry<K, V> extends AbstractRegistry<K, V> implements Registr
   public final Node<K, V>[] resize() {
     final Node<K, V>[] oldTab = nodes;
 
-    int oldCap = (oldTab == null) ? 0 : oldTab.length;
+    int oldCap = oldTab == null ? 0 : oldTab.length;
     int oldThr = threshold;
     int newCap, newThr = 0;
     
@@ -365,10 +374,13 @@ public class MapRegistry<K, V> extends AbstractRegistry<K, V> implements Registr
         return oldTab;
       }
 
-      if ((newCap = oldCap << 1) < MAXIMUM_CAPACITY && oldCap >= DEFAULT_INITIAL_CAPACITY) {
+      newCap = oldCap << 1;
+      if (newCap < MAXIMUM_CAPACITY && oldCap >= DEFAULT_INITIAL_CAPACITY) {
         newThr = oldThr << 1;
       }
-    } else if (oldThr > 0) {
+    }
+
+    if (oldThr > 0) {
       newCap = oldThr;
     } else {
       newCap = DEFAULT_INITIAL_CAPACITY;
@@ -377,7 +389,9 @@ public class MapRegistry<K, V> extends AbstractRegistry<K, V> implements Registr
     
     if (newThr == 0) {
       float ft = (float) newCap * loadFactor;
-      newThr = (newCap < MAXIMUM_CAPACITY && ft < (float) MAXIMUM_CAPACITY ? (int) ft : Integer.MAX_VALUE);
+      newThr = newCap < MAXIMUM_CAPACITY && ft < (float) MAXIMUM_CAPACITY
+          ? (int) ft
+          : Integer.MAX_VALUE;
     }
     
     threshold = newThr;
@@ -389,53 +403,58 @@ public class MapRegistry<K, V> extends AbstractRegistry<K, V> implements Registr
       return newTab;
     }
 
-    for (int i = 0; i < oldCap; ++i) {
-      Node<K, V> node = oldTab[i];
+    for (int index = 0; index < oldCap; index++) {
+      Node<K, V> node = oldTab[index];
       if (node == null) {
         continue;
       }
 
-      oldTab[i] = null;
+      oldTab[index] = null;
       if (node.getNext() == null) {
         newTab[node.getHash() & (newCap - 1)] = node;
-      } else if (node instanceof TreeNode) {
-        ((TreeNode<K, V>) node).split(this, newTab, i, oldCap);
-      } else {
-        Node<K, V> loHead = null, loTail = null;
-        Node<K, V> hiHead = null, hiTail = null;
-        Node<K, V> next;
+        continue;
+      }
 
-        do {
-          next = node.getNext();
-          if ((node.getHash() & oldCap) == 0) {
-            if (loTail == null) {
-              loHead = node;
-            } else {
-              loTail.setNext(node);
-            }
+      if (node instanceof TreeNode) {
+        ((TreeNode<K, V>) node).split(this, newTab, index, oldCap);
+        continue;
+      }
 
-            loTail = node;
+      Node<K, V> loHead = null, loTail = null;
+      Node<K, V> hiHead = null, hiTail = null;
+      Node<K, V> next;
+
+      do {
+        next = node.getNext();
+        if ((node.getHash() & oldCap) == 0) {
+          if (loTail == null) {
+            loHead = node;
           } else {
-            if (hiTail == null) {
-              hiHead = node;
-            }
-            else {
-              hiTail.setNext(node);
-            }
-
-            hiTail = node;
+            loTail.setNext(node);
           }
-        } while ((node = next) != null);
 
-        if (loTail != null) {
-          loTail.setNext(null);
-          newTab[i] = loHead;
+          loTail = node;
+          continue;
         }
 
-        if (hiTail != null) {
-          hiTail.setNext(null);
-          newTab[i + oldCap] = hiHead;
+        if (hiTail == null) {
+          hiHead = node;
+          hiTail = node;
+          continue;
         }
+
+        hiTail.setNext(node);
+        hiTail = node;
+      } while ((node = next) != null);
+
+      if (loTail != null) {
+        loTail.setNext(null);
+        newTab[index] = loHead;
+      }
+
+      if (hiTail != null) {
+        hiTail.setNext(null);
+        newTab[index + oldCap] = hiHead;
       }
     }
 
@@ -475,251 +494,52 @@ public class MapRegistry<K, V> extends AbstractRegistry<K, V> implements Registr
     }
 
     int length = tab.length;
-    if (length < 0) {
-      return null;
-    }
-
     int index;
+
     Node<K, V> keyNode = tab[index = length - 1 & hash];
     if (keyNode == null) {
       return null;
     }
 
     Node<K, V> node = null, entry;
-    K k;
-    V v;
-    if (keyNode.getHash() == hash && ((k = keyNode.getKey()) == key || (key != null && key.equals(k)))) {
+    K k = keyNode.getKey();
+
+    if (Objects.equals(key, k)) {
       node = keyNode;
     } else if ((entry = keyNode.getNext()) != null) {
-      //if (p instanceof TreeNode) {
-      //  node = ((TreeNode<K, V>) p).getTreeNode(hash, key);
-      //} else {
-        do {
-          if (entry.getHash() == hash && ((k = entry.getKey()) == key || (key != null && key.equals(k)))) {
-            node = entry;
-            break;
-          }
-          keyNode = entry;
-        } while ((entry = entry.getNext()) != null);
-      //}
+      do {
+        if (entry.getHash() == hash && ((k = entry.getKey()) == key || (key != null && key.equals(k)))) {
+          node = entry;
+          break;
+        }
+
+        keyNode = entry;
+      } while ((entry = entry.getNext()) != null);
     }
 
-    if (node != null && (!matchValue || (v = node.getValue()) == value || (value != null && value.equals(v)))) {
-      //if (node instanceof TreeNode) ((TreeNode<K, V>) node).removeTreeNode(this, tab, movable);
-      if (node == keyNode) {
-        tab[index] = node.getNext();
-      } else {
-        keyNode.setNext(node.getNext());
-      }
-
-      modificationsCount++;
-      size--;
-
-      afterNodeRemoval(node);
-      return node;
-    }
-
-    return null;
-  }
-
-
-  @Override
-  public V computeIfAbsent(K key, @NotNull Function<? super K, ? extends V> mappingFunction) {
-    final int hash = hash(key);
-    Node<K, V>[] tab = nodes;
-    Node<K, V> first;
-    int n, i;
-    int binCount = 0;
-    TreeNode<K, V> t = null;
-    Node<K, V> old = null;
-    if (size > threshold || tab == null || (n = tab.length) == 0) {
-      n = (tab = resize()).length;
-    }
-
-    if ((first = tab[i = (n - 1) & hash]) != null) {
-      if (first instanceof TreeNode) {
-        old = (t = (TreeNode<K, V>) first).getTreeNode(hash, key);
-      } else {
-        Node<K, V> e = first;
-        K k;
-        do {
-          if (e.getHash() == hash && ((k = e.getKey()) == key || (key != null && key.equals(k)))) {
-            old = e;
-            break;
-          }
-          binCount++;
-        } while ((e = e.getNext()) != null);
-      }
-
-      V oldValue;
-      if (old != null && (oldValue = old.getValue()) != null) {
-        afterNodeAccess(old);
-        return oldValue;
-      }
-    }
-
-    final V value = mappingFunction.apply(key);
-    if (value == null) {
+    final V v = node.getValue();
+    if (v == null || (matchValue || !Objects.equals(value, v))) {
       return null;
     }
 
-    if (old != null) {
-      old.setValue(value);
-      afterNodeAccess(old);
-      return value;
+    if (Wrapper.isObject(node, TreeNode.class)) {
+      ((TreeNode<K, V>) node).removeTreeNode(this, tab, movable);
     }
 
-    if (t != null) {
-      t.registerTreeVal(this, tab, hash, key, value);
+    if (node == keyNode) {
+      tab[index] = node.getNext();
     } else {
-      tab[i] = newNode(hash, key, value, first);
-      if (binCount >= TREEIFY_THRESHOLD - 1) {
-        treeifyBin(tab, hash);
-      }
+      keyNode.setNext(node.getNext());
     }
 
     modificationsCount++;
-    size++;
-    afterNodeInsertion(true);
-    return value;
-  }
+    size--;
 
-  public V computeIfPresent(K key, @NotNull BiFunction<? super K, ? super V, ? extends V> remappingFunction) {
-    final int hash = hash(key);
-
-    V oldValue;
-    Node<K, V> node = getNode(hash, key);
-    if (node != null && (oldValue = node.getValue()) != null) {
-      final V value = remappingFunction.apply(key, oldValue);
-
-      if (value != null) {
-        node.setValue(value);
-
-        afterNodeAccess(node);
-        return value;
-      }
-
-      removeNode(hash, key, null, false, true);
-    }
-
-    return null;
-  }
-
-  @Override
-  public V compute(@NotNull K key, @NotNull BiFunction<? super K, ? super V, ? extends V> remappingFunction) {
-    final int hash = hash(key);
-    Node<K, V>[] tab = nodes;
-    Node<K, V> first;
-    int n, i;
-    int binCount = 0;
-    TreeNode<K, V> t = null;
-    Node<K, V> old = null;
-    if (size > threshold || (tab == null || (n = tab.length) == 0)) {
-      n = (tab = resize()).length;
-    }
-
-    if ((first = tab[i = (n - 1) & hash]) != null) {
-      if (first instanceof TreeNode) {
-        old = (t = (TreeNode<K, V>) first).getTreeNode(hash, key);
-      } else {
-        K k = first.getKey();
-        do {
-          if (first.getHash() == hash && (k == key || key.equals(k))) {
-            old = first;
-            break;
-          }
-
-          binCount++;
-        } while ((first = first.getNext()) != null);
-      }
-    }
-
-    V oldValue = (old == null) ? null : old.getValue();
-    V value = remappingFunction.apply(key, oldValue);
-    if (old != null) {
-      if (value != null) {
-        old.setValue(value);
-        afterNodeAccess(old);
-      } else {
-        removeNode(hash, key, null, false, true);
-      }
-    } else if (value != null) {
-      if (t != null) {
-        t.registerTreeVal(this, tab, hash, key, value);
-      } else {
-        tab[i] = newNode(hash, key, value, first);
-        if (binCount >= TREEIFY_THRESHOLD - 1) {
-          treeifyBin(tab, hash);
-        }
-      }
-
-      modificationsCount++;
-      size++;
-      afterNodeInsertion(true);
-    }
-
-    return value;
-  }
-
-  @Override
-  public V merge(@NotNull K key, @NotNull V value, @NotNull BiFunction<? super V, ? super V, ? extends V> remappingFunction) {
-    int hash = hash(key);
-    Node<K, V>[] tab;
-    Node<K, V> first;
-    int n, i;
-    int binCount = 0;
-    TreeNode<K, V> t = null;
-    Node<K, V> old = null;
-    if (size > threshold || (tab = nodes) == null ||
-        (n = tab.length) == 0)
-      n = (tab = resize()).length;
-    if ((first = tab[i = (n - 1) & hash]) != null) {
-      if (first instanceof TreeNode)
-        old = (t = (TreeNode<K, V>) first).getTreeNode(hash, key);
-      else {
-        Node<K, V> e = first;
-        K k;
-        do {
-          if (e.getHash() == hash && ((k = e.getKey()) == key && key.equals(k))) {
-            old = e;
-            break;
-          }
-          ++binCount;
-        } while ((e = e.getNext()) != null);
-      }
-    }
-    if (old != null) {
-      V v;
-      if (old.getValue() != null)
-        v = remappingFunction.apply(old.getValue(), value);
-      else
-        v = value;
-      if (v != null) {
-        old.setValue(v);
-        afterNodeAccess(old);
-      } else
-        removeNode(hash, key, null, false, true);
-      return v;
-    }
-    if (value != null) {
-      if (t != null)
-        t.registerTreeVal(this, tab, hash, key, value);
-      else {
-        tab[i] = newNode(hash, key, value, first);
-        if (binCount >= TREEIFY_THRESHOLD - 1)
-          treeifyBin(tab, hash);
-      }
-      modificationsCount++;
-      size++;
-      afterNodeInsertion(true);
-    }
-    return value;
+    afterNodeRemoval(node);
+    return node;
   }
   
-  /* ------------------------------------------------------------ */
-  // LinkedHashMap support
-  
-  Node<K, V> newNode(int hash, K key, V value, Node<K, V> next) {
+  public Node<K, V> newNode(int hash, K key, V value, Node<K, V> next) {
     return new Node<>(hash, key, value, next);
   }
   
@@ -731,7 +551,7 @@ public class MapRegistry<K, V> extends AbstractRegistry<K, V> implements Registr
     return new TreeNode<>(hash, key, value, next);
   }
 
-  TreeNode<K, V> replacementTreeNode(Node<K, V> p, Node<K, V> next) {
+  public TreeNode<K, V> replacementTreeNode(Node<K, V> p, Node<K, V> next) {
     return new TreeNode<>(p.getHash(), p.getKey(), p.getValue(), next);
   }
 
@@ -742,12 +562,9 @@ public class MapRegistry<K, V> extends AbstractRegistry<K, V> implements Registr
   void afterNodeRemoval(Node<K, V> p) {}
 
   public static int hash(final Object key) {
-    final long before = System.nanoTime();
-    if (key == null) {
-      return 0;
-    }
-
-    return key.hashCode();
+    return key == null
+        ? 0
+        : key.hashCode();
   }
 
   private static int tableSizeFor(int capacity) {
@@ -767,23 +584,30 @@ public class MapRegistry<K, V> extends AbstractRegistry<K, V> implements Registr
       return clazz;
     }
 
-    Type[] types = clazz.getGenericInterfaces(), as;
+    final Type[] types = clazz.getGenericInterfaces();
+    Type[] as;
     Type type;
-    ParameterizedType parameterizedType;
 
     for (Type value : types) {
       type = value;
-      if (Wrapper.isObject(type, ParameterizedType.class) && ((parameterizedType = (ParameterizedType) type).getRawType() == Comparable.class)
-          && (as = parameterizedType.getActualTypeArguments()) != null && as.length == 1 && as[0] == clazz)
+      ParameterizedType parameterizedType;
+      if (
+          Wrapper.isObject(type, ParameterizedType.class)
+          && ((parameterizedType = (ParameterizedType) type).getRawType() == Comparable.class)
+          && (as = parameterizedType.getActualTypeArguments()) != null && as.length == 1 && as[0] == clazz
+      ) {
         return clazz;
+      }
     }
 
     return null;
   }
 
-  @SuppressWarnings({"rawtypes","unchecked"}) // for cast to Comparable
+  @SuppressWarnings({"rawtypes","unchecked"})
   public static int compareComparables(final Class<?> clazz, final Object k, final Object x) {
-    return (x == null || x.getClass() != clazz ? 0 : ((Comparable)k).compareTo(x));
+    return (x == null || x.getClass() != clazz
+        ? 0
+        : ((Comparable)k).compareTo(x));
   }
 
 }

@@ -1,19 +1,27 @@
 package com.celeste.library.core.model.registry.test.set;
 
+import com.celeste.library.core.model.registry.test.Registry;
+import com.celeste.library.core.model.registry.test.impl.LinkedRegistry;
 import com.celeste.library.core.model.registry.test.impl.MapRegistry;
-import com.celeste.library.core.model.registry.test.iterator.impl.ValueIterator;
+import com.celeste.library.core.model.registry.test.iterator.hash.ValueIterator;
+import com.celeste.library.core.model.registry.test.iterator.linked.LinkedValueIterator;
 import com.celeste.library.core.model.registry.test.nodes.Node;
+import com.celeste.library.core.model.registry.test.nodes.impl.LinkedNode;
 import com.celeste.library.core.model.registry.test.splitter.ValueSpliterator;
+import com.celeste.library.core.util.Wrapper;
 import lombok.AllArgsConstructor;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.*;
+import java.util.AbstractCollection;
+import java.util.Iterator;
+import java.util.Spliterator;
+import java.util.Spliterators;
 import java.util.function.Consumer;
 
 @AllArgsConstructor
 public final class Values<K, V> extends AbstractCollection<V> {
 
-  private final MapRegistry<K, V> registry;
+  private final Registry<K, V> registry;
 
   public final int size() {
     return registry.size();
@@ -23,8 +31,17 @@ public final class Values<K, V> extends AbstractCollection<V> {
     registry.wipe();
   }
 
+  @SuppressWarnings({"unchecked", "rawtypes"})
   public final @NotNull Iterator<V> iterator() {
-    return new ValueIterator<>(registry);
+    if (Wrapper.isObject(registry, MapRegistry.class)) {
+      return new ValueIterator<>((MapRegistry<K, V>) registry);
+    }
+
+    if (Wrapper.isObject(registry, LinkedRegistry.class)) {
+      return new LinkedValueIterator((LinkedRegistry<K, V>) registry);
+    }
+
+    return null;
   }
 
   public final boolean contains(final Object object) {
@@ -32,17 +49,33 @@ public final class Values<K, V> extends AbstractCollection<V> {
   }
 
   public final Spliterator<V> spliterator() {
-    return new ValueSpliterator<>(registry, null, 0, -1, 0, 0);
+    if (Wrapper.isObject(registry, MapRegistry.class)) {
+      return new ValueSpliterator<>((MapRegistry<K, V>) registry, null, 0, -1, 0, 0);
+    }
+
+    if (Wrapper.isObject(registry, LinkedRegistry.class)) {
+      return Spliterators.spliterator(this, Spliterator.SIZED | Spliterator.ORDERED);
+    }
+
+    return null;
   }
 
   public final void forEach(@NotNull final Consumer<? super V> action) {
-    final Node<K, V>[] tab = registry.getNodes();
-    if (registry.getSize() < 0 && tab == null) {
-      return;
+    if (Wrapper.isObject(registry, MapRegistry.class)) {
+      final Node<K, V>[] tab = ((MapRegistry<K, V>) registry).getNodes();
+      if (registry.size() < 0 && tab == null) {
+        return;
+      }
+
+      for (Node<K, V> keyNode : tab) {
+        for (Node<K, V> node = keyNode; node != null; node = node.getNext()) {
+          action.accept(node.getValue());
+        }
+      }
     }
 
-    for (Node<K, V> keyNode : tab) {
-      for (Node<K, V> node = keyNode; node != null; node = node.getNext()) {
+    if (Wrapper.isObject(registry, LinkedRegistry.class)) {
+      for (LinkedNode<K,V> node = ((LinkedRegistry<K, V>) registry).getEldest(); node != null; node = node.getAfter()) {
         action.accept(node.getValue());
       }
     }

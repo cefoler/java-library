@@ -1,15 +1,22 @@
 package com.celeste.library.core.model.registry.test.set;
 
+import com.celeste.library.core.model.registry.test.AbstractRegistry;
+import com.celeste.library.core.model.registry.test.Registry;
+import com.celeste.library.core.model.registry.test.impl.LinkedRegistry;
 import com.celeste.library.core.model.registry.test.impl.MapRegistry;
-import com.celeste.library.core.model.registry.test.iterator.impl.KeyIterator;
+import com.celeste.library.core.model.registry.test.iterator.hash.KeyIterator;
+import com.celeste.library.core.model.registry.test.iterator.linked.LinkedKeyIterator;
 import com.celeste.library.core.model.registry.test.nodes.Node;
+import com.celeste.library.core.model.registry.test.nodes.impl.LinkedNode;
 import com.celeste.library.core.model.registry.test.splitter.KeySpliterator;
+import com.celeste.library.core.util.Wrapper;
 import lombok.AllArgsConstructor;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.AbstractSet;
 import java.util.Iterator;
 import java.util.Spliterator;
+import java.util.Spliterators;
 import java.util.function.Consumer;
 
 import static com.celeste.library.core.model.registry.test.impl.MapRegistry.hash;
@@ -17,7 +24,7 @@ import static com.celeste.library.core.model.registry.test.impl.MapRegistry.hash
 @AllArgsConstructor
 public final class KeySet<K, V> extends AbstractSet<K> {
 
-  private final MapRegistry<K, V> registry;
+  private final Registry<K, V> registry;
 
   public final int size() {
     return registry.size();
@@ -27,31 +34,65 @@ public final class KeySet<K, V> extends AbstractSet<K> {
     registry.wipe();
   }
 
-  public final @NotNull Iterator<K> iterator() {
-    return new KeyIterator<>(registry);
+  @SuppressWarnings({"rawtypes", "unchecked"})
+  public final Iterator<K> iterator() {
+    if (Wrapper.isObject(registry, LinkedRegistry.class)) {
+      return new LinkedKeyIterator((LinkedRegistry) registry);
+    }
+
+    if (Wrapper.isObject(registry, MapRegistry.class)) {
+      return new KeyIterator<>((LinkedRegistry) registry);
+    }
+
+    return null;
   }
 
-  public final boolean contains(final Object object) {
+  public final boolean contains(@NotNull final Object object) {
     return registry.containsKey(object);
   }
 
   public final boolean remove(Object key) {
-    return registry.removeNode(hash(key), key, null, false, true) != null;
+    if (Wrapper.isObject(registry, LinkedRegistry.class)) {
+      return ((MapRegistry<K, V>) registry).removeNode(hash(key), key, null, false, true) != null;
+    }
+
+    if (Wrapper.isObject(registry, MapRegistry.class)) {
+      return ((LinkedRegistry<K, V>) registry).removeNode(hash(key), key, null, false, true) != null;
+    }
+
+    return false;
   }
 
-  public final Spliterator<K> spliterator() {
-    return new KeySpliterator<>(registry, null, 0, -1, 0, 0);
+  @SuppressWarnings({"rawuse"})
+  public final Spliterator<K> spliterator()  {
+    if (Wrapper.isObject(registry, LinkedRegistry.class)) {
+      return Spliterators.spliterator(this, Spliterator.SIZED | Spliterator.ORDERED | Spliterator.DISTINCT);
+    }
+
+    if (Wrapper.isObject(registry, MapRegistry.class)) {
+      return new KeySpliterator<>((MapRegistry<K, V>) registry, null, 0, -1, 0, 0);
+    }
+
+    return null;
   }
 
   public final void forEach(@NotNull final Consumer<? super K> action) {
-    final Node<K,V>[] tab = registry.getNodes();
-    if (registry.size() < 0 && tab == null) {
-      return;
+    if (Wrapper.isObject(registry, LinkedRegistry.class)) {
+      for (LinkedNode<K,V> node = ((LinkedRegistry<K, V>) registry).getEldest(); node != null; node = node.getAfter()) {
+        action.accept(node.getKey());
+      }
     }
 
-    for (Node<K, V> keyNode : tab) {
-      for (Node<K, V> node = keyNode; node != null; node = node.getNext()) {
-        action.accept(node.getKey());
+    if (Wrapper.isObject(registry, MapRegistry.class)) {
+      final Node<K,V>[] tab = ((MapRegistry<K, V>) registry).getNodes();
+      if (registry.size() < 0 && tab == null) {
+        return;
+      }
+
+      for (Node<K, V> keyNode : tab) {
+        for (Node<K, V> node = keyNode; node != null; node = node.getNext()) {
+          action.accept(node.getKey());
+        }
       }
     }
   }

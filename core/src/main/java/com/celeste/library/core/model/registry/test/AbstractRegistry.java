@@ -1,14 +1,21 @@
 package com.celeste.library.core.model.registry.test;
 
 import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.Setter;
 import lombok.ToString;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
 
+@Getter
+@Setter
 @ToString
 @EqualsAndHashCode
 public abstract class AbstractRegistry<K,V> implements Registry<K,V> {
+
+  public transient Set<K> keySet;
+  public transient Collection<V> values;
 
   public int size() {
     return getEntrySet().size();
@@ -72,7 +79,7 @@ public abstract class AbstractRegistry<K,V> implements Registry<K,V> {
     return oldValue;
   }
 
-  public void putAll(Registry<? extends K, ? extends V> registry) {
+  public void registerAll(Registry<? extends K, ? extends V> registry) {
     for (final Entry<? extends K, ? extends V> entry : registry.getEntrySet()) {
       register(entry.getKey(), entry.getValue());
     }
@@ -82,10 +89,7 @@ public abstract class AbstractRegistry<K,V> implements Registry<K,V> {
     getEntrySet().clear();
   }
 
-  transient Set<K> keySet;
-  transient Collection<V> values;
-
-  public Set<K> keySet() {
+  public Set<K> getKeys() {
     if (keySet != null) {
       return keySet;
     }
@@ -165,8 +169,8 @@ public abstract class AbstractRegistry<K,V> implements Registry<K,V> {
         AbstractRegistry.this.wipe();
       }
 
-      public boolean contains(Object v) {
-        return AbstractRegistry.this.containsValue(v);
+      public boolean contains(Object object) {
+        return AbstractRegistry.this.containsValue(object);
       }
     };
 

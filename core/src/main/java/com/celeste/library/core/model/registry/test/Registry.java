@@ -6,7 +6,6 @@ import org.jetbrains.annotations.Nullable;
 import java.util.*;
 import java.util.function.BiConsumer;
 import java.util.function.BiFunction;
-import java.util.function.Function;
 
 public interface Registry<K,V> {
 
@@ -84,65 +83,6 @@ public interface Registry<K,V> {
     }
 
     return get(key);
-  }
-
-  @Nullable
-  default V computeIfAbsent(final K key, @NotNull final Function<? super K, ? extends V> mappingFunction) {
-    if (containsKey(key)) {
-      return null;
-    }
-
-    final V newValue = mappingFunction.apply(key);
-    if (newValue != null) {
-      register(key, newValue);
-      return newValue;
-    }
-
-    return null;
-  }
-
-  @Nullable
-  default V computeIfPresent(K key, @NotNull BiFunction<? super K, ? super V, ? extends V> remappingFunction) {
-    if (!containsKey(key)) {
-      return null;
-    }
-
-    final V newValue = remappingFunction.apply(key, get(key));
-    if (newValue != null) {
-      register(key, newValue);
-      return newValue;
-    }
-
-    remove(key);
-    return null;
-  }
-
-  @Nullable
-  default V compute(@NotNull final K key, @NotNull final BiFunction<? super K, ? super V, ? extends V> remappingFunction) {
-    if (!containsKey(key)) {
-      return null;
-    }
-
-    final V newValue = remappingFunction.apply(key, get(key));
-
-    register(key, newValue);
-    return newValue;
-  }
-
-  @Nullable
-  default V merge(@NotNull final K key, @NotNull final V value, @NotNull final BiFunction<? super V, ? super V, ? extends V> remappingFunction) {
-    final V oldValue = get(key);
-    final V newValue = oldValue == null
-        ? value
-        : remappingFunction.apply(oldValue, value);
-
-    if (newValue == null) {
-      remove(key);
-      return null;
-    }
-
-    register(key, newValue);
-    return newValue;
   }
 
 }

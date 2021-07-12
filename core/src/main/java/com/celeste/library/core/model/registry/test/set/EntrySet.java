@@ -2,7 +2,7 @@ package com.celeste.library.core.model.registry.test.set;
 
 import com.celeste.library.core.model.registry.test.Entry;
 import com.celeste.library.core.model.registry.test.impl.MapRegistry;
-import com.celeste.library.core.model.registry.test.iterator.impl.EntryIterator;
+import com.celeste.library.core.model.registry.test.iterator.hash.EntryIterator;
 import com.celeste.library.core.model.registry.test.nodes.Node;
 import com.celeste.library.core.model.registry.test.splitter.EntrySpliterator;
 import com.celeste.library.core.util.Wrapper;

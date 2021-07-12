@@ -1,4 +1,4 @@
-package com.celeste.library.core.model.registry.test.iterator.impl;
+package com.celeste.library.core.model.registry.test.iterator.hash;
 
 import com.celeste.library.core.model.registry.test.impl.MapRegistry;
 import com.celeste.library.core.model.registry.test.iterator.HashIterator;

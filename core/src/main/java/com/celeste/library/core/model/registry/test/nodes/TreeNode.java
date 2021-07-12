@@ -1,6 +1,7 @@
 package com.celeste.library.core.model.registry.test.nodes;
 
 import com.celeste.library.core.model.registry.test.impl.MapRegistry;
+import com.celeste.library.core.model.registry.test.nodes.impl.LinkedNode;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -10,7 +11,7 @@ import static com.celeste.library.core.model.registry.test.impl.MapRegistry.*;
 
 @Getter
 @Setter
-public final class TreeNode<K, V> extends Node<K, V> {
+public final class TreeNode<K, V> extends LinkedNode<K, V> {
 
   private TreeNode<K, V> left;
   private TreeNode<K, V> right;
@@ -271,30 +272,38 @@ public final class TreeNode<K, V> extends Node<K, V> {
   }
 
   public final void removeTreeNode(MapRegistry<K, V> map, Node<K, V>[] tab, boolean movable) {
-    int n;
-    if (tab == null || (n = tab.length) == 0)
+    int length;
+    if (tab == null || (length = tab.length) == 0) {
       return;
-    int index = (n - 1) & getHash();
+    }
+
+    final int index = (length - 1) & getHash();
     TreeNode<K, V> first = (TreeNode<K, V>) tab[index], root = first, rl;
     TreeNode<K, V> succ = (TreeNode<K, V>) getNext(), pred = previous;
-    if (pred == null)
+
+    if (pred == null) {
       tab[index] = first = succ;
-    else
+    } else {
       pred.setNext(succ);
-    if (succ != null)
+    }
+
+    if (succ != null) {
       succ.previous = pred;
-    if (first == null)
+    }
+
+    if (first == null) {
       return;
-    if (root.parent != null)
+    }
+
+    if (root.parent != null) {
       root = root.root();
-    if (root == null
-        || (movable
-        && (root.right == null
-        || (rl = root.left) == null
-        || rl.left == null))) {
+    }
+
+    if (root == null || (movable && (root.right == null || (rl = root.left) == null || rl.left == null))) {
       tab[index] = first.untreeify(map);  // too small
       return;
     }
+
     TreeNode<K, V> p = this, pl = left, pr = right, replacement;
     if (pl != null && pr != null) {
       TreeNode<K, V> s = pr, sl;
