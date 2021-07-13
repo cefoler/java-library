@@ -1,6 +1,6 @@
 package com.celeste.library.core.util.builder;
 
-import com.celeste.library.core.model.registry.type.KeyType;
+import com.celeste.library.core.registry.type.KeyType;
 import com.celeste.library.core.util.formatter.StringFormatter;
 import com.celeste.library.core.util.pattern.RegexPattern;
 import lombok.AllArgsConstructor;

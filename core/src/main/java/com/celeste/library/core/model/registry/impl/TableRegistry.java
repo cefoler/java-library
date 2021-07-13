@@ -1,7 +1,7 @@
 package com.celeste.library.core.model.registry.impl;
 
 import com.celeste.library.core.model.registry.AbstractRegistry;
-import com.celeste.library.core.model.registry.type.KeyType;
+import com.celeste.library.core.registry.type.KeyType;
 
 import java.util.Hashtable;
 import java.util.Map;

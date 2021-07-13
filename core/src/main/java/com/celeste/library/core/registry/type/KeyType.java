@@ -1,4 +1,4 @@
-package com.celeste.library.core.model.registry.type;
+package com.celeste.library.core.registry.type;
 
 import com.celeste.library.core.util.Wrapper;
 

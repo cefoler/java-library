@@ -11,7 +11,7 @@ import java.util.function.BiFunction;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
-import com.celeste.library.core.model.registry.type.KeyType;
+import com.celeste.library.core.registry.type.KeyType;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
