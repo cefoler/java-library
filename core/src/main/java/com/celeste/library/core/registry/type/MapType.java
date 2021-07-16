@@ -20,9 +20,8 @@ public enum MapType {
         return new MapRegistry<>(builder.getKeyType(), builder.getInitialCapacity(), builder.getLoadFactor());
       case LINKED:
         return new LinkedRegistry<>(builder.getKeyType(), builder.getInitialCapacity(), builder.getLoadFactor(), builder.isAccessOrder());
+      default: return new MapRegistry<>(builder.getKeyType(), builder.getInitialCapacity(), builder.getLoadFactor());
     }
-
-    return null;
   }
 
 }

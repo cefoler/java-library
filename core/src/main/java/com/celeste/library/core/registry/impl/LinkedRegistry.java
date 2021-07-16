@@ -1,13 +1,13 @@
 package com.celeste.library.core.registry.impl;
 
-import com.celeste.library.core.registry.entry.Entry;
+import com.celeste.library.core.registry.structure.entry.Entry;
 import com.celeste.library.core.registry.Registry;
-import com.celeste.library.core.registry.nodes.Node;
-import com.celeste.library.core.registry.nodes.TreeNode;
-import com.celeste.library.core.registry.nodes.impl.LinkedNode;
-import com.celeste.library.core.registry.set.KeySet;
-import com.celeste.library.core.registry.set.Values;
-import com.celeste.library.core.registry.set.EntrySet;
+import com.celeste.library.core.registry.structure.nodes.Node;
+import com.celeste.library.core.registry.structure.nodes.TreeNode;
+import com.celeste.library.core.registry.structure.nodes.impl.LinkedNode;
+import com.celeste.library.core.registry.structure.set.KeySet;
+import com.celeste.library.core.registry.structure.set.Values;
+import com.celeste.library.core.registry.structure.set.EntrySet;
 import com.celeste.library.core.registry.type.KeyType;
 import lombok.Getter;
 import lombok.Setter;
@@ -19,7 +19,8 @@ import java.util.function.BiFunction;
 
 @Getter
 @Setter
-public class LinkedRegistry<K,V> extends MapRegistry<K,V> implements Registry<K,V> {
+public final class LinkedRegistry<K,V> extends MapRegistry<K,V>
+    implements Registry<K,V> {
 
   private transient LinkedNode<K,V> eldest;
   private transient LinkedNode<K,V> youngest;
