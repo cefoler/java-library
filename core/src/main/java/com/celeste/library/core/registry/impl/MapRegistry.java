@@ -53,7 +53,7 @@ public class MapRegistry<K, V> extends AbstractRegistry<K, V>
   public transient int modificationsCount;
 
   public MapRegistry() {
-    this(KeyType.STANDARD);
+    this(KeyType.STANDARD, DEFAULT_INITIAL_CAPACITY, DEFAULT_LOAD_FACTOR);
   }
 
   public MapRegistry(final KeyType type) {
