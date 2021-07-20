@@ -1,6 +1,6 @@
 package com.celeste.library.core.registry;
 
-import com.celeste.library.core.registry.entry.Entry;
+import com.celeste.library.core.registry.structure.entry.Entry;
 import com.celeste.library.core.registry.type.KeyType;
 import lombok.*;
 import org.jetbrains.annotations.NotNull;

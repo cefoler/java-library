@@ -1,6 +1,6 @@
 package com.celeste.library.core.registry;
 
-import com.celeste.library.core.registry.entry.Entry;
+import com.celeste.library.core.registry.structure.entry.Entry;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.*;

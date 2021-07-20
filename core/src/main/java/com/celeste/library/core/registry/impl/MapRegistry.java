@@ -8,13 +8,13 @@ import java.util.function.BiConsumer;
 import java.util.function.BiFunction;
 
 import com.celeste.library.core.registry.AbstractRegistry;
-import com.celeste.library.core.registry.entry.Entry;
+import com.celeste.library.core.registry.structure.entry.Entry;
 import com.celeste.library.core.registry.Registry;
-import com.celeste.library.core.registry.nodes.Node;
-import com.celeste.library.core.registry.nodes.TreeNode;
-import com.celeste.library.core.registry.set.EntrySet;
-import com.celeste.library.core.registry.set.KeySet;
-import com.celeste.library.core.registry.set.Values;
+import com.celeste.library.core.registry.structure.nodes.Node;
+import com.celeste.library.core.registry.structure.nodes.TreeNode;
+import com.celeste.library.core.registry.structure.set.EntrySet;
+import com.celeste.library.core.registry.structure.set.KeySet;
+import com.celeste.library.core.registry.structure.set.Values;
 import com.celeste.library.core.registry.type.KeyType;
 import com.celeste.library.core.util.Wrapper;
 import lombok.Getter;
@@ -53,7 +53,7 @@ public class MapRegistry<K, V> extends AbstractRegistry<K, V>
   public transient int modificationsCount;
 
   public MapRegistry() {
-    this(KeyType.STANDARD);
+    this(KeyType.STANDARD, DEFAULT_INITIAL_CAPACITY, DEFAULT_LOAD_FACTOR);
   }
 
   public MapRegistry(final KeyType type) {
@@ -125,10 +125,10 @@ public class MapRegistry<K, V> extends AbstractRegistry<K, V>
 
   @Override
   public void wipe() {
-    modificationsCount++;
+    this.modificationsCount++;
 
     if (nodes != null && size > 0) {
-      size = 0;
+      this.size = 0;
       Arrays.fill(nodes, null);
     }
   }
@@ -165,9 +165,7 @@ public class MapRegistry<K, V> extends AbstractRegistry<K, V>
 
   @SuppressWarnings({"rawtypes", "unchecked"})
   public Set<Entry<K, V>> getEntrySet() {
-    return entrySet == null
-        ? new EntrySet(this)
-        : entrySet;
+    return entrySet == null ? new EntrySet(this) : entrySet;
   }
 
   @Override
@@ -257,7 +255,7 @@ public class MapRegistry<K, V> extends AbstractRegistry<K, V>
           : MAXIMUM_CAPACITY;
 
       if (tableSize > threshold) {
-        threshold = tableSizeFor(tableSize);
+        this.threshold = tableSizeFor(tableSize);
       }
     } 
     
