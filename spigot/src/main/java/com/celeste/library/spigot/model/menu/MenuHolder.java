@@ -137,11 +137,11 @@ public final class MenuHolder implements InventoryHolder {
         title, menu.getSize());
     ReflectionNms.sendPacket(player, packet);
 
-    player.getInventory().setContents(contents);
-    player.getInventory().setArmorContents(armor);
-
     final InventoryRenderEvent event = new InventoryRenderEvent(player, inventory);
     Bukkit.getPluginManager().callEvent(event);
+
+    player.getInventory().setContents(contents);
+    player.getInventory().setArmorContents(armor);
 
     if (event.isCancelled()) {
       return;
