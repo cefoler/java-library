@@ -1,6 +1,6 @@
 package com.celeste.library.spigot.model.menu;
 
-import com.celeste.library.core.model.entity.Data;
+import com.celeste.library.core.util.builder.DataBuilder;
 import com.celeste.library.core.util.Reflection;
 import com.celeste.library.spigot.model.menu.annotation.Item;
 import com.celeste.library.spigot.model.menu.annotation.Menu;
@@ -89,7 +89,7 @@ public abstract class AbstractMenu {
    * @return MenuHolder
    */
   public final MenuHolder show(final Player player, final int page) {
-    return show(player, Data.create().setData("page", page));
+    return show(player, DataBuilder.create().set("page", page));
   }
 
   /**
