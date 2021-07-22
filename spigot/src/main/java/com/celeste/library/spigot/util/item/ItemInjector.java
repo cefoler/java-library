@@ -98,7 +98,7 @@ public final class ItemInjector {
   @SneakyThrows
   private Object get(final Method getNbtTag, final String key) {
     final Object nmsItem = Reflection.invokeStatic(AS_NMS_COPY, item);
-    final boolean containsTag = (boolean) Reflection.invoke(HAS_TAG, nmsItem);
+    final boolean containsTag = Reflection.invoke(HAS_TAG, nmsItem);
 
     if (!containsTag) {
       return null;
@@ -123,7 +123,7 @@ public final class ItemInjector {
   @SneakyThrows
   private void set(final Constructor<?> nbtTagConstructor, final String key, final Object value) {
     final Object nmsItemStack = Reflection.invokeStatic(AS_NMS_COPY, item);
-    final boolean containsTag = (Boolean) Reflection.invoke(HAS_TAG, nmsItemStack);
+    final boolean containsTag = Reflection.invoke(HAS_TAG, nmsItemStack);
 
     final Object compound = containsTag
         ? Reflection.invoke(GET_TAG, nmsItemStack)
@@ -133,14 +133,14 @@ public final class ItemInjector {
     Reflection.invoke(SET, compound, key, tag);
     Reflection.invoke(SET_TAG, nmsItemStack, compound);
 
-    final ItemMeta meta = (ItemMeta) Reflection.invokeStatic(GET_ITEM_META, nmsItemStack);
+    final ItemMeta meta = Reflection.invokeStatic(GET_ITEM_META, nmsItemStack);
     item.setItemMeta(meta);
   }
 
   @SneakyThrows
   public void remove(final String key) {
     final Object nmsItem = Reflection.invokeStatic(AS_NMS_COPY, item);
-    final boolean containsTag = (boolean) Reflection.invoke(HAS_TAG, nmsItem);
+    final boolean containsTag = Reflection.invoke(HAS_TAG, nmsItem);
 
     if (!containsTag) {
       return;
@@ -149,21 +149,21 @@ public final class ItemInjector {
     final Object compound = Reflection.invoke(GET_TAG, nmsItem);
     Reflection.invoke(REMOVE, compound, key);
 
-    final ItemMeta meta = (ItemMeta) Reflection.invokeStatic(GET_ITEM_META, nmsItem);
+    final ItemMeta meta = Reflection.invokeStatic(GET_ITEM_META, nmsItem);
     item.setItemMeta(meta);
   }
 
   @SneakyThrows
   public boolean has(final String key) {
     final Object nmsItemStack = Reflection.invokeStatic(AS_NMS_COPY, item);
-    final boolean containsTag = (Boolean) Reflection.invoke(HAS_TAG, nmsItemStack);
+    final boolean containsTag = Reflection.invoke(HAS_TAG, nmsItemStack);
 
     if (!containsTag) {
       return false;
     }
 
     final Object compound = Reflection.invoke(GET_TAG, nmsItemStack);
-    return (boolean) Reflection.invoke(HAS_KEY, compound, key);
+    return Reflection.invoke(HAS_KEY, compound, key);
   }
 
   public ItemStack inject() {
