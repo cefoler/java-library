@@ -1,4 +1,4 @@
-package com.celeste.library.spigot.util;
+package com.celeste.library.spigot.util.injector;
 
 import com.celeste.library.spigot.util.item.ItemBuilder;
 import java.util.Arrays;

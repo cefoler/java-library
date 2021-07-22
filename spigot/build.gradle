@@ -14,11 +14,6 @@ dependencies {
     implementation 'com.github.SaiintBrisson.command-framework:bukkit:1.2.0'
 
     /**
-     * REFLECTION FRAMEWORK
-     */
-    implementation 'org.reflections:reflections:0.9.12'
-
-    /**
      * SHARED FRAMEWORK
      */
     implementation project(":core")

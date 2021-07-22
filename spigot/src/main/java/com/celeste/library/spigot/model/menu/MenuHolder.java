@@ -1,6 +1,6 @@
 package com.celeste.library.spigot.model.menu;
 
-import com.celeste.library.core.model.entity.Data;
+import com.celeste.library.core.util.builder.DataBuilder;
 import com.celeste.library.core.util.Reflection;
 import com.celeste.library.core.util.Validation;
 import com.celeste.library.spigot.error.ServerStartError;
@@ -107,7 +107,7 @@ public final class MenuHolder implements InventoryHolder {
    * packets).
    */
   public void show(final AbstractMenu menu, final int page, final Player player) {
-    show(menu, Data.create().setData("page", page), player);
+    show(menu, DataBuilder.create().set("page", page), player);
   }
 
   /**
@@ -137,11 +137,11 @@ public final class MenuHolder implements InventoryHolder {
         title, menu.getSize());
     ReflectionNms.sendPacket(player, packet);
 
-    player.getInventory().setContents(contents);
-    player.getInventory().setArmorContents(armor);
-
     final InventoryRenderEvent event = new InventoryRenderEvent(player, inventory);
     Bukkit.getPluginManager().callEvent(event);
+
+    player.getInventory().setContents(contents);
+    player.getInventory().setArmorContents(armor);
 
     if (event.isCancelled()) {
       return;

@@ -30,6 +30,8 @@ public abstract class AbstractBungeeConnection<T extends Plugin> implements Plug
     this.plugin = plugin;
     this.messenger = plugin.getServer().getMessenger();
     this.connected = false;
+
+    load();
   }
 
   public void load() {

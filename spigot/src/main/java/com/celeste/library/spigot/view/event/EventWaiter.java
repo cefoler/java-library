@@ -36,8 +36,7 @@ public final class EventWaiter<T extends Event> {
   @SneakyThrows
   @SuppressWarnings({"UnstableApiUsage", "unchecked"})
   public EventWaiter() {
-    final TypeToken<T> token = new TypeToken<T>(getClass()) {
-    };
+    final TypeToken<T> token = new TypeToken<T>(getClass()) {};
     final Type type = token.getType();
 
     this.event = (Class<T>) Class.forName(type.getTypeName());

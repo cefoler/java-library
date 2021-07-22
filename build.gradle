@@ -2,13 +2,13 @@ subprojects {
     apply plugin: 'java'
 
     group 'com.celeste'
-    version '3.2.4-SNAPSHOT'
+    version '3.2.8-SNAPSHOT'
 
     sourceCompatibility = 1.8
     targetCompatibility = 1.8
 
-    def lombokVersion = "1.18.20"
-    def jetbrainsVersion = "21.0.1"
+    def lombok = "1.18.20"
+    def annotations = "21.0.1"
 
     repositories {
         mavenLocal()
@@ -28,11 +28,11 @@ subprojects {
         /**
          * ANNOTATION FRAMEWORK
          */
-        compileOnly "org.projectlombok:lombok:${lombokVersion}"
-        annotationProcessor "org.projectlombok:lombok:${lombokVersion}"
+        compileOnly "org.projectlombok:lombok:${lombok}"
+        annotationProcessor "org.projectlombok:lombok:${lombok}"
 
-        compileOnly "org.jetbrains:annotations:${jetbrainsVersion}"
-        annotationProcessor "org.jetbrains:annotations:${jetbrainsVersion}"
+        compileOnly "org.jetbrains:annotations:${annotations}"
+        annotationProcessor "org.jetbrains:annotations:${annotations}"
     }
 
     jar {

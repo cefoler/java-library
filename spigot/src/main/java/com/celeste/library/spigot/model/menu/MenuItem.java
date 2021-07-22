@@ -1,6 +1,6 @@
 package com.celeste.library.spigot.model.menu;
 
-import com.celeste.library.core.model.entity.Data;
+import com.celeste.library.core.util.builder.DataBuilder;
 import com.celeste.library.spigot.model.menu.action.ClickAction;
 import java.util.Properties;
 
@@ -8,7 +8,6 @@ import lombok.*;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
-import org.jetbrains.annotations.NotNull;
 
 /**
  * The MenuItem is the object where the Item, Slot and Action will be storage.
@@ -51,7 +50,7 @@ public final class MenuItem {
    * @return MenuItem
    */
   public MenuItem open(final AbstractMenu menu, final int page) {
-    return open(menu, Data.create().setData("page", page));
+    return open(menu, DataBuilder.create().set("page", page));
   }
 
   /**

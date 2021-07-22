@@ -1,6 +1,6 @@
 package com.celeste.library.spigot.util.item;
 
-import com.celeste.library.spigot.util.EntityInjector;
+import com.celeste.library.spigot.util.injector.EntityInjector;
 import com.google.common.annotations.Beta;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;

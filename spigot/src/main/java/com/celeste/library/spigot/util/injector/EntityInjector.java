@@ -1,6 +1,7 @@
-package com.celeste.library.spigot.util;
+package com.celeste.library.spigot.util.injector;
 
 import com.celeste.library.core.util.Reflection;
+import com.celeste.library.spigot.util.ReflectionNms;
 import java.lang.reflect.Method;
 
 import com.google.common.annotations.Beta;

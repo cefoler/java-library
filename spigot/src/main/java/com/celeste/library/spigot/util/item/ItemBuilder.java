@@ -141,7 +141,6 @@ public final class ItemBuilder implements Cloneable {
     this.meta = itemStack.getItemMeta();
   }
 
-  @SuppressWarnings("deprecation")
   public ItemBuilder(final Material material, final int amount, final int data) {
     this.itemStack = new ItemStack(material, amount, (short) data);
     this.meta = itemStack.getItemMeta();
@@ -330,13 +329,11 @@ public final class ItemBuilder implements Cloneable {
     return this;
   }
 
-  @SuppressWarnings("deprecation")
   public ItemBuilder setDurability(final short durability) {
     itemStack.setDurability(durability);
     return this;
   }
 
-  @SuppressWarnings("deprecation")
   public ItemBuilder addDurability(final short durability) {
     final short currentDurability = itemStack.getDurability();
 
@@ -354,7 +351,7 @@ public final class ItemBuilder implements Cloneable {
     itemStack.setItemMeta(meta);
 
     final Object nmsItemStack = Reflection.invokeStatic(AS_NMS_COPY, itemStack);
-    final boolean containsTag = (Boolean) Reflection.invoke(HAS_TAG, nmsItemStack);
+    final boolean containsTag = Reflection.invoke(HAS_TAG, nmsItemStack);
 
     final Object compound = containsTag
         ? Reflection.invoke(GET_TAG, nmsItemStack)
@@ -363,14 +360,16 @@ public final class ItemBuilder implements Cloneable {
     Reflection.invoke(SET_BOOLEAN, compound, "Unbreakable", unbreakable);
     Reflection.invoke(SET_TAG, nmsItemStack, compound);
 
-    this.meta = (ItemMeta) Reflection.invokeStatic(GET_ITEM_META, nmsItemStack);
+    this.meta = Reflection.invokeStatic(GET_ITEM_META, nmsItemStack);
     return this;
   }
 
   public ItemBuilder glow(final boolean glow) {
     if (glow) {
       itemStack.addUnsafeEnchantment(Enchantment.DURABILITY, 1);
-      meta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
+      addItemFlag(ItemFlag.HIDE_ENCHANTS);
+
+      itemStack.setItemMeta(meta);
       return this;
     }
 
@@ -379,7 +378,9 @@ public final class ItemBuilder implements Cloneable {
     }
 
     itemStack.removeEnchantment(Enchantment.DURABILITY);
-    meta.removeItemFlags(ItemFlag.HIDE_ENCHANTS);
+    removeItemFlag(ItemFlag.HIDE_ENCHANTS);
+
+    itemStack.setItemMeta(meta);
     return this;
   }
 
@@ -446,7 +447,6 @@ public final class ItemBuilder implements Cloneable {
     return this;
   }
 
-  @SuppressWarnings("deprecation")
   public ItemBuilder addPotion(final List<String> potions) {
     if (itemStack.getType() != Material.POTION) {
       return this;
@@ -481,7 +481,6 @@ public final class ItemBuilder implements Cloneable {
     return this;
   }
 
-  @SuppressWarnings("deprecation")
   public ItemBuilder addPotion(final String potionName, final int duration, final int amplifier) {
     if (itemStack.getType() != Material.POTION) {
       return this;
@@ -503,7 +502,6 @@ public final class ItemBuilder implements Cloneable {
     return this;
   }
 
-  @SuppressWarnings("deprecation")
   public ItemBuilder removePotion(final String potionName) {
     if (itemStack.getType() != Material.POTION) {
       return this;
@@ -524,7 +522,6 @@ public final class ItemBuilder implements Cloneable {
     return this;
   }
 
-  @SuppressWarnings("deprecation")
   public ItemBuilder clearPotion() {
     if (itemStack.getType() != Material.POTION) {
       return this;

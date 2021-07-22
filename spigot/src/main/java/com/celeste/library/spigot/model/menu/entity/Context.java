@@ -1,5 +1,6 @@
 package com.celeste.library.spigot.model.menu.entity;
 
+import com.celeste.library.core.util.builder.DataBuilder;
 import com.celeste.library.spigot.model.menu.AbstractMenu;
 import com.celeste.library.spigot.model.menu.MenuHolder;
 import com.celeste.library.spigot.model.menu.MenuItem;
@@ -40,12 +41,24 @@ public final class Context<T extends Event> {
     return getProperty("page");
   }
 
-  public Properties getProperties() {
-    return holder.getProperties();
+  public void setPage(int page) {
+    if (page < 0) {
+      page = 0;
+    }
+
+    setProperty("page", page);
+  }
+
+  public DataBuilder getProperties() {
+    return DataBuilder.create(holder.getProperties());
   }
 
   public <P> P getProperty(final String key) {
     return holder.getProperty(key);
+  }
+
+  public void setProperty(final String key, final Object value) {
+    holder.setProperty(key, value);
   }
 
   public MenuItem slot(final int slot, final ItemStack item) {

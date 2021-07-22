@@ -110,7 +110,7 @@ public final class Json {
   }
 
   public Json click(@NotNull final String click) {
-    this.hover = hover;
+    this.click = click;
     return this;
   }
 
