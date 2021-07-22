@@ -384,7 +384,7 @@ public final class ItemBuilder implements Cloneable {
     return this;
   }
 
-  @SneakyThrows 
+  @SneakyThrows
   public ItemBuilder skull(final String texture, final UUID uuid) {
     if (itemStack.getType() != SKULL) {
       return this;

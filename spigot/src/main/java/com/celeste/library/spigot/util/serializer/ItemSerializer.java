@@ -1,4 +1,4 @@
-package com.celeste.library.spigot.util.item;
+package com.celeste.library.spigot.util.serializer;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;

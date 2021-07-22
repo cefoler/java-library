@@ -1,4 +1,4 @@
-package com.celeste.library.spigot.util;
+package com.celeste.library.spigot.util.serializer;
 
 import java.util.StringJoiner;
 import lombok.AccessLevel;

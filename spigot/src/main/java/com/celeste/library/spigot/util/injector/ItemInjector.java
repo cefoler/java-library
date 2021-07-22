@@ -1,4 +1,4 @@
-package com.celeste.library.spigot.util.item;
+package com.celeste.library.spigot.util.injector;
 
 import com.celeste.library.core.util.Reflection;
 import com.celeste.library.spigot.error.ServerStartError;
