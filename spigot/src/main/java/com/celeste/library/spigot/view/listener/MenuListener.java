@@ -1,14 +1,12 @@
 package com.celeste.library.spigot.view.listener;
 
+import com.celeste.library.core.util.Wrapper;
 import com.celeste.library.spigot.model.menu.MenuHolder;
 import com.celeste.library.spigot.view.event.wrapper.impl.InventoryRenderEvent;
 import org.bukkit.Bukkit;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
-import org.bukkit.event.inventory.InventoryClickEvent;
-import org.bukkit.event.inventory.InventoryCloseEvent;
-import org.bukkit.event.inventory.InventoryDragEvent;
-import org.bukkit.event.inventory.InventoryOpenEvent;
+import org.bukkit.event.inventory.*;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.plugin.Plugin;
 
@@ -29,47 +27,61 @@ public final class MenuListener implements Listener {
 
   @EventHandler(ignoreCancelled = true)
   public void onInventoryClick(final InventoryClickEvent event) {
-    final Inventory inventory = event.getInventory();
-    if (inventory.getHolder() instanceof MenuHolder) {
-      final MenuHolder holder = (MenuHolder) inventory.getHolder();
-      holder.handleClick(event);
+    final MenuHolder holder = getHolder(event);
+    if (holder == null) {
+      return;
     }
+
+    holder.handleClick(event);
   }
 
   @EventHandler(ignoreCancelled = true)
   public void onInventoryRender(final InventoryRenderEvent event) {
-    final Inventory inventory = event.getInventory();
-    if (inventory.getHolder() instanceof MenuHolder) {
-      final MenuHolder holder = (MenuHolder) inventory.getHolder();
-      holder.handleRender(event);
+    final MenuHolder holder = getHolder(event);
+    if (holder == null) {
+      return;
     }
+
+    holder.handleRender(event);
   }
 
   @EventHandler(ignoreCancelled = true)
   public void onInventoryOpen(final InventoryOpenEvent event) {
-    final Inventory inventory = event.getInventory();
-    if (inventory.getHolder() instanceof MenuHolder) {
-      final MenuHolder holder = (MenuHolder) inventory.getHolder();
-      holder.handleOpen(event);
+    final MenuHolder holder = getHolder(event);
+    if (holder == null) {
+      return;
     }
+
+    holder.handleOpen(event);
   }
 
   @EventHandler(ignoreCancelled = true)
   public void onInventoryClose(final InventoryCloseEvent event) {
-    final Inventory inventory = event.getInventory();
-    if (inventory.getHolder() instanceof MenuHolder) {
-      final MenuHolder holder = (MenuHolder) inventory.getHolder();
-      holder.handleClose(event);
+    final MenuHolder holder = getHolder(event);
+    if (holder == null) {
+      return;
     }
+
+    holder.handleClose(event);
   }
 
   @EventHandler(ignoreCancelled = true)
   public void onInventoryDrag(final InventoryDragEvent event) {
-    final Inventory inventory = event.getInventory();
-    if (inventory.getHolder() instanceof MenuHolder) {
-      final MenuHolder holder = (MenuHolder) inventory.getHolder();
-      holder.handleDrag(event);
+    final MenuHolder holder = getHolder(event);
+    if (holder == null) {
+      return;
     }
+
+    holder.handleDrag(event);
+  }
+
+  private MenuHolder getHolder(final InventoryEvent event) {
+    final Inventory inventory = event.getInventory();
+    if (Wrapper.isObject(inventory.getHolder(), MenuHolder.class)) {
+      return (MenuHolder) inventory.getHolder();
+    }
+
+    return null;
   }
 
 }

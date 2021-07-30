@@ -25,7 +25,7 @@ import org.jetbrains.annotations.Nullable;
 @Setter
 @Getter
 public class MapRegistry<K, V> extends AbstractRegistry<K, V>
-    implements Registry<K, V>, Cloneable, Serializable {
+    implements Registry<K, V>, Serializable {
 
   public static final int DEFAULT_INITIAL_CAPACITY;
   public static final int MAXIMUM_CAPACITY;
@@ -310,7 +310,6 @@ public class MapRegistry<K, V> extends AbstractRegistry<K, V>
     value = getKeyType().format(value);
 
     Node<K,V>[] tab = nodes;
-    Node<K,V> node; 
     int number, index;
 
     if (tab == null || (number = tab.length) == 0) {
@@ -318,7 +317,7 @@ public class MapRegistry<K, V> extends AbstractRegistry<K, V>
       number = tab.length;
     }
 
-    node = tab[index = (number - 1) & hash];
+    Node<K,V> node = tab[index = (number - 1) & hash];
     if (node == null) {
       tab[index] = newNode(hash, key, value, null);
 
@@ -478,26 +477,29 @@ public class MapRegistry<K, V> extends AbstractRegistry<K, V>
 
   public final void treeifyBin(final Node<K, V>[] tab, final int hash) {
     int n, index;
-    Node<K,V> node;
     if (tab == null || (n = tab.length) < MIN_TREEIFY_CAPACITY) {
       resize();
       return;
     }
 
-    if ((node = tab[index = (n - 1) & hash]) != null) {
-      TreeNode<K,V> hd = null, tl = null;
+    Node<K,V> node = tab[index = (n - 1) & hash];
+    if (node != null) {
+      TreeNode<K,V> treeNode = null, tl = null;
+
       do {
-        TreeNode<K,V> p = replacementTreeNode(node, null);
-        if (tl == null)
-          hd = p;
-        else {
-          p.setPrevious(tl);
-          tl.setNext(p);
+        TreeNode<K,V> replacement = replacementTreeNode(node, null);
+        if (tl == null) {
+          treeNode = replacement;
+        } else {
+          replacement.setPrevious(tl);
+          tl.setNext(replacement);
         }
-        tl = p;
+
+        tl = replacement;
       } while ((node = node.getNext()) != null);
-      if ((tab[index] = hd) != null) {
-        hd.treeify(tab);
+
+      if ((tab[index] = treeNode) != null) {
+        treeNode.treeify(tab);
       }
     }
   }
@@ -530,6 +532,10 @@ public class MapRegistry<K, V> extends AbstractRegistry<K, V>
 
         keyNode = entry;
       } while ((entry = entry.getNext()) != null);
+    }
+
+    if (node == null) {
+      return null;
     }
 
     final V v = node.getValue();
@@ -619,10 +625,10 @@ public class MapRegistry<K, V> extends AbstractRegistry<K, V>
   }
 
   @SuppressWarnings({"rawtypes","unchecked"})
-  public static int compareComparables(final Class<?> clazz, final Object k, final Object x) {
-    return (x == null || x.getClass() != clazz
+  public static int compareComparables(final Class<?> clazz, final Object one, final Object two) {
+    return two == null || two.getClass() != clazz
         ? 0
-        : ((Comparable)k).compareTo(x));
+        : ((Comparable) one).compareTo(two);
   }
 
 }

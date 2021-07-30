@@ -16,11 +16,10 @@ public enum MapType {
 
   public <T, U> Registry<T, U> get(final MapBuilder builder) {
     switch (this) {
-      case MAP:
-        return new MapRegistry<>(builder.getKeyType(), builder.getInitialCapacity(), builder.getLoadFactor());
       case LINKED:
         return new LinkedRegistry<>(builder.getKeyType(), builder.getInitialCapacity(), builder.getLoadFactor(), builder.isAccessOrder());
-      default: return new MapRegistry<>(builder.getKeyType(), builder.getInitialCapacity(), builder.getLoadFactor());
+      default:
+        return new MapRegistry<>(builder.getKeyType(), builder.getInitialCapacity(), builder.getLoadFactor());
     }
   }
 

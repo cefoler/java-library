@@ -1,6 +1,7 @@
 package com.celeste.library.core.registry.type;
 
 import com.celeste.library.core.util.Wrapper;
+import org.jetbrains.annotations.NotNull;
 
 public enum KeyType {
 
@@ -8,20 +9,23 @@ public enum KeyType {
   UPPER_CASE,
   STANDARD;
 
-  public String convert(final String value) {
+  public String convert(@NotNull final String value) {
     switch (this) {
-      case UPPER_CASE: return value.toUpperCase();
-      case LOWER_CASE: return value.toLowerCase();
-      case STANDARD: return value;
+      case UPPER_CASE:
+        return value.toUpperCase();
+      case LOWER_CASE:
+        return value.toLowerCase();
+      case STANDARD:
+        return value;
+      default:
+        return null;
     }
-
-    return null;
   }
 
   @SuppressWarnings("unchecked")
-  public <T> T format(T key) {
+  public <T> T format(final T key) {
     if (Wrapper.isString(key)) {
-      key = (T) this.convert((String) key);
+      return (T) convert((String) key);
     }
 
     return key;

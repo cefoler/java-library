@@ -23,7 +23,7 @@ public final class TreeNode<K, V> extends LinkedNode<K, V> {
     super(hash, key, val, next);
   }
 
-  final TreeNode<K, V> root() {
+  TreeNode<K, V> root() {
     for (TreeNode<K, V> node = this, value; ; ) {
       value = node.parent;
       if (value == null) {
@@ -67,7 +67,7 @@ public final class TreeNode<K, V> extends LinkedNode<K, V> {
     root.setPrevious(null);
   }
 
-  public final TreeNode<K, V> find(final int h, final Object obj, Class<?> clazz) {
+  public TreeNode<K, V> find(final int h, final Object obj, Class<?> clazz) {
     TreeNode<K, V> node = this;
 
     do {
@@ -119,7 +119,7 @@ public final class TreeNode<K, V> extends LinkedNode<K, V> {
     return null;
   }
 
-  public final TreeNode<K, V> getTreeNode(final int hash, final Object object) {
+  public TreeNode<K, V> getTreeNode(final int hash, final Object object) {
     final TreeNode<K, V> node = parent != null ? root() : this;
     return node.find(hash, object, null);
   }
@@ -130,7 +130,7 @@ public final class TreeNode<K, V> extends LinkedNode<K, V> {
         : 0;
   }
 
-  public final void treeify(final Node<K, V>[] nodes) {
+  public void treeify(final Node<K, V>[] nodes) {
     TreeNode<K, V> root = null;
 
     for (TreeNode<K, V> node = this, next; node != null; node = next) {
@@ -188,7 +188,7 @@ public final class TreeNode<K, V> extends LinkedNode<K, V> {
     moveRootToFront(nodes, root);
   }
   
-  public final Node<K, V> untreeify(final MapRegistry<K, V> registry) {
+  public Node<K, V> untreeify(final MapRegistry<K, V> registry) {
     Node<K, V> nodeOne = null, nodeTwo = null;
     
     for (Node<K, V> node = this; node != null; node = node.getNext()) {
@@ -206,7 +206,7 @@ public final class TreeNode<K, V> extends LinkedNode<K, V> {
     return nodeOne;
   }
   
-  public final TreeNode<K, V> registerTreeVal(MapRegistry<K, V> registry, Node<K, V>[] nodes, int hash, K key, V value) {
+  public TreeNode<K, V> registerTreeVal(MapRegistry<K, V> registry, Node<K, V>[] nodes, int hash, K key, V value) {
     Class<?> clazz = null;
     boolean searched = false;
 
@@ -269,7 +269,7 @@ public final class TreeNode<K, V> extends LinkedNode<K, V> {
     }
   }
 
-  public final void removeTreeNode(MapRegistry<K, V> map, Node<K, V>[] tab, boolean movable) {
+  public void removeTreeNode(MapRegistry<K, V> map, Node<K, V>[] tab, boolean movable) {
     int length;
     if (tab == null || (length = tab.length) == 0) {
       return;
@@ -384,7 +384,7 @@ public final class TreeNode<K, V> extends LinkedNode<K, V> {
    * @param index the index of the table being split
    * @param bit   the bit of hash to split on
    */
-  public final void split(MapRegistry<K, V> map, Node<K, V>[] tab, int index, int bit) {
+  public void split(MapRegistry<K, V> map, Node<K, V>[] tab, int index, int bit) {
     TreeNode<K, V> b = this;
     // Relink into lo and hi lists, preserving order
     TreeNode<K, V> loHead = null, loTail = null;
@@ -430,9 +430,6 @@ public final class TreeNode<K, V> extends LinkedNode<K, V> {
     }
   }
 
-  /* ------------------------------------------------------------ */
-  // Red-black tree methods, all adapted from CLR
-
   static <K, V> TreeNode<K, V> rotateLeft(TreeNode<K, V> root,
                                           TreeNode<K, V> p) {
     TreeNode<K, V> r, pp, rl;
@@ -466,6 +463,7 @@ public final class TreeNode<K, V> extends LinkedNode<K, V> {
       l.right = p;
       p.parent = l;
     }
+
     return root;
   }
 
@@ -555,7 +553,7 @@ public final class TreeNode<K, V> extends LinkedNode<K, V> {
                   null : xp.right;
             }
             if (xpr != null) {
-              xpr.red = (xp == null) ? false : xp.red;
+              xpr.red = xp.red;
               if ((sr = xpr.right) != null)
                 sr.red = false;
             }
@@ -591,7 +589,7 @@ public final class TreeNode<K, V> extends LinkedNode<K, V> {
                   null : xp.left;
             }
             if (xpl != null) {
-              xpl.red = (xp == null) ? false : xp.red;
+              xpl.red = xp.red;
               if ((sl = xpl.left) != null)
                 sl.red = false;
             }

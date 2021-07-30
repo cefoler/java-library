@@ -12,7 +12,7 @@ public final class EntryIterator<K, V> extends HashIterator<K, V> implements Ite
     super(registry);
   }
 
-  public final Entry<K, V> next() {
+  public Entry<K, V> next() {
     return nextNode();
   }
 

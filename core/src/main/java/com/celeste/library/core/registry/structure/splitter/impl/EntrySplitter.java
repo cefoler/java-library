@@ -8,21 +8,21 @@ import org.jetbrains.annotations.NotNull;
 import java.util.Spliterator;
 import java.util.function.Consumer;
 
-public final class EntrySpliterator<K, V> extends MapSpliterator<K, V>
+public final class EntrySplitter<K, V> extends MapSplitter<K, V>
     implements Spliterator<Entry<K, V>> {
 
-  public EntrySpliterator(final MapRegistry<K, V> map, final Node<K, V> current,
-                          final int index, final int fence, final int estimatedSize,
-                          final int expectedModificationsCount
+  public EntrySplitter(final MapRegistry<K, V> map, final Node<K, V> current,
+                       final int index, final int fence, final int estimatedSize,
+                       final int expectedModificationsCount
   ) {
     super(map, current, index, fence, estimatedSize, expectedModificationsCount);
   }
 
   @Override
-  public EntrySpliterator<K, V> trySplit() {
+  public EntrySplitter<K, V> trySplit() {
     int value = getTableSize(), lo = index, mid = (lo + value) >>> 1;
     return (lo >= mid || current != null)
-        ? new EntrySpliterator<>(map, current, lo, index = mid, size >>>= 1, modificationsCount)
+        ? new EntrySplitter<>(map, current, lo, index = mid, size >>>= 1, modificationsCount)
         : null;
   }
 

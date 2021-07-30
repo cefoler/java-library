@@ -11,7 +11,7 @@ dependencies {
     /**
      * SPIGOT FRAMEWORK
      */
-    implementation 'com.github.SaiintBrisson.command-framework:bukkit:1.2.0'
+    implementation 'com.github.SaiintBrisson.command-framework:bukkit:1.3.0'
 
     /**
      * SHARED FRAMEWORK

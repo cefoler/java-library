@@ -87,13 +87,7 @@ public final class MenuHolder implements InventoryHolder {
     final String title = menu.getTitle();
 
     this.inventory = Bukkit.createInventory(this, size, title);
-
-    final InventoryRenderEvent event = new InventoryRenderEvent(player, inventory);
-    Bukkit.getPluginManager().callEvent(event);
-
-    if (event.isCancelled()) {
-      return;
-    }
+    Bukkit.getPluginManager().callEvent(new InventoryRenderEvent(player, inventory));
 
     Arrays.stream(menu.getItems())
         .filter(item -> item != null && item.getItem() != null)
@@ -122,8 +116,10 @@ public final class MenuHolder implements InventoryHolder {
     inventory.clear();
     properties.putIfAbsent("page", 0);
 
+    // Clear player inventory to reduce the errors because of the inventory changes
     final ItemStack[] contents = player.getInventory().getContents();
     final ItemStack[] armor = player.getInventory().getArmorContents();
+
     player.getInventory().clear();
 
     final Object entityPlayer = Reflection.invoke(GET_HANDLE, player);
@@ -140,16 +136,12 @@ public final class MenuHolder implements InventoryHolder {
     final InventoryRenderEvent event = new InventoryRenderEvent(player, inventory);
     Bukkit.getPluginManager().callEvent(event);
 
-    player.getInventory().setContents(contents);
-    player.getInventory().setArmorContents(armor);
-
-    if (event.isCancelled()) {
-      return;
-    }
-
     Arrays.stream(menu.getItems())
         .filter(item -> item != null && item.getItem() != null)
         .forEach(item -> inventory.setItem(item.getSlot(), item.getItem()));
+
+    player.getInventory().setContents(contents);
+    player.getInventory().setArmorContents(armor);
   }
 
   /**
@@ -170,12 +162,7 @@ public final class MenuHolder implements InventoryHolder {
     inventory.clear();
     menu.setItems(new MenuItem[menu.getSize()]);
 
-    final InventoryRenderEvent event = new InventoryRenderEvent(player, inventory);
-    Bukkit.getPluginManager().callEvent(event);
-
-    if (event.isCancelled()) {
-      return;
-    }
+    Bukkit.getPluginManager().callEvent(new InventoryRenderEvent(player, inventory));
 
     Arrays.stream(menu.getItems())
         .filter(item -> item != null && item.getItem() != null)

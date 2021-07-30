@@ -15,7 +15,15 @@ public enum ClickEventType {
 
   private final String name;
 
+  @Nullable
   public static ClickEventType getEvent(final String event) {
+    return Arrays.stream(values())
+        .filter(type -> type.getName().equalsIgnoreCase(event))
+        .findFirst()
+        .orElse(null);
+  }
+
+  public static ClickEventType getEventOrThrow(final String event) {
     return Arrays.stream(values())
         .filter(type -> type.getName().equalsIgnoreCase(event))
         .findFirst()

@@ -12,10 +12,13 @@ public enum TimeLanguage {
 
   private final String days;
   private final String day;
+
   private final String hours;
   private final String hour;
+
   private final String minutes;
   private final String minute;
+
   private final String seconds;
   private final String second;
 

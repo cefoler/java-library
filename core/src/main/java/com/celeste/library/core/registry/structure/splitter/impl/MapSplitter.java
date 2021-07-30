@@ -5,7 +5,7 @@ import com.celeste.library.core.registry.structure.nodes.Node;
 import lombok.AllArgsConstructor;
 
 @AllArgsConstructor
-public class MapSpliterator<K, V> {
+public class MapSplitter<K, V> {
 
   public final MapRegistry<K, V> map;
   public Node<K, V> current;

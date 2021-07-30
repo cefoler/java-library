@@ -186,9 +186,10 @@ public final class LinkedRegistry<K,V> extends MapRegistry<K,V>
 
     if (after == null) {
       setYoungest(dst);
-    } else {
-      after.setBefore(dst);
+      return;
     }
+
+    after.setBefore(dst);
   }
 
   public Node<K,V> newNode(final int hash, final K key, final V value, final Node<K,V> node) {
@@ -233,9 +234,10 @@ public final class LinkedRegistry<K,V> extends MapRegistry<K,V>
 
     if (after == null) {
       setYoungest(before);
-    } else {
-      after.setBefore(before);
+      return;
     }
+
+    after.setBefore(before);
   }
 
   public void afterNodeInsertion(final boolean evict) {

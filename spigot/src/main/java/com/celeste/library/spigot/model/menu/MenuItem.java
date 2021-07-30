@@ -118,14 +118,14 @@ public final class MenuItem {
   }
 
   public MenuItem message(final String... message) {
-    return action(((holder, event) -> event.getWhoClicked().sendMessage(message)));
+    return action((holder, event) -> event.getWhoClicked().sendMessage(message));
   }
 
   public MenuItem sound(final Sound sound, final float volume, final float pitch) {
-    return action(((holder, event) -> {
+    return action((holder, event) -> {
       final Player player = (Player) event.getWhoClicked();
       player.playSound(player.getLocation(), sound, volume, pitch);
-    }));
+    });
   }
 
   /**

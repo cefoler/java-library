@@ -1,5 +1,6 @@
 package com.celeste.library.spigot.view.event;
 
+import com.celeste.library.spigot.exception.InvalidEventException;
 import com.google.common.reflect.TypeToken;
 import java.lang.reflect.Type;
 import java.util.Objects;
@@ -26,28 +27,29 @@ public final class EventWaiter<T extends Event> {
 
   @Setter
   private int executions;
-  private boolean expire;
+  private boolean expires;
 
   private EventPriority priority;
 
-  /**
-   * Event waiter constructor
-   */
   @SneakyThrows
   @SuppressWarnings({"UnstableApiUsage", "unchecked"})
   public EventWaiter() {
-    final TypeToken<T> token = new TypeToken<T>(getClass()) {};
-    final Type type = token.getType();
+    try {
+      final TypeToken<T> token = new TypeToken<T>(getClass()) {};
+      final Type type = token.getType();
 
-    this.event = (Class<T>) Class.forName(type.getTypeName());
-    this.cancelled = true;
+      this.event = (Class<T>) Class.forName(type.getTypeName());
+      this.cancelled = true;
 
-    this.filter = Objects::nonNull;
+      this.filter = Objects::nonNull;
 
-    this.executions = 0;
-    this.expire = false;
+      this.executions = 0;
+      this.expires = false;
 
-    this.priority = EventPriority.NORMAL;
+      this.priority = EventPriority.NORMAL;
+    } catch (Exception exception) {
+      throw new InvalidEventException("The event used in EventWaiter is invalid. Exception: " + exception.getMessage());
+    }
   }
 
   /**
@@ -69,7 +71,7 @@ public final class EventWaiter<T extends Event> {
    */
   public EventWaiter<T> expireAfter(final int executions) {
     this.executions = executions;
-    this.expire = true;
+    this.expires = true;
     return this;
   }
 
@@ -92,11 +94,11 @@ public final class EventWaiter<T extends Event> {
    */
   public EventWaiter<T> handler(final Consumer<T> consumer) {
     if (action != null) {
-      action = action.andThen(consumer);
+      this.action = action.andThen(consumer);
       return this;
     }
 
-    action = consumer;
+    this.action = consumer;
     return this;
   }
 

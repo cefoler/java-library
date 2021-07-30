@@ -12,8 +12,8 @@ public enum DyeType {
   BLACK(0),
   RED(1),
   GREEN(2),
-  COCOA_BEANS(3),
-  LAPIS_LAZULI(4),
+  BROWN(3),
+  DARK_BLUE(4),
   PURPLE(5),
   CYAN(6),
   LIGHT_GRAY(7),
@@ -43,23 +43,28 @@ public enum DyeType {
         .orElseThrow(() -> new UnsupportedOperationException("The used dye type was not found."));
   }
 
+  @Nullable
   public static DyeType getByRecipe(final int principal, final int secondary) {
     final DyeType type = get(principal);
-    if (type == null) return null;
+    if (type == null) {
+      return null;
+    }
 
     switch (type) {
       case RED:
-        return secondary == YELLOW.getData() ? ORANGE : secondary == WHITE.getData() ? PINK
-            : PURPLE;
-      case LAPIS_LAZULI:
-        return secondary == RED.getData() ? PURPLE : secondary == GREEN.getData() ? CYAN
-            : LIGHT_BLUE;
+        return secondary == YELLOW.getData()
+            ? ORANGE : secondary == WHITE.getData()
+            ? PINK : PURPLE;
+      case DARK_BLUE:
+        return secondary == RED.getData()
+            ? PURPLE : secondary == GREEN.getData()
+            ? CYAN : LIGHT_BLUE;
       case WHITE:
-        return secondary == GRAY.getData() ? LIGHT_GRAY
-            : secondary == RED.getData() ? PINK
-            : secondary == LAPIS_LAZULI.getData() ? LIGHT_BLUE
-            : secondary == BLACK.getData() ? GRAY
-            : LIME;
+        return secondary == GRAY.getData()
+            ? LIGHT_GRAY : secondary == RED.getData()
+            ? PINK : secondary == DARK_BLUE.getData()
+            ? LIGHT_BLUE : secondary == BLACK.getData()
+            ? GRAY : LIME;
       case BLACK:
         return GRAY;
       case GREEN:
@@ -78,11 +83,11 @@ public enum DyeType {
       case PINK:
         return new DyeType[]{RED, WHITE};
       case PURPLE:
-        return new DyeType[]{LAPIS_LAZULI, RED};
+        return new DyeType[]{DARK_BLUE, RED};
       case CYAN:
-        return new DyeType[]{LAPIS_LAZULI, GREEN};
+        return new DyeType[]{DARK_BLUE, GREEN};
       case LIGHT_BLUE:
-        return new DyeType[]{LAPIS_LAZULI, WHITE};
+        return new DyeType[]{DARK_BLUE, WHITE};
       case LIGHT_GRAY:
         return new DyeType[]{WHITE, GRAY};
       case GRAY:
