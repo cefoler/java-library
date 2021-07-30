@@ -14,7 +14,15 @@ public enum HoverEventType {
 
   private final String name;
 
+  @Nullable
   public static HoverEventType getEvent(final String event) {
+    return Arrays.stream(values())
+        .filter(type -> type.getName().equalsIgnoreCase(event))
+        .findFirst()
+        .orElse(null);
+  }
+
+  public static HoverEventType getEventOrThrow(final String event) {
     return Arrays.stream(values())
         .filter(type -> type.getName().equalsIgnoreCase(event))
         .findFirst()

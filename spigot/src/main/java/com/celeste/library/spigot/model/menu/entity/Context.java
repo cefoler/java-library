@@ -118,12 +118,6 @@ public final class Context<T extends Event> {
       return;
     }
 
-    if (Wrapper.isObject(event, InventoryRenderEvent.class)) {
-      final InventoryRenderEvent renderEvent = (InventoryRenderEvent) event;
-      renderEvent.setCancelled(true);
-      return;
-    }
-
     if (Wrapper.isObject(event, InventoryOpenEvent.class)) {
       final InventoryOpenEvent openEvent = (InventoryOpenEvent) event;
       openEvent.setCancelled(true);

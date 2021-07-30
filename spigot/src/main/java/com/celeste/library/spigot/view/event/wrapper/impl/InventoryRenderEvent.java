@@ -1,16 +1,21 @@
 package com.celeste.library.spigot.view.event.wrapper.impl;
 
-import com.celeste.library.spigot.view.event.wrapper.AbstractCancellableEvent;
 import lombok.Getter;
-import lombok.RequiredArgsConstructor;
 import org.bukkit.entity.Player;
+import org.bukkit.event.inventory.InventoryEvent;
 import org.bukkit.inventory.Inventory;
 
 @Getter
-@RequiredArgsConstructor
-public final class InventoryRenderEvent extends AbstractCancellableEvent {
+public final class InventoryRenderEvent extends InventoryEvent {
 
   private final Player player;
   private final Inventory inventory;
+
+  public InventoryRenderEvent(final Player player, final Inventory inventory) {
+    super(null);
+
+    this.player = player;
+    this.inventory = inventory;
+  }
 
 }

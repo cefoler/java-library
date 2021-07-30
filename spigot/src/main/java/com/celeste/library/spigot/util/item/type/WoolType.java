@@ -3,6 +3,7 @@ package com.celeste.library.spigot.util.item.type;
 import java.util.Arrays;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import org.jetbrains.annotations.Nullable;
 
 @Getter
 @AllArgsConstructor
@@ -27,6 +28,7 @@ public enum WoolType {
 
   private final int data;
 
+  @Nullable
   public static WoolType get(final int data) {
     return Arrays.stream(values())
         .filter(woolType -> woolType.getData() == data)

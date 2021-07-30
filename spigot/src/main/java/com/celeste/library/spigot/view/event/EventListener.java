@@ -30,7 +30,7 @@ public final class EventListener<T extends Event> implements Listener, EventExec
       action.accept(newEvent);
     }
 
-    if (!builder.isExpire()) {
+    if (!builder.isExpires()) {
       return;
     }
 

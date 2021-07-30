@@ -64,6 +64,8 @@ public final class ItemBuilder implements Cloneable {
 
   private static final Material SPAWNER;
 
+  private static final String TEXTURE_URL;
+
   static {
     try {
       final Class<?> craftItemStackClazz = ReflectionNms.getObc("inventory.CraftItemStack");
@@ -119,6 +121,8 @@ public final class ItemBuilder implements Cloneable {
       SPAWNER = ReflectionNms.isEqualsOrMoreRecent(13)
           ? Enum.valueOf(Material.class, "SPAWNER")
           : Enum.valueOf(Material.class, "MOB_SPAWNER");
+
+      TEXTURE_URL = "https://textures.minecraft.net/texture/";
     } catch (Exception exception) {
       throw new ServerStartError(exception);
     }
@@ -264,16 +268,15 @@ public final class ItemBuilder implements Cloneable {
       return this;
     }
 
-    enchantments.forEach(enchantment -> {
+    for (String enchantment : enchantments) {
       final String[] split = enchantment.split(":");
       if (split.length != 2) {
-        return;
+        continue;
       }
 
       final Enchantment enchant = EnchantmentType.getRealEnchantment(split[0]);
-      final int level = Integer.parseInt(split[1]);
-      itemStack.addUnsafeEnchantment(enchant, level);
-    });
+      itemStack.addUnsafeEnchantment(enchant, Integer.parseInt(split[1]));
+    }
 
     return this;
   }
@@ -367,10 +370,7 @@ public final class ItemBuilder implements Cloneable {
   public ItemBuilder glow(final boolean glow) {
     if (glow) {
       itemStack.addUnsafeEnchantment(Enchantment.DURABILITY, 1);
-      addItemFlag(ItemFlag.HIDE_ENCHANTS);
-
-      itemStack.setItemMeta(meta);
-      return this;
+      return addItemFlag(ItemFlag.HIDE_ENCHANTS);
     }
 
     if (!itemStack.containsEnchantment(Enchantment.DURABILITY)) {
@@ -378,10 +378,7 @@ public final class ItemBuilder implements Cloneable {
     }
 
     itemStack.removeEnchantment(Enchantment.DURABILITY);
-    removeItemFlag(ItemFlag.HIDE_ENCHANTS);
-
-    itemStack.setItemMeta(meta);
-    return this;
+    return removeItemFlag(ItemFlag.HIDE_ENCHANTS);
   }
 
   @SneakyThrows
@@ -392,7 +389,7 @@ public final class ItemBuilder implements Cloneable {
 
     itemStack.setItemMeta(meta);
 
-    final String newTexture = "https://textures.minecraft.net/texture/" + texture;
+    final String newTexture = TEXTURE_URL + texture;
     final SkullMeta skullMeta = (SkullMeta) meta;
 
     final byte[] textureBytes = String.format("{textures:{SKIN:{url:\"%s\"}}}",
@@ -452,14 +449,15 @@ public final class ItemBuilder implements Cloneable {
       return this;
     }
 
-    potions.forEach(potionString -> {
+    for (String potionString : potions) {
       final String[] split = potionString.split(":");
 
       if (split.length < 3) {
-        return;
+        continue;
       }
 
       final String potionName = split[0];
+
       final int duration = Integer.parseInt(split[1]);
       final int amplifier = Integer.parseInt(split[2]);
 
@@ -467,7 +465,7 @@ public final class ItemBuilder implements Cloneable {
       final PotionEffectType type = PotionEffectType.getByName(potionName);
 
       if (type == null) {
-        return;
+        continue;
       }
 
       final PotionEffect effect = type.createEffect(duration * 20, amplifier);
@@ -476,7 +474,7 @@ public final class ItemBuilder implements Cloneable {
       final Potion potion = Potion.fromItemStack(itemStack);
       potion.setSplash(potion.isSplash());
       potion.apply(itemStack);
-    });
+    }
 
     return this;
   }
@@ -497,6 +495,7 @@ public final class ItemBuilder implements Cloneable {
     potionMeta.addCustomEffect(effect, true);
 
     final Potion potion = Potion.fromItemStack(itemStack);
+
     potion.setSplash(potion.isSplash());
     potion.apply(itemStack);
     return this;
@@ -517,6 +516,7 @@ public final class ItemBuilder implements Cloneable {
     potionMeta.removeCustomEffect(type);
 
     final Potion potion = Potion.fromItemStack(itemStack);
+
     potion.setSplash(potion.isSplash());
     potion.apply(itemStack);
     return this;
@@ -531,6 +531,7 @@ public final class ItemBuilder implements Cloneable {
     potionMeta.clearCustomEffects();
 
     final Potion potion = Potion.fromItemStack(itemStack);
+
     potion.setSplash(potion.isSplash());
     potion.apply(itemStack);
     return this;

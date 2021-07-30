@@ -56,7 +56,7 @@ public final class Json {
       return this;
     }
 
-    if (click == null && hover != null) {
+    if (click == null) {
       this.json = "{\"text\":\"" + text + "\",\"hoverEvent\":{\"action\":\"" + hoverType.getName()
           + "\",\"value\":\"" + hover + "\"}}";
       return this;
@@ -75,8 +75,7 @@ public final class Json {
           + "before sending it to players");
     }
 
-    final Object text = Reflection.invokeStatic(A, json);
-    final Object packet = Reflection.instance(PACKET_CHAT_CONSTRUCTOR, text, (byte) 1);
+    final Object packet = Reflection.instance(PACKET_CHAT_CONSTRUCTOR, Reflection.invokeStatic(A, json), (byte) 1);
     ReflectionNms.sendPacket(player, packet);
   }
 
@@ -87,9 +86,7 @@ public final class Json {
           + "before sending it to players");
     }
 
-    final Object text = Reflection.invokeStatic(A, json);
-    final Object packet = Reflection.instance(PACKET_CHAT_CONSTRUCTOR, text, (byte) 1);
-
+    final Object packet = Reflection.instance(PACKET_CHAT_CONSTRUCTOR, Reflection.invokeStatic(A, json), (byte) 1);
     for (final Player player : Bukkit.getOnlinePlayers()) {
       ReflectionNms.sendPacket(player, packet);
     }
