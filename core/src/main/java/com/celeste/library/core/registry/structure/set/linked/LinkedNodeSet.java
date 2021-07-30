@@ -17,19 +17,19 @@ public final class LinkedNodeSet<K, V> extends AbstractSet<LinkedNode<K, V>> {
 
   private final LinkedRegistry<K, V> registry;
 
-  public final int size() {
+  public int size() {
     return registry.size();
   }
 
-  public final void clear() {
+  public void clear() {
     registry.wipe();
   }
 
-  public final @NotNull Iterator<LinkedNode<K,V>> iterator() {
+  public @NotNull Iterator<LinkedNode<K,V>> iterator() {
     return new LinkedNodeIterator<>(registry);
   }
 
-  public final boolean contains(final Object object) {
+  public boolean contains(final Object object) {
     if (!Wrapper.isObject(object, LinkedNode.class)) {
       return false;
     }
@@ -41,7 +41,7 @@ public final class LinkedNodeSet<K, V> extends AbstractSet<LinkedNode<K, V>> {
     return candidate != null && candidate.equals(node);
   }
 
-  public final boolean remove(final Object object) {
+  public boolean remove(final Object object) {
     if (!Wrapper.isObject(object, LinkedNode.class)) {
       return false;
     }
@@ -52,11 +52,11 @@ public final class LinkedNodeSet<K, V> extends AbstractSet<LinkedNode<K, V>> {
     return registry.removeNode(MapRegistry.hash(key), key, node.getValue(), true, true) != null;
   }
 
-  public final Spliterator<LinkedNode<K,V>> spliterator() {
+  public Spliterator<LinkedNode<K,V>> spliterator() {
     return Spliterators.spliterator(this, Spliterator.SIZED | Spliterator.ORDERED | Spliterator.DISTINCT);
   }
 
-  public final void forEach(@NotNull final Consumer<? super LinkedNode<K,V>> action) {
+  public void forEach(@NotNull final Consumer<? super LinkedNode<K,V>> action) {
     for (LinkedNode<K,V> node = registry.getEldest(); node != null; node = node.getAfter()) {
       action.accept(node);
     }

@@ -11,7 +11,7 @@ public final class KeyIterator<K, V> extends HashIterator<K, V> implements Itera
     super(registry);
   }
 
-  public final K next() {
+  public K next() {
     return nextNode().getKey();
   }
 

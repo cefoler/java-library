@@ -11,7 +11,7 @@ public final class ValueIterator<K, V> extends HashIterator<K, V> implements Ite
     super(registry);
   }
 
-  public final V next() {
+  public V next() {
     return nextNode().getValue();
   }
 

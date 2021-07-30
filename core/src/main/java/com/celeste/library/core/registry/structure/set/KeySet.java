@@ -7,7 +7,7 @@ import com.celeste.library.core.registry.structure.iterator.hash.KeyIterator;
 import com.celeste.library.core.registry.structure.iterator.linked.LinkedKeyIterator;
 import com.celeste.library.core.registry.structure.nodes.Node;
 import com.celeste.library.core.registry.structure.nodes.impl.LinkedNode;
-import com.celeste.library.core.registry.structure.splitter.impl.KeySpliterator;
+import com.celeste.library.core.registry.structure.splitter.impl.KeySplitter;
 import com.celeste.library.core.util.Wrapper;
 import lombok.AllArgsConstructor;
 import org.jetbrains.annotations.NotNull;
@@ -25,16 +25,16 @@ public final class KeySet<K, V> extends AbstractSet<K> {
 
   private final Registry<K, V> registry;
 
-  public final int size() {
+  public int size() {
     return registry.size();
   }
 
-  public final void clear() {
+  public void clear() {
     registry.wipe();
   }
 
   @SuppressWarnings({"rawtypes", "unchecked"})
-  public final Iterator<K> iterator() {
+  public Iterator<K> iterator() {
     if (Wrapper.isObject(registry, LinkedRegistry.class)) {
       return new LinkedKeyIterator((LinkedRegistry) registry);
     }
@@ -46,11 +46,11 @@ public final class KeySet<K, V> extends AbstractSet<K> {
     return null;
   }
 
-  public final boolean contains(@NotNull final Object object) {
+  public boolean contains(@NotNull final Object object) {
     return registry.containsKey(object);
   }
 
-  public final boolean remove(Object key) {
+  public boolean remove(Object key) {
     if (Wrapper.isObject(registry, LinkedRegistry.class)) {
       return ((MapRegistry<K, V>) registry).removeNode(hash(key), key, null, false, true) != null;
     }
@@ -63,19 +63,19 @@ public final class KeySet<K, V> extends AbstractSet<K> {
   }
 
   @SuppressWarnings({"rawuse"})
-  public final Spliterator<K> spliterator()  {
+  public Spliterator<K> spliterator()  {
     if (Wrapper.isObject(registry, LinkedRegistry.class)) {
       return Spliterators.spliterator(this, Spliterator.SIZED | Spliterator.ORDERED | Spliterator.DISTINCT);
     }
 
     if (Wrapper.isObject(registry, MapRegistry.class)) {
-      return new KeySpliterator<>((MapRegistry<K, V>) registry, null, 0, -1, 0, 0);
+      return new KeySplitter<>((MapRegistry<K, V>) registry, null, 0, -1, 0, 0);
     }
 
     return null;
   }
 
-  public final void forEach(@NotNull final Consumer<? super K> action) {
+  public void forEach(@NotNull final Consumer<? super K> action) {
     if (Wrapper.isObject(registry, LinkedRegistry.class)) {
       for (LinkedNode<K,V> node = ((LinkedRegistry<K, V>) registry).getEldest(); node != null; node = node.getAfter()) {
         action.accept(node.getKey());

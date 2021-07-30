@@ -13,7 +13,7 @@ public abstract class AbstractCollection<E> implements Collection<E> {
     MAX_ARRAY_SIZE = Integer.MAX_VALUE - 8;
   }
 
-  public abstract Iterator<E> iterator();
+  public abstract @NotNull Iterator<E> iterator();
 
   public abstract int size();
 

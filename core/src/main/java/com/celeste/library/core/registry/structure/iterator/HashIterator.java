@@ -12,6 +12,7 @@ public abstract class HashIterator<K, V> {
 
   public Node<K, V> next;
   public Node<K, V> current;
+
   private int index;
 
   public HashIterator(final MapRegistry<K, V> registry) {

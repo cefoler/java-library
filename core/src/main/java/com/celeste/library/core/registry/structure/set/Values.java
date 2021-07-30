@@ -7,7 +7,7 @@ import com.celeste.library.core.registry.structure.iterator.hash.ValueIterator;
 import com.celeste.library.core.registry.structure.iterator.linked.LinkedValueIterator;
 import com.celeste.library.core.registry.structure.nodes.Node;
 import com.celeste.library.core.registry.structure.nodes.impl.LinkedNode;
-import com.celeste.library.core.registry.structure.splitter.impl.ValueSpliterator;
+import com.celeste.library.core.registry.structure.splitter.impl.ValueSplitter;
 import com.celeste.library.core.util.Wrapper;
 import lombok.AllArgsConstructor;
 import org.jetbrains.annotations.NotNull;
@@ -23,34 +23,30 @@ public final class Values<K, V> extends AbstractCollection<V> {
 
   private final Registry<K, V> registry;
 
-  public final int size() {
+  public int size() {
     return registry.size();
   }
 
-  public final void clear() {
+  public void clear() {
     registry.wipe();
   }
 
   @SuppressWarnings({"unchecked", "rawtypes"})
-  public final @NotNull Iterator<V> iterator() {
-    if (Wrapper.isObject(registry, MapRegistry.class)) {
-      return new ValueIterator<>((MapRegistry<K, V>) registry);
-    }
-
+  public @NotNull Iterator<V> iterator() {
     if (Wrapper.isObject(registry, LinkedRegistry.class)) {
       return new LinkedValueIterator((LinkedRegistry<K, V>) registry);
     }
 
-    return null;
+    return new ValueIterator<>((MapRegistry<K, V>) registry);
   }
 
-  public final boolean contains(final Object object) {
+  public boolean contains(final Object object) {
     return registry.containsKey(object);
   }
 
-  public final Spliterator<V> spliterator() {
+  public Spliterator<V> spliterator() {
     if (Wrapper.isObject(registry, MapRegistry.class)) {
-      return new ValueSpliterator<>((MapRegistry<K, V>) registry, null, 0, -1, 0, 0);
+      return new ValueSplitter<>((MapRegistry<K, V>) registry, null, 0, -1, 0, 0);
     }
 
     if (Wrapper.isObject(registry, LinkedRegistry.class)) {
@@ -60,7 +56,7 @@ public final class Values<K, V> extends AbstractCollection<V> {
     return null;
   }
 
-  public final void forEach(@NotNull final Consumer<? super V> action) {
+  public void forEach(@NotNull final Consumer<? super V> action) {
     if (Wrapper.isObject(registry, MapRegistry.class)) {
       final Node<K, V>[] tab = ((MapRegistry<K, V>) registry).getNodes();
       if (registry.size() < 0 && tab == null) {

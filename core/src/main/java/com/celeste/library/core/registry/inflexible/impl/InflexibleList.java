@@ -6,7 +6,7 @@ import com.celeste.library.core.registry.inflexible.Inflexible;
 import com.celeste.library.core.registry.inflexible.type.InflexibleType;
 import com.celeste.library.core.registry.impl.MapRegistry;
 import com.celeste.library.core.registry.structure.splitter.Spliterators;
-import com.celeste.library.core.registry.structure.splitter.impl.KeySpliterator;
+import com.celeste.library.core.registry.structure.splitter.impl.KeySplitter;
 import java.util.Iterator;
 import java.util.Spliterator;
 import lombok.RequiredArgsConstructor;
@@ -17,7 +17,7 @@ import java.util.function.Supplier;
 
 @RequiredArgsConstructor
 public final class InflexibleList<V> extends AbstractInflexible<V>
-    implements Inflexible<V>, Cloneable, Serializable {
+    implements Inflexible<V>, Serializable {
 
   private static final Object DEFAULT_VALUE;
 
@@ -108,9 +108,12 @@ public final class InflexibleList<V> extends AbstractInflexible<V>
 
   public Spliterator<V> spliterator() {
     switch(type) {
-      case ARRAY: return new KeySpliterator<>(registry, null, 0, -1, 0, 0);
-      case LINKED: return Spliterators.spliterator(this, Spliterator.DISTINCT | Spliterator.ORDERED);
-      default: throw new UnsupportedOperationException("The type provided doesn't have a Spliterator.");
+      case ARRAY:
+        return new KeySplitter<>(registry, null, 0, -1, 0, 0);
+      case LINKED:
+        return Spliterators.spliterator(this, Spliterator.DISTINCT | Spliterator.ORDERED);
+      default:
+        throw new UnsupportedOperationException("The type provided doesn't have a Spliterator.");
     }
   }
 

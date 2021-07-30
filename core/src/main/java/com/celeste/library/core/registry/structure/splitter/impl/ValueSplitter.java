@@ -7,17 +7,17 @@ import org.jetbrains.annotations.NotNull;
 import java.util.Spliterator;
 import java.util.function.Consumer;
 
-public class ValueSpliterator<K, V> extends MapSpliterator<K, V>
+public final class ValueSplitter<K, V> extends MapSplitter<K, V>
     implements Spliterator<V> {
 
-  public ValueSpliterator(MapRegistry<K, V> map, Node<K, V> current, int index, int fence, int estimatedSize, int expectedModificationsCount) {
+  public ValueSplitter(MapRegistry<K, V> map, Node<K, V> current, int index, int fence, int estimatedSize, int expectedModificationsCount) {
     super(map, current, index, fence, estimatedSize, expectedModificationsCount);
   }
 
-  public ValueSpliterator<K, V> trySplit() {
+  public ValueSplitter<K, V> trySplit() {
     int fence = getTableSize(), index = this.index, estimatedSize = (index + fence) >>> 1;
     return (index >= estimatedSize || current != null)
-        ? new ValueSpliterator<>(map, current, index, this.index = estimatedSize, this.size >>>= 1, modificationsCount)
+        ? new ValueSplitter<>(map, current, index, this.index = estimatedSize, this.size >>>= 1, modificationsCount)
         : null;
   }
 

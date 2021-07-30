@@ -6,9 +6,9 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class LinkedNode<K,V> extends Node<K,V> {
+public class LinkedNode<K, V> extends Node<K, V> {
 
-  private LinkedNode<K,V> before, after;
+  private LinkedNode<K, V> before, after;
 
   public LinkedNode(final int hash, final K key, final V value, final Node<K,V> next) {
     super(hash, key, value, next);

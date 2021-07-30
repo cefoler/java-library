@@ -13,7 +13,7 @@ public interface Inflexible<V> extends Collection<V> {
 
   boolean isEmpty();
 
-  Iterator<V> iterator();
+  @NotNull Iterator<V> iterator();
 
   boolean contains(@NotNull Object object);
 

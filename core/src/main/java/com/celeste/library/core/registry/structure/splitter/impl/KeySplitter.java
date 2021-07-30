@@ -7,17 +7,17 @@ import org.jetbrains.annotations.NotNull;
 import java.util.Spliterator;
 import java.util.function.Consumer;
 
-public final class KeySpliterator<K, V> extends MapSpliterator<K, V> implements Spliterator<K> {
+public final class KeySplitter<K, V> extends MapSplitter<K, V> implements Spliterator<K> {
 
-  public KeySpliterator(MapRegistry<K, V> map, Node<K, V> current, int index, int fence, int estimatedSize, int expectedModificationsCount) {
+  public KeySplitter(MapRegistry<K, V> map, Node<K, V> current, int index, int fence, int estimatedSize, int expectedModificationsCount) {
     super(map, current, index, fence, estimatedSize, expectedModificationsCount);
   }
 
   @Override
-  public KeySpliterator<K, V> trySplit() {
+  public KeySplitter<K, V> trySplit() {
     int fence = getTableSize(), index = this.index, estimatedSize = (index + fence) >>> 1;
     return (index >= estimatedSize || current != null)
-        ? new KeySpliterator<>(map, current, index, this.index = estimatedSize, this.size >>>= 1, modificationsCount)
+        ? new KeySplitter<>(map, current, index, this.index = estimatedSize, this.size >>>= 1, modificationsCount)
         : null;
   }
 
