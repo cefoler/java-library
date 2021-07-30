@@ -33,11 +33,9 @@ public abstract class AbstractBukkitPlugin extends JavaPlugin {
   public AbstractBukkitPlugin() {
     this.manager = Bukkit.getServer().getPluginManager();
     this.service = Bukkit.getServer().getServicesManager();
-
-    registerSystems();
   }
 
-  private void registerSystems() {
+  public void registerSystems() {
     new MenuListener(this);
     new MonitorListener(this);
   }
@@ -51,9 +49,9 @@ public abstract class AbstractBukkitPlugin extends JavaPlugin {
     final MessageHolder holder = frame.getMessageHolder();
 
     holder.setMessage(MessageType.ERROR, "§cA error occurred.");
-    holder.setMessage(MessageType.INCORRECT_TARGET, "Only {target} can execute this command..");
-    holder.setMessage(MessageType.INCORRECT_USAGE, "Wrong use! The correct is: /{usage}");
-    holder.setMessage(MessageType.NO_PERMISSION, "You don't have enough permissions.");
+    holder.setMessage(MessageType.INCORRECT_TARGET, "§cOnly {target} can execute this command..");
+    holder.setMessage(MessageType.INCORRECT_USAGE, "§cWrong use! The correct is: /{usage}");
+    holder.setMessage(MessageType.NO_PERMISSION, "§cYou don't have enough permissions.");
 
     frame.registerCommands(instances);
   }
