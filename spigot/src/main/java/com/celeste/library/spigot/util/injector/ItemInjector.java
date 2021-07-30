@@ -130,6 +130,7 @@ public final class ItemInjector {
         : Reflection.instance(COMPOUND_CONSTRUCTOR);
 
     final Object tag = Reflection.instance(nbtTagConstructor, value);
+
     Reflection.invoke(SET, compound, key, tag);
     Reflection.invoke(SET_TAG, nmsItemStack, compound);
 

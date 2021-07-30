@@ -122,8 +122,10 @@ public final class MenuHolder implements InventoryHolder {
     inventory.clear();
     properties.putIfAbsent("page", 0);
 
+    // Clear player inventory to reduce the errors because of the inventory changes
     final ItemStack[] contents = player.getInventory().getContents();
     final ItemStack[] armor = player.getInventory().getArmorContents();
+
     player.getInventory().clear();
 
     final Object entityPlayer = Reflection.invoke(GET_HANDLE, player);

@@ -65,7 +65,12 @@ public class PaginatorImpl<T> extends AbstractPaginator<T> {
 
   @Override
   public Paginator<T> page(final int page) {
-    this.currentPage = page < 0 ? 0 : page > totalPages() ? totalPages() : page;
+    this.currentPage = page < 0
+        ? 0
+        : page > totalPages()
+        ? totalPages()
+        : page;
+
     holder.setProperty("page", currentPage);
     return this;
   }

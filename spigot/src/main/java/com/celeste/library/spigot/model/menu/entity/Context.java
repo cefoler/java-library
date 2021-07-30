@@ -20,6 +20,7 @@ import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.inventory.InventoryDragEvent;
 import org.bukkit.event.inventory.InventoryOpenEvent;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.PlayerInventory;
 
 @Getter
 @RequiredArgsConstructor
@@ -35,6 +36,10 @@ public final class Context<T extends Event> {
 
   public String getPlayerName() {
     return player.getName();
+  }
+
+  public PlayerInventory getPlayerInventory() {
+    return player.getInventory();
   }
 
   public void message(final String message) {

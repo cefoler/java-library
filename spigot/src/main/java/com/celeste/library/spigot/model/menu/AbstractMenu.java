@@ -40,7 +40,6 @@ public abstract class AbstractMenu {
   public AbstractMenu() {
     try {
       final Class<? extends AbstractMenu> clazz = getClass();
-
       if (Reflection.containsAnnotation(clazz, Menu.class)) {
         final Menu annotation = Reflection.getAnnotation(clazz, Menu.class);
 
@@ -111,32 +110,28 @@ public abstract class AbstractMenu {
    *
    * @param context Context
    */
-  public void onRender(final Context<InventoryRenderEvent> context) {
-  }
+  public void onRender(final Context<InventoryRenderEvent> context) {}
 
   /**
    * Event when the menu is opened
    *
    * @param context Context
    */
-  public void onOpen(final Context<InventoryOpenEvent> context) {
-  }
+  public void onOpen(final Context<InventoryOpenEvent> context) {}
 
   /**
    * Event when the menu is opened
    *
    * @param context Context
    */
-  public void onClose(final Context<InventoryCloseEvent> context) {
-  }
+  public void onClose(final Context<InventoryCloseEvent> context) {}
 
   /**
    * Event when the player drags item from their inventory
    *
    * @param context Context
    */
-  public void onDrag(final Context<InventoryDragEvent> context) {
-  }
+  public void onDrag(final Context<InventoryDragEvent> context) {}
 
 }
 

@@ -15,6 +15,7 @@ import org.bukkit.scoreboard.Team;
 
 @Getter
 @Setter
+// TODO: Add support to 1.13 above via Reflection
 public class Score {
 
   private final String title;

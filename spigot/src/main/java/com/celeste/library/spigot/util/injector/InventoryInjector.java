@@ -3,7 +3,6 @@ package com.celeste.library.spigot.util.injector;
 import com.celeste.library.spigot.util.item.ItemBuilder;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Objects;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 import org.bukkit.Material;
@@ -20,8 +19,7 @@ public final class InventoryInjector {
 
   public List<ItemStack> getItemsFromMaterial(final Material material, final Player player) {
     return Arrays.stream(player.getInventory().getContents())
-        .filter(Objects::nonNull)
-        .filter(item -> item.getType() == material)
+        .filter(item -> item != null && item.getType() == material)
         .collect(Collectors.toList());
   }
 
@@ -29,28 +27,27 @@ public final class InventoryInjector {
   public List<ItemStack> getItemsFromOldData(final Material material, int data,
       final Player player) {
     return Arrays.stream(player.getInventory().getContents())
-        .filter(Objects::nonNull)
-        .filter(item -> item.getType() == material)
-        .filter(item -> item.getDurability() == data)
+        .filter(item -> item != null && item.getType() == material && item.getDurability() == data)
         .collect(Collectors.toList());
   }
 
-  public List<ItemStack> getItemsFromModelData(final Material material, int data,
-      final Player player) {
+  public List<ItemStack> getItemsFromModelData(final Material material, int data, final Player player) {
     return Arrays.stream(player.getInventory().getContents())
-        .filter(Objects::nonNull)
-        .filter(item -> item.getType() == material)
-        .map(ItemBuilder::new)
-        .filter(item -> item.hasModelData(data))
-        .map(ItemBuilder::build)
+        .filter(item -> {
+          if (item == null || item.getType() != material) {
+            return false;
+          }
+
+          final ItemBuilder builder = new ItemBuilder(item);
+          return builder.hasModelData(data);
+        })
         .collect(Collectors.toList());
   }
 
   public int removeItemsFromMaterial(final Material material, final Player player) {
     final AtomicInteger count = new AtomicInteger();
     Arrays.stream(player.getInventory().getContents())
-        .filter(Objects::nonNull)
-        .filter(item -> item.getType() == material)
+        .filter(item -> item != null && item.getType() == material)
         .forEach(item -> {
           count.set(count.get() + item.getAmount());
           player.getInventory().remove(item);
@@ -62,8 +59,7 @@ public final class InventoryInjector {
   public void removeItemsFromMaterial(final Material material, int amount, final Player player) {
     final AtomicInteger count = new AtomicInteger();
     final List<ItemStack> items = Arrays.stream(player.getInventory().getContents())
-        .filter(Objects::nonNull)
-        .filter(item -> item.getType() == material)
+        .filter(item -> item != null && item.getType() == material)
         .collect(Collectors.toList());
 
     for (ItemStack item : items) {
