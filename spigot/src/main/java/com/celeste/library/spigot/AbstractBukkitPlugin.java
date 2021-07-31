@@ -16,6 +16,8 @@ import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.ServicesManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import static me.saiintbrisson.minecraft.command.message.MessageType.*;
+
 @Getter
 public abstract class AbstractBukkitPlugin extends JavaPlugin {
 
@@ -40,6 +42,11 @@ public abstract class AbstractBukkitPlugin extends JavaPlugin {
     new MonitorListener(this);
   }
 
+  public void shutdownExecutors() {
+    EXECUTOR.shutdown();
+    SCHEDULED.shutdown();
+  }
+
   public void registerListeners(final Listener... listeners) {
     Arrays.stream(listeners).forEach(listener -> manager.registerEvents(listener, this));
   }
@@ -48,10 +55,10 @@ public abstract class AbstractBukkitPlugin extends JavaPlugin {
     final BukkitFrame frame = new BukkitFrame(this);
     final MessageHolder holder = frame.getMessageHolder();
 
-    holder.setMessage(MessageType.ERROR, "§cA error occurred.");
-    holder.setMessage(MessageType.INCORRECT_TARGET, "§cOnly {target} can execute this command..");
-    holder.setMessage(MessageType.INCORRECT_USAGE, "§cWrong use! The correct is: /{usage}");
-    holder.setMessage(MessageType.NO_PERMISSION, "§cYou don't have enough permissions.");
+    holder.setMessage(ERROR, "§cA error occurred.");
+    holder.setMessage(INCORRECT_TARGET, "§cOnly {target} can execute this command..");
+    holder.setMessage(INCORRECT_USAGE, "§cWrong use! The correct is: /{usage}");
+    holder.setMessage(NO_PERMISSION, "§cYou don't have enough permissions.");
 
     frame.registerCommands(instances);
   }
@@ -60,10 +67,10 @@ public abstract class AbstractBukkitPlugin extends JavaPlugin {
     final BukkitFrame frame = new BukkitFrame(this);
     final MessageHolder holder = frame.getMessageHolder();
 
-    holder.setMessage(MessageType.ERROR, messages[0]);
-    holder.setMessage(MessageType.INCORRECT_TARGET, messages[1]);
-    holder.setMessage(MessageType.INCORRECT_USAGE, messages[2]);
-    holder.setMessage(MessageType.NO_PERMISSION, messages[3]);
+    holder.setMessage(ERROR, messages[0]);
+    holder.setMessage(INCORRECT_TARGET, messages[1]);
+    holder.setMessage(INCORRECT_USAGE, messages[2]);
+    holder.setMessage(NO_PERMISSION, messages[3]);
 
     frame.registerCommands(instances);
   }
