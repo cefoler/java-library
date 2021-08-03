@@ -110,28 +110,28 @@ public abstract class AbstractMenu {
    *
    * @param context Context
    */
-  public void onRender(final Context<InventoryRenderEvent> context) {}
+  protected void onRender(final Context<InventoryRenderEvent> context) {}
 
   /**
    * Event when the menu is opened
    *
    * @param context Context
    */
-  public void onOpen(final Context<InventoryOpenEvent> context) {}
+  protected void onOpen(final Context<InventoryOpenEvent> context) {}
 
   /**
    * Event when the menu is opened
    *
    * @param context Context
    */
-  public void onClose(final Context<InventoryCloseEvent> context) {}
+  protected void onClose(final Context<InventoryCloseEvent> context) {}
 
   /**
    * Event when the player drags item from their inventory
    *
    * @param context Context
    */
-  public void onDrag(final Context<InventoryDragEvent> context) {}
+  protected void onDrag(final Context<InventoryDragEvent> context) {}
 
 }
 
