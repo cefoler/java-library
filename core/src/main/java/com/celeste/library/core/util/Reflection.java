@@ -1,10 +1,7 @@
 package com.celeste.library.core.util;
 
 import java.lang.annotation.Annotation;
-import java.lang.reflect.Constructor;
-import java.lang.reflect.Field;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
+import java.lang.reflect.*;
 import java.util.Arrays;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
@@ -69,6 +66,31 @@ public final class Reflection {
     final Constructor<?> constructor = getClazz(path).getDeclaredConstructor(parameterClass);
     constructor.setAccessible(true);
     return constructor;
+  }
+
+  public static Object getValueFromEnum(final Class<?> enumClass, final String enumName, final int fallbackOrdinal) {
+    try {
+      return Enum.valueOf(enumClass.asSubclass(Enum.class), enumName);
+    } catch (IllegalArgumentException exception) {
+      final Object[] constants = enumClass.getEnumConstants();
+      if (constants.length > fallbackOrdinal) {
+        return constants[fallbackOrdinal];
+      }
+
+      throw exception;
+    }
+  }
+
+  public static void setField(final Object object, final Class<?> fieldType, final Object value) throws ReflectiveOperationException {
+    final Field[] fields = Arrays.stream(object.getClass().getDeclaredFields())
+        .filter((field) -> !Modifier.isStatic(field.getModifiers()))
+        .toArray(Field[]::new);
+
+    for (Field field : fields) {
+      if (field.getType() == fieldType) {
+        field.set(object, value);
+      }
+    }
   }
 
   public static <T> Constructor<T> getDcConstructor(final Class<T> clazz,

@@ -13,6 +13,13 @@ public final class StringFormatter {
     return joiner.toString();
   }
 
+  public <T> static String join(final Collection<T> args) {
+    final StringJoiner joiner = new StringJoiner(" ");
+    Arrays.stream(args).forEach(joiner::add);
+
+    return joiner.toString();
+  }
+
   public static String join(final String[] args, final String format) {
     final StringJoiner joiner = new StringJoiner(format);
     Arrays.stream(args).forEach(joiner::add);
