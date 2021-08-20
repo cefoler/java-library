@@ -2,6 +2,8 @@ package com.celeste.library.core.util.formatter;
 
 import com.celeste.library.core.util.pattern.RegexPattern;
 import java.util.Arrays;
+import java.util.Collection;
+import java.util.List;
 import java.util.StringJoiner;
 
 public final class StringFormatter {
@@ -13,9 +15,9 @@ public final class StringFormatter {
     return joiner.toString();
   }
 
-  public <T> static String join(final Collection<T> args) {
+  public static <T> String join(final List<T> args) {
     final StringJoiner joiner = new StringJoiner(" ");
-    Arrays.stream(args).forEach(joiner::add);
+    args.forEach(t -> joiner.add((CharSequence) t));
 
     return joiner.toString();
   }
