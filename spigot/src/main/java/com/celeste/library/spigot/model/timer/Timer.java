@@ -38,7 +38,12 @@ public abstract class Timer {
   public static void end() {
     if (TASK != null) {
       TASK.cancel();
+      TASK = null;
     }
+  }
+
+  public static boolean isStarted() {
+    return TASK != null;
   }
 
 }
