@@ -1,4 +1,4 @@
-package com.celeste.library.core.registry.type;
+package com.celeste.library.core.model.registry.type;
 
 import com.celeste.library.core.util.Wrapper;
 import org.jetbrains.annotations.NotNull;

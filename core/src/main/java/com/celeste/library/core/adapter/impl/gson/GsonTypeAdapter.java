@@ -11,11 +11,13 @@ import com.google.gson.internal.Streams;
 import com.google.gson.reflect.TypeToken;
 import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonWriter;
+
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Map.Entry;
+
 import org.jetbrains.annotations.Nullable;
 
 public final class GsonTypeAdapter<T> implements TypeAdapterFactory {
@@ -40,6 +42,7 @@ public final class GsonTypeAdapter<T> implements TypeAdapterFactory {
     this.base = base;
     this.fieldName = fieldName;
     this.maintain = maintain;
+
     this.labelToSubtype = new LinkedHashMap<>();
     this.subtypeToLabel = new LinkedHashMap<>();
   }
@@ -84,7 +87,6 @@ public final class GsonTypeAdapter<T> implements TypeAdapterFactory {
     }
 
     return new TypeAdapter<U>() {
-
       @Override
       public U read(final JsonReader reader) {
         final JsonElement json = Streams.parse(reader);

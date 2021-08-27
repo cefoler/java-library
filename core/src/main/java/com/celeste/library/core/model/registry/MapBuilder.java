@@ -1,14 +1,13 @@
-package com.celeste.library.core.registry;
+package com.celeste.library.core.model.registry;
 
-import com.celeste.library.core.registry.impl.MapRegistry;
-import com.celeste.library.core.registry.type.KeyType;
-import com.celeste.library.core.registry.type.MapType;
+import com.celeste.library.core.model.registry.type.KeyType;
+import com.celeste.library.core.model.registry.type.MapType;
+import com.google.common.annotations.Beta;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.HashSet;
-
+@Beta
 @Getter
 @RequiredArgsConstructor
 public final class MapBuilder {
@@ -17,15 +16,11 @@ public final class MapBuilder {
   private KeyType keyType;
 
   private int initialCapacity;
-  private float loadFactor;
-  private boolean accessOrder;
 
   {
     mapType = MapType.MAP;
     keyType = KeyType.STANDARD;
-    initialCapacity = MapRegistry.DEFAULT_INITIAL_CAPACITY;
-    loadFactor = MapRegistry.DEFAULT_LOAD_FACTOR;
-    accessOrder = false;
+    initialCapacity = 4 << 16;
   }
 
   public static <T, U> Registry<T, U> create(@NotNull final MapType mapType, @NotNull final KeyType keyType) {
@@ -51,16 +46,6 @@ public final class MapBuilder {
 
   public MapBuilder capacity(final int initialCapacity) {
     this.initialCapacity = initialCapacity;
-    return this;
-  }
-
-  public MapBuilder loadFactor(final float loadFactor) {
-    this.loadFactor = loadFactor;
-    return this;
-  }
-
-  public MapBuilder accessOrder(final boolean accessOrder) {
-    this.accessOrder = accessOrder;
     return this;
   }
 
