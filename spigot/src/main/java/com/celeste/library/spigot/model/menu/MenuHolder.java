@@ -64,12 +64,6 @@ public final class MenuHolder implements InventoryHolder {
   private AbstractMenu menu;
   private Inventory inventory;
 
-  /**
-   * AbstractMenu holder constructor.
-   *
-   * @param menu AbstractMenu
-   * @param properties ImmutableMap of the properties
-   */
   public MenuHolder(final AbstractMenu menu, final Properties properties) {
     this.menu = menu;
     this.properties = properties;
@@ -177,7 +171,7 @@ public final class MenuHolder implements InventoryHolder {
    * @return MenuItem
    */
   public MenuItem slot(final int slot, final ItemStack item) {
-    final MenuItem menuItem = new MenuItem(slot).item(item);
+    final MenuItem menuItem = new MenuItem(slot, item, null);
     menu.getItems()[slot] = menuItem;
 
     return menuItem;
@@ -193,7 +187,7 @@ public final class MenuHolder implements InventoryHolder {
   }
 
   public void handleClick(final InventoryClickEvent event) {
-    if (menu.cancelOnClick) {
+    if (menu.isCancelOnClick()) {
       event.setCancelled(true);
     }
 

@@ -108,7 +108,7 @@ public final class Context<T extends Event> {
 
   public void cancel() {
     if (Wrapper.isObject(event, InventoryCloseEvent.class)) {
-      AbstractBukkitPlugin.getScheduled().schedule(() -> show(holder.getMenu(), getPage()), 20, TimeUnit.MILLISECONDS);
+      AbstractBukkitPlugin.getScheduled().schedule(() -> show(holder.getMenu(), getPage()), 250, TimeUnit.MILLISECONDS);
       return;
     }
 

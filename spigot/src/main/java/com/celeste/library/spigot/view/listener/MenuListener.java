@@ -1,6 +1,5 @@
 package com.celeste.library.spigot.view.listener;
 
-import com.celeste.library.core.util.Wrapper;
 import com.celeste.library.spigot.model.menu.MenuHolder;
 import com.celeste.library.spigot.view.event.wrapper.impl.InventoryRenderEvent;
 import org.bukkit.Bukkit;
@@ -77,7 +76,7 @@ public final class MenuListener implements Listener {
 
   private MenuHolder getHolder(final InventoryEvent event) {
     final Inventory inventory = event.getInventory();
-    if (Wrapper.isObject(inventory.getHolder(), MenuHolder.class)) {
+    if (inventory.getHolder() instanceof MenuHolder) {
       return (MenuHolder) inventory.getHolder();
     }
 

@@ -51,7 +51,7 @@ public class FastScore {
   private static Object ENUM_SB_ACTION_REMOVE;
 
   static {
-    PACKETS = new HashMap(8);
+    PACKETS = new HashMap<>(8);
     COLOR_CODES = Arrays.stream(ChatColor.values())
         .map(Object::toString)
         .toArray(String[]::new);
@@ -152,14 +152,10 @@ public class FastScore {
     this.player = player;
     this.lines = new ArrayList<>(16);
 
-    this.id = "fb-" + Integer.toHexString(ThreadLocalRandom.current().nextInt());
+    this.id = "fs-" + Integer.toHexString(ThreadLocalRandom.current().nextInt());
 
-    try {
-      this.sendObjectivePacket(CREATE);
-      this.sendDisplayObjectivePacket();
-    } catch (Throwable throwable) {
-      throw new RuntimeException("Unable to create scoreboard", throwable);
-    }
+    sendObjectivePacket(CREATE);
+    sendDisplayObjectivePacket();
   }
 
   public void updateTitle(final String title) {
@@ -172,12 +168,7 @@ public class FastScore {
     }
 
     this.title = title;
-
-    try {
-      this.sendObjectivePacket(UPDATE);
-    } catch (Throwable throwable) {
-      throw new RuntimeException("Unable to update scoreboard title", throwable);
-    }
+    sendObjectivePacket(UPDATE);
   }
 
   public String getLine(final int line) {
@@ -188,26 +179,22 @@ public class FastScore {
   public synchronized void updateLine(final int line, final String text) {
     checkLineNumber(line, false, true);
 
-    try {
-      if (line < size()) {
-        
-        lines.set(line, text);
-        sendTeamPacket(getScoreByLine(line), TeamMode.UPDATE);
-        return;
-      }
+    if (line < size()) {
+      lines.set(line, text);
 
-      final List<String> newLines = new ArrayList<>(lines);
-      if (line > size()) {
-        for (int i = size(); i < line; i++) {
-          newLines.add("");
-        }
-      }
-
-      newLines.add(text);
-      updateLines(newLines);
-    } catch (Throwable throwable) {
-      throw new RuntimeException("Unable to update scoreboard lines", throwable);
+      sendTeamPacket(getScoreByLine(line), TeamMode.UPDATE);
+      return;
     }
+
+    final List<String> newLines = new ArrayList<>(lines);
+    if (line > size()) {
+      for (int index = size(); index < line; index++) {
+        newLines.add("");
+      }
+    }
+
+    newLines.add(text);
+    updateLines(newLines);
   }
 
   public synchronized void removeLine(final int line) {
@@ -216,7 +203,7 @@ public class FastScore {
       return;
     }
 
-    final List<String> newLines = new ArrayList(lines);
+    final List<String> newLines = new ArrayList<>(lines);
     newLines.remove(line);
     
     updateLines(newLines);
@@ -239,44 +226,41 @@ public class FastScore {
       }
     }
 
-    final List<String> oldLines = new ArrayList(lines);
+    final List<String> oldLines = new ArrayList<>(lines);
     
     lines.clear();
     lines.addAll(newLines);
 
     final int linesSize = size();
-
-    try {
-      if (oldLines.size() == linesSize) {
-        for (int i = 0; i < linesSize; i++) {
-          if (!Objects.equals(getLineByScore(oldLines, i), getLineByScore(i))) {
-            sendTeamPacket(i, TeamMode.UPDATE);
-          }
+    if (oldLines.size() == linesSize) {
+      for (int i = 0; i < linesSize; i++) {
+        if (!Objects.equals(getLineByScore(oldLines, i), getLineByScore(i))) {
+          sendTeamPacket(i, TeamMode.UPDATE);
         }
-        
-        return;
       }
 
-      final List<String> oldLinesCopy = new ArrayList(oldLines);
-      
-      int i;
-      if (oldLines.size() > linesSize) {
-        for (i = oldLinesCopy.size(); i > linesSize; i--) {
-          this.sendTeamPacket(i - 1, TeamMode.REMOVE);
-          this.sendScorePacket(i - 1, ScoreboardAction.REMOVE);
-          oldLines.remove(0);
-        }
-        
-        return;
+      return;
+    }
+
+    final List<String> oldLinesCopy = new ArrayList<>(oldLines);
+
+    int index;
+    if (oldLines.size() > linesSize) {
+      for (index = oldLinesCopy.size(); index > linesSize; index--) {
+        sendTeamPacket(index - 1, TeamMode.REMOVE);
+        sendScorePacket(index - 1, ScoreboardAction.REMOVE);
+
+        oldLines.remove(0);
       }
 
-      for(i = oldLinesCopy.size(); i < linesSize; i++) {
-        this.sendScorePacket(i, ScoreboardAction.CHANGE);
-        this.sendTeamPacket(i, TeamMode.CREATE);
-        oldLines.add(oldLines.size() - i, this.getLineByScore(i));
-      }
-    } catch (Throwable throwable) {
-      throw new RuntimeException("Unable to update scoreboard lines", throwable);
+      return;
+    }
+
+    for (index = oldLinesCopy.size(); index < linesSize; index++) {
+      sendScorePacket(index, ScoreboardAction.CHANGE);
+      sendTeamPacket(index, TeamMode.CREATE);
+
+      oldLines.add(oldLines.size() - index, this.getLineByScore(index));
     }
   }
 
@@ -285,20 +269,15 @@ public class FastScore {
   }
 
   public void delete() {
-    try {
-      int count = 0;
-
-      while(true) {
-        if (count >= size()) {
-          this.sendObjectivePacket(REMOVE);
-          break;
-        }
-
-        this.sendTeamPacket(count, TeamMode.REMOVE);
-        count++;
+    int count = 0;
+    while(true) {
+      if (count >= size()) {
+        this.sendObjectivePacket(REMOVE);
+        break;
       }
-    } catch (Throwable throwable) {
-      throw new RuntimeException("Unable to delete scoreboard", throwable);
+
+      sendTeamPacket(count, TeamMode.REMOVE);
+      count++;
     }
 
     this.deleted = true;
@@ -351,7 +330,8 @@ public class FastScore {
     }
   }
 
-  private void sendDisplayObjectivePacket() throws Throwable {
+  @SneakyThrows
+  private void sendDisplayObjectivePacket(){
     final Object packet = PACKET_SB_DISPLAY_OBJ.newInstance();
 
     setField(packet, Integer.TYPE, 1);

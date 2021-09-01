@@ -47,6 +47,22 @@ public final class MenuPaginator<T> extends PaginatorImpl<T> {
     }
   }
 
+  public void setup(final ItemStack previousItem, final int previous, final ItemStack nextItem, final int next) {
+    if (!isFirst()) {
+      holder.slot(previous, previousItem)
+          .action((holder, event) -> previous())
+          .cancel()
+          .update();
+    }
+
+    if (!isLast()) {
+      holder.slot(next, nextItem)
+          .action((holder, event) -> next())
+          .cancel()
+          .update();
+    }
+  }
+
   private ItemStack getDefaultPreviousItem() {
     return new ItemBuilder(SKULL, 1, 3)
         .name("§cPrevious page")
