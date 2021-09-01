@@ -63,15 +63,10 @@ public final class DateFormatter {
    * @return String
    */
   public static String format(final long time, final TimeLanguage language) {
-    final long differenceTime = System.currentTimeMillis() - time;
-
-    final long days = MILLISECONDS.toDays(differenceTime);
-    final long hours = MILLISECONDS.toHours(differenceTime)
-        - MILLISECONDS.toDays(differenceTime) * 24;
-    final long minutes = MILLISECONDS.toMinutes(differenceTime)
-        - MILLISECONDS.toHours(differenceTime) * 60;
-    final long seconds = MILLISECONDS.toSeconds(differenceTime)
-        - MILLISECONDS.toMinutes(differenceTime) * 60;
+    final long days = DAYS.convert(time, MILLISECONDS);
+    final long hours = HOURS.convert(time, MILLISECONDS) - days * 24;
+    final long minutes = MINUTES.convert(time, MILLISECONDS) - hours * 60;
+    final long seconds = SECONDS.convert(time, MILLISECONDS) - minutes * 60;
 
     final StringBuilder builder = new StringBuilder();
 
@@ -111,9 +106,9 @@ public final class DateFormatter {
    * @return String formatted
    */
   public static String format(final long time, final boolean withHours) {
-    final long seconds = MILLISECONDS.toSeconds(time);
-    final long minutes = MILLISECONDS.toMinutes(seconds);
-    final long hours = MILLISECONDS.toHours(minutes);
+    final long seconds = time / 1000;
+    final long minutes = seconds / 60;
+    final long hours = minutes / 60;
 
     final long newSeconds = seconds - minutes * 60;
     final String secondsString = newSeconds > 9 ? String.valueOf(newSeconds) : "0" + newSeconds;
@@ -134,8 +129,8 @@ public final class DateFormatter {
     return format(time, TimeLanguage.ENGLISH);
   }
 
-  private static String format(final String str) {
-    return " " + str;
+  private static String format(final String string) {
+    return " " + string;
   }
 
   private static String and(final TimeLanguage language) {

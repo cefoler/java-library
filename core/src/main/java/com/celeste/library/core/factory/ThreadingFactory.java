@@ -148,7 +148,7 @@ public final class ThreadingFactory {
   }
 
   public static ScheduledExecutorService scheduledThreadPool() {
-    return new ScheduledThreadPoolExecutor(0);
+    return new ScheduledThreadPoolExecutor(1);
   }
 
   public static ScheduledExecutorService scheduledThreadPool(final int minThreads) {
