@@ -9,21 +9,45 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public final class Reflection {
 
-  public static Class<?> getClazz(final String path) throws ClassNotFoundException {
-    return Class.forName(path);
+  public static <T> Class<T> getClazz(final Object object) {
+    final Class<?> clazz = object.getClass();
+    return getClazz(clazz);
   }
 
-  public static Class<?> getClazz(final Field field) {
-    return field.getType();
+  public static <T> Class<T> getClazz(final String path) throws ClassNotFoundException {
+    final Class<?> clazz = Class.forName(path);
+    return getClazz(clazz);
+  }
+
+  public static <T> Class<T> getClazz(final Field field) {
+    final Class<?> clazz = field.getType();
+    return getClazz(clazz);
+  }
+
+  @SuppressWarnings("unchecked")
+  public static <T> Class<T> getClazz(final Class<?> clazz) {
+    return (Class<T>) clazz;
+  }
+
+  public static Class<?>[] getClasses(final Object object) {
+    final Class<?> clazz = getClazz(object);
+    return getClasses(clazz);
+  }
+
+  public static Class<?> getClasses(final Object object, final int size) {
+    final Class<?> clazz = getClazz(object);
+    return getClasses(clazz, size);
   }
 
   public static Class<?>[] getClasses(final String path) throws ClassNotFoundException {
-    return getClazz(path).getClasses();
+    final Class<?> clazz = getClazz(path);
+    return getClasses(clazz);
   }
 
   public static Class<?> getClasses(final String path, final int size)
       throws ClassNotFoundException {
-    return getClazz(path).getClasses()[size];
+    final Class<?> clazz = getClazz(path);
+    return getClasses(clazz, size);
   }
 
   public static Class<?>[] getClasses(final Class<?> clazz) {
@@ -31,16 +55,28 @@ public final class Reflection {
   }
 
   public static Class<?> getClasses(final Class<?> clazz, final int size) {
-    return clazz.getClasses()[size];
+    return getClasses(clazz)[size];
+  }
+
+  public static Class<?>[] getDcClasses(final Object object) {
+    final Class<?> clazz = getClazz(object);
+    return getDcClasses(clazz);
+  }
+
+  public static Class<?> getDcClasses(final Object object, final int size) {
+    final Class<?> clazz = getClazz(object);
+    return getDcClasses(clazz, size);
   }
 
   public static Class<?>[] getDcClasses(final String path) throws ClassNotFoundException {
-    return getClazz(path).getDeclaredClasses();
+    final Class<?> clazz = getClazz(path);
+    return getDcClasses(clazz);
   }
 
   public static Class<?> getDcClasses(final String path, final int size)
       throws ClassNotFoundException {
-    return getClazz(path).getDeclaredClasses()[size];
+    final Class<?> clazz = getClazz(path);
+    return getDcClasses(clazz, size);
   }
 
   public static Class<?>[] getDcClasses(final Class<?> clazz) {
@@ -48,135 +84,166 @@ public final class Reflection {
   }
 
   public static Class<?> getDcClasses(final Class<?> clazz, final int size) {
-    return clazz.getDeclaredClasses()[size];
+    return getDcClasses(clazz)[size];
   }
 
-  public static Constructor<?> getConstructor(final String path, final Class<?>... parameterClass)
+  public static <T> Constructor<T> getConstructor(final Object object, final Class<?>... parameters)
+      throws NoSuchMethodException {
+    final Class<T> clazz = getClazz(object);
+    return getConstructor(clazz, parameters);
+  }
+
+  public static <T> Constructor<T> getConstructor(final String path, final Class<?>... parameters)
       throws ClassNotFoundException, NoSuchMethodException {
-    return getClazz(path).getConstructor(parameterClass);
+    final Class<T> clazz = getClazz(path);
+    return getConstructor(clazz, parameters);
   }
 
   public static <T> Constructor<T> getConstructor(final Class<T> clazz,
-      final Class<?>... parameterClass) throws NoSuchMethodException {
-    return clazz.getConstructor(parameterClass);
+                                                  final Class<?>... parameters) throws NoSuchMethodException {
+    return clazz.getConstructor(parameters);
   }
 
-  public static Constructor<?> getDcConstructor(final String path, final Class<?>... parameterClass)
+  public static <T> Constructor<T> getDcConstructor(final Object object,
+                                                    final Class<?>... parameters) throws NoSuchMethodException {
+    final Class<T> clazz = getClazz(object);
+    return getDcConstructor(clazz, parameters);
+  }
+
+  public static <T> Constructor<T> getDcConstructor(final String path, final Class<?>... parameters)
       throws ClassNotFoundException, NoSuchMethodException {
-    final Constructor<?> constructor = getClazz(path).getDeclaredConstructor(parameterClass);
-    constructor.setAccessible(true);
-    return constructor;
-  }
-
-  public static Object getValueFromEnum(final Class<?> enumClass, final String enumName, final int fallbackOrdinal) {
-    try {
-      return Enum.valueOf(enumClass.asSubclass(Enum.class), enumName);
-    } catch (IllegalArgumentException exception) {
-      final Object[] constants = enumClass.getEnumConstants();
-      if (constants.length > fallbackOrdinal) {
-        return constants[fallbackOrdinal];
-      }
-
-      throw exception;
-    }
-  }
-
-  public static void setField(final Object object, final Class<?> fieldType, final Object value) throws ReflectiveOperationException {
-    final Field[] fields = Arrays.stream(object.getClass().getDeclaredFields())
-        .filter((field) -> !Modifier.isStatic(field.getModifiers()))
-        .toArray(Field[]::new);
-
-    for (Field field : fields) {
-      if (field.getType() == fieldType) {
-        field.set(object, value);
-      }
-    }
+    final Class<T> clazz = getClazz(path);
+    return getDcConstructor(clazz, parameters);
   }
 
   public static <T> Constructor<T> getDcConstructor(final Class<T> clazz,
-      final Class<?>... parameterClass) throws NoSuchMethodException {
-    final Constructor<T> constructor = clazz.getDeclaredConstructor(parameterClass);
+                                                    final Class<?>... parameters) throws NoSuchMethodException {
+    final Constructor<T> constructor = clazz.getDeclaredConstructor(parameters);
     constructor.setAccessible(true);
     return constructor;
   }
 
-  public static Constructor<?>[] getConstructors(final String path)
-      throws ClassNotFoundException {
-    return getClazz(path).getConstructors();
+  public static <T> Constructor<T>[] getConstructors(final Object object) {
+    final Class<T> clazz = getClazz(object);
+    return getConstructors(clazz);
   }
 
-  public static Constructor<?> getConstructors(final String path, final int size)
-      throws ClassNotFoundException {
-    return getClazz(path).getConstructors()[size];
+  public static <T> Constructor<T> getConstructors(final Object object, final int size) {
+    final Class<T> clazz = getClazz(object);
+    return getConstructors(clazz, size);
   }
 
+  public static <T> Constructor<T>[] getConstructors(final String path)
+      throws ClassNotFoundException {
+    final Class<T> clazz = getClazz(path);
+    return getConstructors(clazz);
+  }
+
+  public static <T> Constructor<T> getConstructors(final String path, final int size)
+      throws ClassNotFoundException {
+    final Class<T> clazz = getClazz(path);
+    return getConstructors(clazz, size);
+  }
+
+  @SuppressWarnings("unchecked")
   public static <T> Constructor<T>[] getConstructors(final Class<T> clazz) {
-    return Arrays.stream(clazz.getConstructors())
-        .toArray(Constructor[]::new);
+    return (Constructor<T>[]) clazz.getConstructors();
   }
 
   public static <T> Constructor<T> getConstructors(final Class<T> clazz, final int size) {
-    return Arrays.stream(clazz.getConstructors())
-        .toArray(Constructor[]::new)[size];
+    return getConstructors(clazz)[size];
   }
 
-  public static Constructor<?>[] getDcConstructors(final String path)
+  public static <T> Constructor<T>[] getDcConstructors(final Object object) {
+    final Class<T> clazz = getClazz(object);
+    return getConstructors(clazz);
+  }
+
+  public static <T> Constructor<T> getDcConstructors(final Object object, final int size) {
+    final Class<T> clazz = getClazz(object);
+    return getConstructors(clazz, size);
+  }
+
+  public static <T> Constructor<T>[] getDcConstructors(final String path)
       throws ClassNotFoundException {
-    return Arrays.stream(getClazz(path).getDeclaredConstructors())
-        .peek(constructor -> constructor.setAccessible(true))
-        .toArray(Constructor[]::new);
+    final Class<T> clazz = getClazz(path);
+    return getConstructors(clazz);
   }
 
-  public static Constructor<?> getDcConstructors(final String path, final int size)
+  public static <T> Constructor<T> getDcConstructors(final String path, final int size)
       throws ClassNotFoundException {
-    final Constructor<?> constructor = getClazz(path).getDeclaredConstructors()[size];
-    constructor.setAccessible(true);
-    return constructor;
+    final Class<T> clazz = getClazz(path);
+    return getConstructors(clazz, size);
   }
 
+  @SuppressWarnings("unchecked")
   public static <T> Constructor<T>[] getDcConstructors(final Class<T> clazz) {
     return Arrays.stream(clazz.getDeclaredConstructors())
         .peek(constructor -> constructor.setAccessible(true))
         .toArray(Constructor[]::new);
   }
 
+  @SuppressWarnings("unchecked")
   public static <T> Constructor<T> getDcConstructors(final Class<T> clazz, final int size) {
-    final Constructor<T> constructor = Arrays.stream(clazz.getDeclaredConstructors())
-        .toArray(Constructor[]::new)[size];
+    final Constructor<T> constructor = (Constructor<T>) clazz.getDeclaredConstructors()[size];
     constructor.setAccessible(true);
     return constructor;
   }
 
-  public static Method getMethod(final String path, final String methodName,
-      final Class<?>... parameterClass) throws ClassNotFoundException, NoSuchMethodException {
-    return getClazz(path).getMethod(methodName, parameterClass);
+  public static Method getMethod(final Object object, final String name,
+                                 final Class<?>... parameters) throws NoSuchMethodException {
+    final Class<?> clazz = getClazz(object);
+    return getMethod(clazz, name, parameters);
   }
 
-  public static Method getMethod(final Class<?> clazz, final String methodName,
-      final Class<?>... parameterClass) throws NoSuchMethodException {
-    return clazz.getMethod(methodName, parameterClass);
+  public static Method getMethod(final String path, final String name, final Class<?>... parameters)
+      throws ClassNotFoundException, NoSuchMethodException {
+    final Class<?> clazz = getClazz(path);
+    return getMethod(clazz, name, parameters);
   }
 
-  public static Method getDcMethod(final String path, final String methodName,
-      final Class<?>... parameterClass) throws ClassNotFoundException, NoSuchMethodException {
-    final Method method = getClazz(path).getDeclaredMethod(methodName, parameterClass);
+  public static Method getMethod(final Class<?> clazz, final String name,
+                                 final Class<?>... parameters) throws NoSuchMethodException {
+    return clazz.getMethod(name, parameters);
+  }
+
+  public static Method getDcMethod(final Object object, final String name,
+                                   final Class<?>... parameters) throws NoSuchMethodException {
+    final Class<?> clazz = getClazz(object);
+    return getDcMethod(clazz, name, parameters);
+  }
+
+  public static Method getDcMethod(final String path, final String name,
+                                   final Class<?>... parameters) throws ClassNotFoundException, NoSuchMethodException {
+    final Class<?> clazz = getClazz(path);
+    return getDcMethod(clazz, name, parameters);
+  }
+
+  public static Method getDcMethod(final Class<?> clazz, final String name,
+                                   final Class<?>... parameters) throws NoSuchMethodException {
+    final Method method = clazz.getDeclaredMethod(name, parameters);
     method.setAccessible(true);
     return method;
   }
 
-  public static Method getDcMethod(final Class<?> clazz, final String methodName,
-      final Class<?>... parameterClass) throws NoSuchMethodException {
-    final Method method = clazz.getDeclaredMethod(methodName, parameterClass);
-    method.setAccessible(true);
-    return method;
+  public static Method[] getMethods(final Object object) {
+    final Class<?> clazz = getClazz(object);
+    return getMethods(clazz);
+  }
+
+  public static Method getMethods(final Object object, final int size) {
+    final Class<?> clazz = getClazz(object);
+    return getMethods(clazz, size);
   }
 
   public static Method[] getMethods(final String path) throws ClassNotFoundException {
-    return getClazz(path).getMethods();
+    final Class<?> clazz = getClazz(path);
+    return getMethods(clazz);
   }
 
   public static Method getMethods(final String path, final int size) throws ClassNotFoundException {
-    return getClazz(path).getMethods()[size];
+    final Class<?> clazz = getClazz(path);
+    return getMethods(clazz, size);
   }
 
   public static Method[] getMethods(final Class<?> clazz) {
@@ -184,20 +251,28 @@ public final class Reflection {
   }
 
   public static Method getMethods(final Class<?> clazz, final int size) {
-    return clazz.getMethods()[size];
+    return getMethods(clazz)[size];
+  }
+
+  public static Method[] getDcMethods(final Object object) {
+    final Class<?> clazz = getClazz(object);
+    return getDcMethods(clazz);
+  }
+
+  public static Method getDcMethods(final Object object, final int size) {
+    final Class<?> clazz = getClazz(object);
+    return getDcMethods(clazz, size);
   }
 
   public static Method[] getDcMethods(final String path) throws ClassNotFoundException {
-    return Arrays.stream(getClazz(path).getDeclaredMethods())
-        .peek(method -> method.setAccessible(true))
-        .toArray(Method[]::new);
+    final Class<?> clazz = getClazz(path);
+    return getDcMethods(clazz);
   }
 
   public static Method getDcMethods(final String path, final int size)
       throws ClassNotFoundException {
-    final Method method = getClazz(path).getDeclaredMethods()[size];
-    method.setAccessible(true);
-    return method;
+    final Class<?> clazz = getClazz(path);
+    return getDcMethods(clazz, size);
   }
 
   public static Method[] getDcMethods(final Class<?> clazz) {
@@ -212,37 +287,59 @@ public final class Reflection {
     return method;
   }
 
-  public static Field getField(final String path, final String variableName)
-      throws ClassNotFoundException, NoSuchFieldException {
-    return getClazz(path).getField(variableName);
+  public static Field getField(final Object object, final String name) throws NoSuchFieldException {
+    final Class<?> clazz = getClazz(object);
+    return getField(clazz, name);
   }
 
-  public static Field getField(final Class<?> clazz, final String variableName)
+  public static Field getField(final String path, final String name)
+      throws ClassNotFoundException, NoSuchFieldException {
+    final Class<?> clazz = getClazz(path);
+    return getField(clazz, name);
+  }
+
+  public static Field getField(final Class<?> clazz, final String name)
       throws NoSuchFieldException {
-    return clazz.getField(variableName);
+    return clazz.getField(name);
   }
 
-  public static Field getDcField(final String path, final String variableName)
+  public static Field getDcField(final Object object, final String name)
+      throws NoSuchFieldException {
+    final Class<?> clazz = getClazz(object);
+    return getDcField(clazz, name);
+  }
+
+  public static Field getDcField(final String path, final String name)
       throws ClassNotFoundException, NoSuchFieldException {
-    final Field field = getClazz(path).getDeclaredField(variableName);
+    final Class<?> clazz = getClazz(path);
+    return getDcField(clazz, name);
+  }
+
+  public static Field getDcField(final Class<?> clazz, final String name)
+      throws NoSuchFieldException {
+    final Field field = clazz.getDeclaredField(name);
     field.setAccessible(true);
     return field;
   }
 
-  public static Field getDcField(final Class<?> clazz, final String variableName)
-      throws NoSuchFieldException {
-    final Field field = clazz.getDeclaredField(variableName);
-    field.setAccessible(true);
-    return field;
+  public static Field[] getFields(final Object object) {
+    final Class<?> clazz = getClazz(object);
+    return getFields(clazz);
+  }
+
+  public static Field getFields(final Object object, final int size) {
+    final Class<?> clazz = getClazz(object);
+    return getFields(clazz, size);
   }
 
   public static Field[] getFields(final String path) throws ClassNotFoundException {
-    return getClazz(path).getFields();
+    final Class<?> clazz = getClazz(path);
+    return getFields(clazz);
   }
 
-  public static Field getFields(final String path, final int size)
-      throws ClassNotFoundException {
-    return getClazz(path).getFields()[size];
+  public static Field getFields(final String path, final int size) throws ClassNotFoundException {
+    final Class<?> clazz = getClazz(path);
+    return getFields(clazz, size);
   }
 
   public static Field[] getFields(final Class<?> clazz) {
@@ -250,19 +347,27 @@ public final class Reflection {
   }
 
   public static Field getFields(final Class<?> clazz, final int size) {
-    return clazz.getFields()[size];
+    return getFields(clazz)[size];
+  }
+
+  public static Field[] getDcFields(final Object object) {
+    final Class<?> clazz = getClazz(object);
+    return getDcFields(clazz);
+  }
+
+  public static Field getDcFields(final Object object, final int size) {
+    final Class<?> clazz = getClazz(object);
+    return getDcFields(clazz, size);
   }
 
   public static Field[] getDcFields(final String path) throws ClassNotFoundException {
-    return Arrays.stream(getClazz(path).getDeclaredFields())
-        .peek(field -> field.setAccessible(true))
-        .toArray(Field[]::new);
+    final Class<?> clazz = getClazz(path);
+    return getDcFields(clazz);
   }
 
   public static Field getDcFields(final String path, final int size) throws ClassNotFoundException {
-    final Field field = getClazz(path).getDeclaredFields()[size];
-    field.setAccessible(true);
-    return field;
+    final Class<?> clazz = getClazz(path);
+    return getDcFields(clazz, size);
   }
 
   public static Field[] getDcFields(final Class<?> clazz) {
@@ -278,68 +383,89 @@ public final class Reflection {
   }
 
   public static <T extends Annotation> boolean containsAnnotation(final Class<?> clazz,
-      final Class<T> annotation) {
+                                                                  final Class<T> annotation) {
     return clazz.isAnnotationPresent(annotation);
   }
 
   public static <T extends Annotation> boolean containsAnnotation(final Constructor<?> constructor,
-      final Class<T> annotation) {
+                                                                  final Class<T> annotation) {
     return constructor.isAnnotationPresent(annotation);
   }
 
   public static <T extends Annotation> boolean containsAnnotation(final Field field,
-      final Class<T> annotation) {
+                                                                  final Class<T> annotation) {
     return field.isAnnotationPresent(annotation);
   }
 
   public static <T extends Annotation> T getAnnotation(final Class<?> clazz,
-      final Class<T> annotation) {
+                                                       final Class<T> annotation) {
     return clazz.getAnnotation(annotation);
   }
 
   public static <T extends Annotation> T getAnnotation(final Constructor<?> constructor,
-      final Class<T> annotation) {
+                                                       final Class<T> annotation) {
     return constructor.getAnnotation(annotation);
   }
 
   public static <T extends Annotation> T getAnnotation(final Field field,
-      final Class<T> annotation) {
+                                                       final Class<T> annotation) {
     return field.getAnnotation(annotation);
   }
 
-  @SuppressWarnings("unchecked")
-  public static <T> T instance(final Constructor<?> constructor)
+  public static <T> T instance(final Object object)
+      throws NoSuchMethodException, InvocationTargetException, IllegalAccessException,
+      InstantiationException {
+    final Constructor<T> constructor = getConstructor(object);
+    return instance(constructor);
+  }
+
+  public static <T> T instance(final Class<T> clazz)
+      throws NoSuchMethodException, InvocationTargetException, IllegalAccessException,
+      InstantiationException {
+    final Constructor<T> constructor = getConstructor(clazz);
+    return instance(constructor);
+  }
+
+  public static <T> T instance(final Constructor<T> constructor)
       throws IllegalAccessException, InvocationTargetException, InstantiationException {
-    return (T) constructor.newInstance();
+    return constructor.newInstance();
   }
 
-  @SuppressWarnings("unchecked")
-  public static <T> T instance(final Constructor<?> constructor, final Object... args)
+  public static <T> T instance(final Constructor<T> constructor, final Object... arguments)
       throws IllegalAccessException, InvocationTargetException, InstantiationException {
-    return (T) constructor.newInstance(args);
+    return constructor.newInstance(arguments);
   }
 
   @SuppressWarnings("unchecked")
-  public static <T> T invoke(final Method method, final Object instance, final Object... args)
+  public static <T> T invoke(final Method method, final Object instance, final Object... arguments)
       throws InvocationTargetException, IllegalAccessException {
-    return (T) method.invoke(instance, args);
+    return (T) method.invoke(instance, arguments);
   }
 
-  @SuppressWarnings("unchecked")
-  public static <T> T invokeStatic(final Method method, final Object... args)
+  public static <T> T invokeStatic(final Method method, final Object... arguments)
       throws InvocationTargetException, IllegalAccessException {
-    return (T) method.invoke(null, args);
+    return invoke(method, null, arguments);
   }
 
   @SuppressWarnings("unchecked")
-  public static <T> T get(final Field field, final Object instance)
-      throws IllegalAccessException {
+  public static <T> T get(final Field field, final Object instance) throws IllegalAccessException {
     return (T) field.get(instance);
   }
 
-  @SuppressWarnings("unchecked")
   public static <T> T getStatic(final Field field) throws IllegalAccessException {
-    return (T) field.get(null);
+    return get(field, null);
+  }
+
+  public static void setField(final Object object, final Class<?> fieldType, final Object value) throws ReflectiveOperationException {
+    final Field[] fields = Arrays.stream(object.getClass().getDeclaredFields())
+        .filter((field) -> !Modifier.isStatic(field.getModifiers()))
+        .toArray(Field[]::new);
+
+    for (Field field : fields) {
+      if (field.getType() == fieldType) {
+        field.set(object, value);
+      }
+    }
   }
 
 }
