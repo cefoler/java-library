@@ -19,9 +19,7 @@ import org.bukkit.entity.Player;
 public final class ActionBar {
 
   private static final Constructor<?> PACKET_CHAT_CONSTRUCTOR;
-
   private static final Method A;
-
   private static final Object MESSAGE_TYPE;
 
   static {

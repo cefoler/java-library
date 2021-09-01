@@ -3,7 +3,10 @@ package com.celeste.library.spigot.util.serializer;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.Base64;
+import java.util.List;
+
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import org.bukkit.inventory.ItemStack;
@@ -21,19 +24,24 @@ public final class ItemSerializer {
    * @throws IOException Throws if it wasn't able to put the items into byte
    */
   public static String serialize(final ItemStack... items) throws IOException {
+    return serialize(Arrays.asList(items));
+  }
+
+  public static String serialize(final List<ItemStack> list) throws IOException {
     try (
         final ByteArrayOutputStream arrayOutput = new ByteArrayOutputStream();
         final BukkitObjectOutputStream objectOutput = new BukkitObjectOutputStream(arrayOutput)
     ) {
-      objectOutput.writeInt(items.length);
+      objectOutput.writeInt(list.size());
 
-      for (final ItemStack item : items) {
+      for (ItemStack item : list) {
         objectOutput.writeObject(item);
       }
 
       return Base64.getEncoder().encodeToString(arrayOutput.toByteArray());
     }
   }
+
 
   /**
    * Deserializes the items into ItemStack again

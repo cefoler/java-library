@@ -1,6 +1,7 @@
 package com.celeste.library.spigot.util.item;
 
 import com.celeste.library.core.util.Reflection;
+import com.celeste.library.core.util.Wrapper;
 import com.celeste.library.spigot.error.ServerStartError;
 import com.celeste.library.spigot.util.ReflectionNms;
 import com.celeste.library.spigot.util.item.type.EnchantmentType;
@@ -80,15 +81,18 @@ public final class ItemBuilder implements Cloneable {
       SET_TAG = Reflection.getMethod(itemStackClazz, "setTag", compoundClazz);
       GET_ITEM_META = Reflection.getMethod(craftItemStackClazz, "getItemMeta", itemStackClazz);
 
-      // MODEL DATA
-      final Class<?> metaItemClazz = ReflectionNms.getObc("inventory.CraftMetaItem");
-      SET_CUSTOM_MODEL_DATA = ReflectionNms.isEqualsOrMoreRecent(13)
-          ? Reflection.getDcMethod(metaItemClazz, "setCustomModelData")
-          : null;
+      SET_CUSTOM_MODEL_DATA = null;
+      HAS_CUSTOM_MODEL_DATA = null;
 
-      HAS_CUSTOM_MODEL_DATA = ReflectionNms.isEqualsOrMoreRecent(13)
-          ? Reflection.getDcMethod(metaItemClazz, "hasCustomModelData")
-          : null;
+//      // MODEL DATA
+//      final Class<?> metaItemClazz = ReflectionNms.getObc("inventory.CraftMetaItem");
+//      SET_CUSTOM_MODEL_DATA = ReflectionNms.isEqualsOrMoreRecent(13)
+//          ? Reflection.getDcMethod(metaItemClazz, "setCustomModelData")
+//          : null;
+//
+//      HAS_CUSTOM_MODEL_DATA = ReflectionNms.isEqualsOrMoreRecent(13)
+//          ? Reflection.getDcMethod(metaItemClazz, "hasCustomModelData")
+//          : null;
 
       // UNBREAKABLE
       SET_BOOLEAN = Reflection.getMethod(compoundClazz, "setBoolean", String.class, boolean.class);
@@ -162,12 +166,20 @@ public final class ItemBuilder implements Cloneable {
 
   @SneakyThrows
   public ItemBuilder modelData(final int data) {
+    if (SET_CUSTOM_MODEL_DATA == null) {
+      return this;
+    }
+
     SET_CUSTOM_MODEL_DATA.invoke(meta, data);
     return this;
   }
 
   @SneakyThrows
   public boolean hasModelData(final int data) {
+    if (HAS_CUSTOM_MODEL_DATA == null) {
+      return false;
+    }
+
     return (boolean) HAS_CUSTOM_MODEL_DATA.invoke(meta, data);
   }
 
@@ -295,8 +307,7 @@ public final class ItemBuilder implements Cloneable {
 
     Arrays.stream(enchantments).forEach(enchantment -> {
       final Enchantment enchant = EnchantmentType.getRealEnchantment(enchantment.getKey());
-      final int level = enchantment.getValue();
-      itemStack.addUnsafeEnchantment(enchant, level);
+      itemStack.addUnsafeEnchantment(enchant, enchantment.getValue());
     });
 
     return this;
@@ -410,7 +421,7 @@ public final class ItemBuilder implements Cloneable {
 
   @SneakyThrows
   @SuppressWarnings("deprecation")
-  public ItemBuilder skullOwner(final String owner) {
+  public ItemBuilder skull(final String owner) {
     if (itemStack.getType() != SKULL) {
       return this;
     }
@@ -438,9 +449,11 @@ public final class ItemBuilder implements Cloneable {
   }
 
   public ItemBuilder armor(final Color color) {
-    final LeatherArmorMeta armorMeta = (LeatherArmorMeta) meta;
+    if (!Wrapper.isObject(meta, LeatherArmorMeta.class)) {
+      return this;
+    }
 
-    armorMeta.setColor(color);
+    ((LeatherArmorMeta) meta).setColor(color);
     return this;
   }
 
@@ -472,6 +485,7 @@ public final class ItemBuilder implements Cloneable {
       potionMeta.addCustomEffect(effect, true);
 
       final Potion potion = Potion.fromItemStack(itemStack);
+
       potion.setSplash(potion.isSplash());
       potion.apply(itemStack);
     }
@@ -527,8 +541,7 @@ public final class ItemBuilder implements Cloneable {
       return this;
     }
 
-    final PotionMeta potionMeta = (PotionMeta) meta;
-    potionMeta.clearCustomEffects();
+    ((PotionMeta) meta).clearCustomEffects();
 
     final Potion potion = Potion.fromItemStack(itemStack);
 

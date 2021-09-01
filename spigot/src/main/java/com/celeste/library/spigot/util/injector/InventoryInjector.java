@@ -64,15 +64,16 @@ public final class InventoryInjector {
 
     for (ItemStack item : items) {
       final int newCount = count.get();
-      if (newCount + item.getAmount() > amount) {
-        final int amountLeft = newCount - amount;
-        item.setAmount(amountLeft);
+      if (newCount + item.getAmount() < amount) {
+        count.set(newCount + item.getAmount());
 
         player.getInventory().remove(item);
         return;
       }
 
-      count.set(newCount + item.getAmount());
+      final int amountLeft = newCount - amount;
+      item.setAmount(amountLeft);
+
       player.getInventory().remove(item);
     }
   }
