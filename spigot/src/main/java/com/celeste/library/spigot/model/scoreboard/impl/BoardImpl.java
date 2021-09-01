@@ -1,7 +1,8 @@
-package com.celeste.library.spigot.model.scoreboard;
+package com.celeste.library.spigot.model.scoreboard.impl;
 
 import java.util.*;
 
+import com.celeste.library.spigot.model.scoreboard.Board;
 import lombok.Getter;
 import lombok.Setter;
 import org.bukkit.Bukkit;
@@ -14,7 +15,7 @@ import org.bukkit.scoreboard.Team;
 
 @Getter
 @Setter
-public class Score implements Board {
+public class BoardImpl implements Board {
 
   private String title;
 
@@ -24,39 +25,39 @@ public class Score implements Board {
   private final DisplaySlot slot;
   private List<String> lines;
 
-  public Score(final Player player) {
+  public BoardImpl(final Player player) {
     this("", player);
   }
 
-  public Score(final String title, final Player player) {
+  public BoardImpl(final String title, final Player player) {
     this(title, Bukkit.getScoreboardManager().getNewScoreboard(), player);
   }
 
-  public Score(final String title, final Scoreboard scoreboard, final Player player) {
+  public BoardImpl(final String title, final Scoreboard scoreboard, final Player player) {
     this(title, scoreboard, scoreboard.registerNewObjective("score", "dummy"), player);
   }
 
-  public Score(final String title, final DisplaySlot slot, final Player player) {
+  public BoardImpl(final String title, final DisplaySlot slot, final Player player) {
     this(title, Bukkit.getScoreboardManager().getNewScoreboard(), slot, player);
   }
 
-  public Score(final String title, final Scoreboard scoreboard,
-               final DisplaySlot slot, final Player player) {
+  public BoardImpl(final String title, final Scoreboard scoreboard,
+                   final DisplaySlot slot, final Player player) {
     this(title, scoreboard, scoreboard.registerNewObjective("score", "dummy"), slot, player);
   }
 
-  public Score(final String title, final Scoreboard scoreboard,
-               final Objective objective, final Player player) {
+  public BoardImpl(final String title, final Scoreboard scoreboard,
+                   final Objective objective, final Player player) {
     this(title, scoreboard, objective, DisplaySlot.SIDEBAR, player);
   }
 
-  public Score(final String title, final Scoreboard scoreboard,
-               final Objective objective, final DisplaySlot slot, final Player player) {
+  public BoardImpl(final String title, final Scoreboard scoreboard,
+                   final Objective objective, final DisplaySlot slot, final Player player) {
     this(title, scoreboard, objective, slot, new ArrayList<>(), player);
   }
 
-  public Score(final String title, final Scoreboard scoreboard, final Objective objective,
-               final DisplaySlot slot, final List<String> lines, final Player player) {
+  public BoardImpl(final String title, final Scoreboard scoreboard, final Objective objective,
+                   final DisplaySlot slot, final List<String> lines, final Player player) {
     this.title = title;
     this.scoreboard = scoreboard;
     this.objective = objective;

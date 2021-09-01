@@ -1,5 +1,6 @@
-package com.celeste.library.spigot.model.scoreboard;
+package com.celeste.library.spigot.model.scoreboard.impl;
 
+import com.celeste.library.spigot.model.scoreboard.Board;
 import com.celeste.library.spigot.util.ReflectionNms;
 import lombok.Getter;
 import lombok.SneakyThrows;
@@ -17,11 +18,11 @@ import java.util.*;
 import java.util.concurrent.ThreadLocalRandom;
 
 import static com.celeste.library.core.util.Reflection.*;
-import static com.celeste.library.spigot.model.scoreboard.FastScore.ObjectiveMode.*;
-import static com.celeste.library.spigot.model.scoreboard.FastScore.VersionType.*;
+import static com.celeste.library.spigot.model.scoreboard.impl.FastBoardImpl.ObjectiveMode.*;
+import static com.celeste.library.spigot.model.scoreboard.impl.FastBoardImpl.VersionType.*;
 
 @Getter
-public class FastScore implements Board {
+public class FastBoardImpl implements Board {
 
   private static final Map<Class<?>, Field[]> PACKETS;
   private static final String[] COLOR_CODES;
@@ -145,7 +146,7 @@ public class FastScore implements Board {
     }
   }
 
-  public FastScore(final Player player) {
+  public FastBoardImpl(final Player player) {
     this.title = ChatColor.RESET.toString();
     this.deleted = false;
     this.player = player;

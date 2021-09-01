@@ -2,13 +2,13 @@ subprojects {
     apply plugin: 'java'
 
     group 'com.celeste'
-    version '3.2.9-SNAPSHOT'
+    version '3.3.2-SNAPSHOT'
 
     sourceCompatibility = 1.8
     targetCompatibility = 1.8
 
     def lombok = "1.18.20"
-    def annotations = "21.0.1"
+    def annotations = "22.0.0"
 
     repositories {
         mavenLocal()
@@ -40,10 +40,10 @@ subprojects {
     }
 
     tasks.withType(JavaCompile) {
-        options.encoding = 'UTF-8'
+        options.encoding = "UTF-8"
     }
 
     tasks.withType(Jar) {
-        destinationDirectory.set(file("$rootDir/target/"))
+        from "LICENSE.md"
     }
 }

@@ -19,7 +19,8 @@ import org.bukkit.plugin.messaging.PluginMessageListener;
  * @param <T> AbstractBukkitPlugin
  */
 @Getter
-public abstract class AbstractBungeeConnection<T extends Plugin> implements PluginMessageListener {
+public abstract class AbstractBungeeConnection<T extends Plugin>
+    implements PluginMessageListener {
 
   private final T plugin;
   private final Messenger messenger;
