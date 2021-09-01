@@ -5,7 +5,6 @@ import lombok.Getter;
 import lombok.SneakyThrows;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
-import org.jetbrains.annotations.NotNull;
 
 import java.lang.invoke.MethodHandle;
 import java.lang.invoke.MethodHandles;
@@ -22,7 +21,7 @@ import static com.celeste.library.spigot.model.scoreboard.FastScore.ObjectiveMod
 import static com.celeste.library.spigot.model.scoreboard.FastScore.VersionType.*;
 
 @Getter
-public class FastScore {
+public class FastScore implements Board {
 
   private static final Map<Class<?>, Field[]> PACKETS;
   private static final String[] COLOR_CODES;
@@ -158,7 +157,7 @@ public class FastScore {
     sendDisplayObjectivePacket();
   }
 
-  public void updateTitle(final String title) {
+  public void setTitle(final String title) {
     if (getTitle().equals(title)) {
       return;
     }
@@ -171,12 +170,12 @@ public class FastScore {
     sendObjectivePacket(UPDATE);
   }
 
-  public String getLine(final int line) {
+  public String get(final int line) {
     checkLineNumber(line, true, false);
     return lines.get(line);
   }
 
-  public synchronized void updateLine(final int line, final String text) {
+  public synchronized void update(final int line, final String text) {
     checkLineNumber(line, false, true);
 
     if (line < size()) {
@@ -194,10 +193,10 @@ public class FastScore {
     }
 
     newLines.add(text);
-    updateLines(newLines);
+    set(newLines);
   }
 
-  public synchronized void removeLine(final int line) {
+  public synchronized void remove(final int line) {
     checkLineNumber(line, false, false);
     if (line > this.size()) {
       return;
@@ -206,14 +205,14 @@ public class FastScore {
     final List<String> newLines = new ArrayList<>(lines);
     newLines.remove(line);
     
-    updateLines(newLines);
+    set(newLines);
   }
 
-  public void updateLines(final String... lines) {
-    updateLines(Arrays.asList(lines));
+  public void set(final String... lines) {
+    set(Arrays.asList(lines));
   }
 
-  public synchronized void updateLines(@NotNull final Collection<String> newLines) {
+  public synchronized void set(final Collection<String> newLines) {
     checkLineNumber(newLines.size(), false, true);
     if (!V1_13.isHigherOrEqual()) {
       int lineCount = 0;

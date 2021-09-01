@@ -1,8 +1,7 @@
 package com.celeste.library.spigot.model.scoreboard;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
+
 import lombok.Getter;
 import lombok.Setter;
 import org.bukkit.Bukkit;
@@ -15,10 +14,9 @@ import org.bukkit.scoreboard.Team;
 
 @Getter
 @Setter
-// TODO: Add support to 1.13 above via Reflection
-public class Score {
+public class Score implements Board {
 
-  private final String title;
+  private String title;
 
   private Scoreboard scoreboard;
   private Objective objective;
@@ -26,35 +24,39 @@ public class Score {
   private final DisplaySlot slot;
   private List<String> lines;
 
-  public Score(final String title) {
-    this(title, Bukkit.getScoreboardManager().getNewScoreboard());
+  public Score(final Player player) {
+    this("", player);
   }
 
-  public Score(final String title, final Scoreboard scoreboard) {
-    this(title, scoreboard, scoreboard.registerNewObjective("score", "dummy"));
+  public Score(final String title, final Player player) {
+    this(title, Bukkit.getScoreboardManager().getNewScoreboard(), player);
   }
 
-  public Score(final String title, final DisplaySlot slot) {
-    this(title, Bukkit.getScoreboardManager().getNewScoreboard(), slot);
+  public Score(final String title, final Scoreboard scoreboard, final Player player) {
+    this(title, scoreboard, scoreboard.registerNewObjective("score", "dummy"), player);
   }
 
-  public Score(final String title, final Scoreboard scoreboard,
-      final DisplaySlot slot) {
-    this(title, scoreboard, scoreboard.registerNewObjective("score", "dummy"), slot);
-  }
-
-  public Score(final String title, final Scoreboard scoreboard,
-      final Objective objective) {
-    this(title, scoreboard, objective, DisplaySlot.SIDEBAR);
+  public Score(final String title, final DisplaySlot slot, final Player player) {
+    this(title, Bukkit.getScoreboardManager().getNewScoreboard(), slot, player);
   }
 
   public Score(final String title, final Scoreboard scoreboard,
-      final Objective objective, final DisplaySlot slot) {
-    this(title, scoreboard, objective, slot, new ArrayList<>());
+               final DisplaySlot slot, final Player player) {
+    this(title, scoreboard, scoreboard.registerNewObjective("score", "dummy"), slot, player);
+  }
+
+  public Score(final String title, final Scoreboard scoreboard,
+               final Objective objective, final Player player) {
+    this(title, scoreboard, objective, DisplaySlot.SIDEBAR, player);
+  }
+
+  public Score(final String title, final Scoreboard scoreboard,
+               final Objective objective, final DisplaySlot slot, final Player player) {
+    this(title, scoreboard, objective, slot, new ArrayList<>(), player);
   }
 
   public Score(final String title, final Scoreboard scoreboard, final Objective objective,
-      final DisplaySlot slot, final List<String> lines) {
+               final DisplaySlot slot, final List<String> lines, final Player player) {
     this.title = title;
     this.scoreboard = scoreboard;
     this.objective = objective;
@@ -63,19 +65,17 @@ public class Score {
 
     objective.setDisplaySlot(slot);
     objective.setDisplayName(title);
-  }
 
-  public void send(final Player player) {
     player.setScoreboard(scoreboard);
   }
 
-  public void clear() {
+  public void delete() {
     scoreboard.getEntries().forEach(scoreboard::resetScores);
   }
 
-  private void setLine(final Score score, final int line, final String text) {
-    final Objective objective = score.getObjective();
-    final Team team = score.getScoreboard().registerNewTeam(String.valueOf(UUID.randomUUID())
+  public void set(final int line, final String text) {
+    final Objective objective = getObjective();
+    final Team team = getScoreboard().registerNewTeam(String.valueOf(UUID.randomUUID())
         .replace("-", "")
         .substring(0, 16));
 
@@ -108,51 +108,50 @@ public class Score {
     objective.getScore(entry).setScore(line);
   }
 
-  private void setLine(final Score score, final int line, final String prefix,
-      final String suffix) {
-    final Objective objective = score.getObjective();
-    final Team team = score.getScoreboard().registerNewTeam(String.valueOf(line));
+  @Override
+  public void set(final String... texts) {
+    final List<String> list = Arrays.asList(texts);
+    Collections.reverse(list);
 
-    if (suffix.length() <= 16) {
-      team.addEntry(prefix);
-      team.setSuffix(suffix);
-
-      objective.getScore(prefix).setScore(line);
-      return;
+    for (int i = 0; i < list.size(); i++) {
+      set(i, list.get(i));
     }
 
-    final String newPrefix = suffix.substring(0, 16);
-    final String newSuffix = ChatColor.getLastColors(newPrefix) + suffix.substring(16);
-
-    team.addEntry(prefix);
-    team.setPrefix(newPrefix);
-    team.setSuffix(newSuffix);
-
-    objective.getScore(prefix).setScore(line);
+    this.lines = list;
   }
 
-  public void updateLine(final Score score, final int line, final String prefix,
-      final String suffix) {
-    final Objective objective = score.getObjective();
-    final Team team = score.getScoreboard().getTeam(String.valueOf(line));
+  @Override
+  public void set(final Collection<String> texts) {
+    final List<String> list = new ArrayList<>(texts);
+    Collections.reverse(list);
 
-    team.setPrefix("");
-    team.setSuffix("");
-
-    if (suffix.length() <= 16) {
-      team.setSuffix(suffix);
-
-      objective.getScore(prefix).setScore(line);
-      return;
+    for (int i = 0; i < list.size(); i++) {
+      set(i, list.get(i));
     }
 
-    final String newPrefix = suffix.substring(0, 16);
-    final String newSuffix = ChatColor.getLastColors(newPrefix) + suffix.substring(16);
+    this.lines = list;
+  }
 
-    team.setPrefix(newPrefix);
-    team.setSuffix(newSuffix);
+  @Override
+  public void remove(final int line) {
+    lines.remove(line);
+    set(lines);
+  }
 
-    objective.getScore(prefix).setScore(line);
+  @Override
+  public String get(final int line) {
+    return lines.get(line);
+  }
+
+
+  @Override
+  public int size() {
+    return lines.size();
+  }
+
+  @Override
+  public void update(final int line, final String text) {
+
   }
 
 }
