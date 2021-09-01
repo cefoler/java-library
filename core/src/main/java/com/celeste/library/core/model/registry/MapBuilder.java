@@ -20,7 +20,7 @@ public final class MapBuilder {
   {
     mapType = MapType.MAP;
     keyType = KeyType.STANDARD;
-    initialCapacity = 4 << 16;
+    initialCapacity = 4;
   }
 
   public static <T, U> Registry<T, U> create(@NotNull final MapType mapType, @NotNull final KeyType keyType) {
