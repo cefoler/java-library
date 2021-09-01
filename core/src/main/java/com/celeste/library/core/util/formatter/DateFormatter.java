@@ -6,9 +6,10 @@ import com.celeste.library.core.util.pattern.RegexPattern;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.TimeZone;
-import java.util.concurrent.TimeUnit;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
+
+import static java.util.concurrent.TimeUnit.*;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public final class DateFormatter {
@@ -64,13 +65,13 @@ public final class DateFormatter {
   public static String format(final long time, final TimeLanguage language) {
     final long differenceTime = System.currentTimeMillis() - time;
 
-    final long days = TimeUnit.MILLISECONDS.toDays(differenceTime);
-    final long hours = TimeUnit.MILLISECONDS.toHours(differenceTime)
-        - TimeUnit.MILLISECONDS.toDays(differenceTime) * 24;
-    final long minutes = TimeUnit.MILLISECONDS.toMinutes(differenceTime)
-        - TimeUnit.MILLISECONDS.toHours(differenceTime) * 60;
-    final long seconds = TimeUnit.MILLISECONDS.toSeconds(differenceTime)
-        - TimeUnit.MILLISECONDS.toMinutes(differenceTime) * 60;
+    final long days = MILLISECONDS.toDays(differenceTime);
+    final long hours = MILLISECONDS.toHours(differenceTime)
+        - MILLISECONDS.toDays(differenceTime) * 24;
+    final long minutes = MILLISECONDS.toMinutes(differenceTime)
+        - MILLISECONDS.toHours(differenceTime) * 60;
+    final long seconds = MILLISECONDS.toSeconds(differenceTime)
+        - MILLISECONDS.toMinutes(differenceTime) * 60;
 
     final StringBuilder builder = new StringBuilder();
 
@@ -99,6 +100,34 @@ public final class DateFormatter {
     }
 
     return builder.toString();
+  }
+
+  /**
+   * Formats the long time into string formatted to 00:00:00
+   * like a clock, if the hours equals to 0 and withHours is false,
+   * the clock is only displayed as 00:00
+   *
+   * @param time long time
+   * @return String formatted
+   */
+  public static String format(final long time, final boolean withHours) {
+    final long seconds = MILLISECONDS.toSeconds(time);
+    final long minutes = MILLISECONDS.toMinutes(seconds);
+    final long hours = MILLISECONDS.toHours(minutes);
+
+    final long newSeconds = seconds - minutes * 60;
+    final String secondsString = newSeconds > 9 ? String.valueOf(newSeconds) : "0" + newSeconds;
+
+    if (hours == 0 && !withHours) {
+      final String minutesString = minutes > 9 ? String.valueOf(minutes) : "0" + minutes;
+      return minutesString + ":" + secondsString;
+    }
+
+    final long newMinutes = minutes - hours * 60;
+    final String minutesString = newMinutes > 9 ? String.valueOf(newMinutes) : "0" + newMinutes;
+
+    final String hoursString = hours > 9 ? String.valueOf(hours) : "0" + hours;
+    return hoursString + ":" + minutesString + ":" + secondsString;
   }
 
   public static String format(final long time) {
