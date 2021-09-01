@@ -27,26 +27,32 @@ public abstract class AbstractBungeeConnection<T extends Plugin>
 
   private boolean connected;
 
+  private static final String CHANNEL;
+
+  static {
+    CHANNEL = "BungeeCord";
+  }
+
   public AbstractBungeeConnection(final T plugin) {
     this.plugin = plugin;
     this.messenger = plugin.getServer().getMessenger();
     this.connected = false;
 
-    load();
+    register();
   }
 
-  public void load() {
-    messenger.registerIncomingPluginChannel(plugin, "BungeeCord", this);
-    messenger.registerOutgoingPluginChannel(plugin, "BungeeCord");
+  public void register() {
+    messenger.registerIncomingPluginChannel(plugin, CHANNEL, this);
+    messenger.registerOutgoingPluginChannel(plugin, CHANNEL);
 
-    connected = true;
+    this.connected = true;
   }
 
-  public void unload() {
-    messenger.unregisterIncomingPluginChannel(plugin, "BungeeCord", this);
-    messenger.unregisterOutgoingPluginChannel(plugin, "BungeeCord");
+  public void unregister() {
+    messenger.unregisterIncomingPluginChannel(plugin, CHANNEL, this);
+    messenger.unregisterOutgoingPluginChannel(plugin, CHANNEL);
 
-    connected = false;
+    this.connected = false;
   }
 
   /**
@@ -65,7 +71,7 @@ public abstract class AbstractBungeeConnection<T extends Plugin>
       dateOutput.writeUTF("Connect");
       dateOutput.writeUTF(server);
 
-      player.sendPluginMessage(plugin, "BungeeCord", byteOutput.toByteArray());
+      player.sendPluginMessage(plugin, CHANNEL, byteOutput.toByteArray());
     } catch (IOException exception) {
       throw new UnsupportedOperationException("Unable to connect server: " + server
           + " through Bungeecord", exception);

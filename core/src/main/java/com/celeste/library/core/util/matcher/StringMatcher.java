@@ -2,10 +2,15 @@ package com.celeste.library.core.util.matcher;
 
 import com.celeste.library.core.util.builder.RegexBuilder;
 import com.celeste.library.core.util.pattern.RegexPattern;
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import static com.celeste.library.core.util.pattern.RegexPattern.*;
+
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
 public final class StringMatcher {
 
   public static boolean matches(final String str, final RegexPattern pattern) {
@@ -33,26 +38,26 @@ public final class StringMatcher {
   }
 
   public boolean containsLetters(final String str) {
-    return Pattern.matches(str, RegexPattern.LETTERS.getPattern());
+    return Pattern.matches(str, LETTERS.getPattern());
   }
 
   public boolean containsLetters(final String str, final int amount) {
     return Pattern.matches(RegexBuilder.builder()
-        .append(RegexPattern.LETTERS)
+        .append(LETTERS)
         .amount(amount)
         .buildAsString(), str);
   }
 
   public boolean containsNumbers(final String str) {
-    return Pattern.matches(RegexPattern.NUMBERS.getPattern(), str);
+    return Pattern.matches(NUMBERS.getPattern(), str);
   }
 
   public boolean containsSpecialLetters(final String str) {
-    return Pattern.matches(RegexPattern.SPECIAL_LETTERS.getPattern(), str);
+    return Pattern.matches(SPECIAL_LETTERS.getPattern(), str);
   }
 
   public boolean isHexaDecimal(final String str) {
-    return Pattern.matches(RegexPattern.HEXADECIMAL.getPattern(), str);
+    return Pattern.matches(HEXADECIMAL.getPattern(), str);
   }
 
 }

@@ -1,6 +1,7 @@
 package com.celeste.library.spigot.view.event;
 
 import java.util.function.Consumer;
+
 import lombok.AllArgsConstructor;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
@@ -15,7 +16,6 @@ public final class EventListener<T extends Event> implements Listener, EventExec
   @Override
   public void execute(final Listener listener, final Event event) {
     final Class<T> clazz = builder.getEvent();
-
     if (!clazz.isInstance(event)) {
       return;
     }
@@ -30,7 +30,7 @@ public final class EventListener<T extends Event> implements Listener, EventExec
       action.accept(newEvent);
     }
 
-    if (!builder.isExpires()) {
+    if (!builder.isExpired()) {
       return;
     }
 
@@ -43,9 +43,6 @@ public final class EventListener<T extends Event> implements Listener, EventExec
     builder.setExecutions(executions - 1);
   }
 
-  /**
-   * Unregisters the event
-   */
   public void unregister() {
     HandlerList.getHandlerLists().forEach(handler -> handler.unregister(this));
   }

@@ -27,7 +27,7 @@ public final class EventWaiter<T extends Event> {
 
   @Setter
   private int executions;
-  private boolean expires;
+  private boolean expired;
 
   private EventPriority priority;
 
@@ -36,15 +36,14 @@ public final class EventWaiter<T extends Event> {
   public EventWaiter() {
     try {
       final TypeToken<T> token = new TypeToken<T>(getClass()) {};
-      final Type type = token.getType();
 
-      this.event = (Class<T>) Class.forName(type.getTypeName());
+      this.event = (Class<T>) Class.forName(token.getType().getTypeName());
       this.cancelled = true;
 
       this.filter = Objects::nonNull;
 
       this.executions = 0;
-      this.expires = false;
+      this.expired = false;
 
       this.priority = EventPriority.NORMAL;
     } catch (Exception exception) {
@@ -71,7 +70,7 @@ public final class EventWaiter<T extends Event> {
    */
   public EventWaiter<T> expireAfter(final int executions) {
     this.executions = executions;
-    this.expires = true;
+    this.expired = true;
     return this;
   }
 

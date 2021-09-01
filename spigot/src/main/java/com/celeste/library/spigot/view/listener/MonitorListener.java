@@ -10,8 +10,6 @@ import org.bukkit.event.player.PlayerKickEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.plugin.Plugin;
 
-import java.util.UUID;
-
 import static com.celeste.library.spigot.util.monitor.ChatMonitor.*;
 
 public final class MonitorListener implements Listener {
@@ -31,7 +29,7 @@ public final class MonitorListener implements Listener {
 
   @EventHandler(priority = EventPriority.LOWEST)
   public void onAsyncPlayerChat(final AsyncPlayerChatEvent event) {
-    final ChatMonitor chatMonitor = ChatMonitor.MAP.remove(event.getPlayer().getUniqueId());
+    final ChatMonitor chatMonitor = MAP.remove(event.getPlayer().getUniqueId());
     if (chatMonitor == null) {
       return;
     }
@@ -39,7 +37,7 @@ public final class MonitorListener implements Listener {
     event.setCancelled(true);
 
     final String message = event.getMessage();
-    if (message.equalsIgnoreCase("cancelar") || message.equalsIgnoreCase("cancel")) {
+    if (message.equalsIgnoreCase("cancel") || message.equalsIgnoreCase("cancelar")) {
       chatMonitor.getCancel().accept(null);
       return;
     }

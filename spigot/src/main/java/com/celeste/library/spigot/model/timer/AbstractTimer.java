@@ -28,24 +28,33 @@ public abstract class AbstractTimer implements Timer {
     start(20, 20);
   }
 
+  public void start(final long delay, final long period, final TimeUnit unit) {
+    final long delayInSeconds = unit.convert(delay, TimeUnit.SECONDS) * 20;
+    final long periodInSeconds = unit.convert(period, TimeUnit.SECONDS) * 20;
+
+    start(delayInSeconds, periodInSeconds);
+  }
+
   public void start(final long delay, final long period) {
-    CANCELLED = false;
     TASK = Bukkit.getScheduler().runTaskTimer(plugin, this::run, delay, period);
+    CANCELLED = false;
   }
 
   public void startAsync() {
-    getScheduled().scheduleWithFixedDelay(this::run, 0, 1, TimeUnit.SECONDS);
+    startAsync(0, 1, TimeUnit.SECONDS);
   }
 
   public void startAsync(final long delay, final long period, final TimeUnit unit) {
     getScheduled().scheduleWithFixedDelay(this::run, delay, period, unit);
   }
 
-  public static void end() {
-    if (TASK != null) {
-      CANCELLED = true;
-      TASK.cancel();
+  public static void stop() {
+    if (TASK == null) {
+      return;
     }
+
+    CANCELLED = true;
+    TASK.cancel();
   }
 
   public static boolean isCancelled() {
