@@ -8,56 +8,56 @@ import lombok.AllArgsConstructor;
 @AllArgsConstructor
 public final class StringBuilder {
 
-  private String str;
+  private String value;
   private KeyType keyType;
 
-  public StringBuilder(final String str) {
-    this.str = str;
+  public StringBuilder(final String string) {
+    this.value = string;
     this.keyType = KeyType.STANDARD;
   }
 
   public StringBuilder append(final String arg) {
-    this.str = str + arg;
+    this.value = value + arg;
     return this;
   }
 
   public StringBuilder append(final String[] args, final String format) {
-    this.str = str + StringFormatter.join(args, format);
+    this.value = this.value + StringFormatter.join(args, format);
     return this;
   }
 
   public StringBuilder append(final String format, final String... args) {
-    this.str = str + StringFormatter.join(args, format);
+    this.value = this.value + StringFormatter.join(args, format);
     return this;
   }
 
   public StringBuilder append(final String[] args, final String beforeArg, final String afterArg) {
-    this.str = str + StringFormatter.join(args, beforeArg, afterArg);
+    this.value = value + StringFormatter.join(args, beforeArg, afterArg);
     return this;
   }
 
   public StringBuilder append(final String beforeArg, final String afterArg, final String... args) {
-    this.str = str + StringFormatter.join(args, beforeArg, afterArg);
+    this.value = value + StringFormatter.join(args, beforeArg, afterArg);
     return this;
   }
 
   public StringBuilder remove(final RegexPattern pattern) {
-    this.str = str.replaceAll(pattern.getPattern(), "");
+    this.value = value.replaceAll(pattern.getPattern(), "");
     return this;
   }
 
   public StringBuilder remove(final int size) {
-    this.str = str.substring(0, str.length() - size);
+    this.value = value.substring(0, value.length() - size);
     return this;
   }
 
   public StringBuilder startAtIndex(final int index) {
-    this.str = str.substring(index);
+    this.value = StringFormatter.startAtIndex(value, index);
     return this;
   }
 
   public StringBuilder onlyWith(final RegexPattern pattern) {
-    this.str = str.replaceAll("(" + RegexPattern.REMOVE_GROUP + pattern.getPattern() + ")", "");
+    this.value = value.replaceAll("(" + RegexPattern.REMOVE_GROUP + pattern.getPattern() + ")", "");
     return this;
   }
 
@@ -77,7 +77,7 @@ public final class StringBuilder {
   }
 
   public String build() {
-    return keyType.convert(str);
+    return keyType.convert(value);
   }
 
 }

@@ -1,6 +1,5 @@
 package com.celeste.library.core.util.matcher;
 
-import com.celeste.library.core.util.builder.RegexBuilder;
 import com.celeste.library.core.util.pattern.RegexPattern;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
@@ -13,51 +12,44 @@ import static com.celeste.library.core.util.pattern.RegexPattern.*;
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public final class StringMatcher {
 
-  public static boolean matches(final String str, final RegexPattern pattern) {
-    return Pattern.matches(pattern.getPattern(), str);
+  public static boolean matches(final String string, final RegexPattern pattern) {
+    return Pattern.matches(pattern.getPattern(), string);
   }
 
-  public static boolean matches(final String str, final String pattern) {
-    return Pattern.matches(pattern, str);
+  public static boolean matches(final String string, final String pattern) {
+    return Pattern.matches(pattern, string);
   }
 
-  public static boolean matches(final String str, final Pattern pattern) {
-    return Pattern.matches(pattern.pattern(), str);
+  public static boolean matches(final String string, final Pattern pattern) {
+    return Pattern.matches(pattern.pattern(), string);
   }
 
-  public static Matcher matcher(final String str, final String pattern) {
-    return Pattern.compile(pattern).matcher(str);
+  public static Matcher matcher(final String string, final String pattern) {
+    return Pattern.compile(pattern).matcher(string);
   }
 
-  public static Matcher matcher(final String str, final RegexPattern pattern) {
-    return Pattern.compile(pattern.getPattern()).matcher(str);
+  public static Matcher matcher(final String string, final RegexPattern pattern) {
+    return Pattern.compile(pattern.getPattern()).matcher(string);
   }
 
-  public static boolean contains(final String str, final String part) {
-    return Pattern.matches(RegexPattern.contains(part), part);
+  public static boolean contains(final String string, final String part) {
+    return Pattern.matches(RegexPattern.contains(part), string);
   }
 
-  public boolean containsLetters(final String str) {
-    return Pattern.matches(str, LETTERS.getPattern());
+  public boolean containsLetters(final String string) {
+    return Pattern.matches(string, LETTERS.getPattern());
   }
 
-  public boolean containsLetters(final String str, final int amount) {
-    return Pattern.matches(RegexBuilder.builder()
-        .append(LETTERS)
-        .amount(amount)
-        .buildAsString(), str);
+  public boolean containsNumbers(final String string) {
+    return Pattern.matches(NUMBERS.getPattern(), string);
   }
 
-  public boolean containsNumbers(final String str) {
-    return Pattern.matches(NUMBERS.getPattern(), str);
+  public boolean containsSpecialLetters(final String string) {
+    return Pattern.matches(SPECIAL_LETTERS.getPattern(), string);
   }
 
-  public boolean containsSpecialLetters(final String str) {
-    return Pattern.matches(SPECIAL_LETTERS.getPattern(), str);
-  }
-
-  public boolean isHexaDecimal(final String str) {
-    return Pattern.matches(HEXADECIMAL.getPattern(), str);
+  public boolean isHexaDecimal(final String string) {
+    return Pattern.matches(HEXADECIMAL.getPattern(), string);
   }
 
 }

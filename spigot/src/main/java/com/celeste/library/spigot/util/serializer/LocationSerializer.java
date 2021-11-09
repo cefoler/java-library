@@ -12,7 +12,7 @@ public final class LocationSerializer {
   /**
    * Serializes a location into a String
    *
-   * @param location Location
+   * @param location    Location
    * @param yawAndPitch boolean
    * @return String
    */

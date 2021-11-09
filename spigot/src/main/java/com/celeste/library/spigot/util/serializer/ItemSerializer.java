@@ -6,7 +6,6 @@ import java.io.IOException;
 import java.util.Arrays;
 import java.util.Base64;
 import java.util.List;
-
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import org.bukkit.inventory.ItemStack;

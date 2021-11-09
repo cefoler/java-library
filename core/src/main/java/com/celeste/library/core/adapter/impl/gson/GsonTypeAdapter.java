@@ -68,8 +68,7 @@ public final class GsonTypeAdapter<T> implements TypeAdapterFactory {
     return this;
   }
 
-  @Nullable
-  @SuppressWarnings("ObjectAllocationInLoop")
+  @Nullable @SuppressWarnings("ObjectAllocationInLoop")
   public <U> TypeAdapter<U> create(final Gson gson, final TypeToken<U> token) {
     if (token.getRawType() != base) {
       return null;
@@ -109,8 +108,7 @@ public final class GsonTypeAdapter<T> implements TypeAdapterFactory {
         return type.fromJsonTree(json);
       }
 
-      @Override
-      @SuppressWarnings("unchecked")
+      @Override @SuppressWarnings("unchecked")
       public void write(final JsonWriter writer, final U value) throws IOException {
         final Class<?> clazz = value.getClass();
 
@@ -143,7 +141,6 @@ public final class GsonTypeAdapter<T> implements TypeAdapterFactory {
         Streams.write(newJson, writer);
       }
     }.nullSafe();
-
   }
 
 }

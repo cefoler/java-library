@@ -1,8 +1,6 @@
 package com.celeste.library.core.util.builder;
 
 import com.celeste.library.core.util.formatter.DateFormatter;
-import com.celeste.library.core.util.formatter.type.TimeLanguage;
-import com.celeste.library.core.util.pattern.RegexPattern;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -27,7 +25,7 @@ public final class DateBuilder {
   }
 
   private DateBuilder setTimezone() {
-    dateFormat.setTimeZone(TimeZone.getDefault());
+    setTimezone(TimeZone.getDefault());
     return this;
   }
 

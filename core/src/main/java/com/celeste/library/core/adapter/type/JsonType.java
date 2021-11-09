@@ -23,7 +23,7 @@ public enum JsonType {
     return Arrays.stream(values())
         .filter(type -> type.getNames().contains(json.toUpperCase()))
         .findFirst()
-        .orElseThrow(() -> new InvalidParameterException("Invalid json: " + json));
+        .orElseThrow(() -> new InvalidParameterException("Invalid JSON type: " + json));
   }
 
   public static JsonType getJson(final String json, @Nullable final JsonType orElse) {

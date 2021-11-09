@@ -3,22 +3,23 @@ package com.celeste.library.core.util.formatter;
 import com.celeste.library.core.util.formatter.type.TimeLanguage;
 import com.celeste.library.core.util.formatter.type.TimeType;
 import com.celeste.library.core.util.pattern.RegexPattern;
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
+
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.TimeZone;
-import lombok.AccessLevel;
-import lombok.NoArgsConstructor;
 
 import static java.util.concurrent.TimeUnit.*;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public final class DateFormatter {
 
-  private static final SimpleDateFormat DATE_FORMAT;
+  private static final SimpleDateFormat DEFAULT_DATE_FORMAT;
 
   static {
-    DATE_FORMAT = new SimpleDateFormat("MM/dd/yyyy HH:mm");
-    DATE_FORMAT.setTimeZone(TimeZone.getDefault());
+    DEFAULT_DATE_FORMAT = new SimpleDateFormat("MM/dd/yyyy HH:mm");
+    DEFAULT_DATE_FORMAT.setTimeZone(TimeZone.getDefault());
   }
 
   public static String convertToString(final long time, final SimpleDateFormat dateFormat) {
@@ -26,7 +27,7 @@ public final class DateFormatter {
   }
 
   public static String convertToString(final long time) {
-    return DATE_FORMAT.format(time);
+    return DEFAULT_DATE_FORMAT.format(time);
   }
 
   public static String convertToString(final Date date, final SimpleDateFormat dateFormat) {
@@ -34,7 +35,7 @@ public final class DateFormatter {
   }
 
   public static String convertToString(final Date date) {
-    return DATE_FORMAT.format(date.getTime());
+    return DEFAULT_DATE_FORMAT.format(date.getTime());
   }
 
   /**
