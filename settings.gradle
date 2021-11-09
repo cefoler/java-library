@@ -1,6 +1,9 @@
-rootProject.name = 'java-library'
+rootProject.name = "java-library"
 
-include 'core'
-include 'spigot'
-include 'bungeecord'
+/**
+ * SUB PROJECTS
+ */
+include "core"
+include "spigot"
+include "bungeecord"
 
