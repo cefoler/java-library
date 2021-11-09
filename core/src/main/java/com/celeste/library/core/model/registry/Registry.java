@@ -16,15 +16,7 @@ public interface Registry<T, U> extends Serializable, Cloneable {
 
   U register(final T key, final U value);
 
-  Registry<T, U> put(final T key, final U value);
-
   U registerIfAbsent(final T key, final U value);
-
-  Registry<T, U> putIfAbsent(final T key, final U value);
-
-  Registry<T, U> registerAll(final Map<T, U> values);
-
-  Registry<T, U> registerAllIfAbsent(final Map<T, U> values);
 
   U compute(final T key, final BiFunction<T, U, U> function);
 

@@ -1,21 +1,17 @@
 package com.celeste.library.core.model.registry;
 
-import java.util.Collection;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
-import java.util.Set;
-import java.util.function.BiConsumer;
-import java.util.function.BiFunction;
-import java.util.function.Function;
-import java.util.stream.Collectors;
-
 import com.celeste.library.core.model.registry.type.KeyType;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import org.jetbrains.annotations.Nullable;
+
+import java.util.*;
+import java.util.Map.Entry;
+import java.util.function.BiConsumer;
+import java.util.function.BiFunction;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 @Getter
 @RequiredArgsConstructor
@@ -30,32 +26,8 @@ public abstract class AbstractRegistry<T, U> implements Registry<T, U> {
   }
 
   @Override
-  public Registry<T, U> put(final T key, final U value) {
-    register(key, value);
-    return this;
-  }
-
-  @Override
   public U registerIfAbsent(final T key, final U value) {
     return map.putIfAbsent(keyType.format(key), value);
-  }
-
-  @Override
-  public Registry<T, U> putIfAbsent(final T key, final U value) {
-    map.putIfAbsent(keyType.format(key), value);
-    return this;
-  }
-
-  @Override
-  public Registry<T, U> registerAll(final Map<T, U> values) {
-    values.forEach(this::register);
-    return this;
-  }
-
-  @Override
-  public Registry<T, U> registerAllIfAbsent(final Map<T, U> values) {
-    values.forEach(this::registerIfAbsent);
-    return this;
   }
 
   @Override

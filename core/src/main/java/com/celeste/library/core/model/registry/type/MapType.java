@@ -1,6 +1,6 @@
 package com.celeste.library.core.model.registry.type;
 
-import com.celeste.library.core.model.registry.MapBuilder;
+import com.celeste.library.core.model.registry.builder.MapBuilder;
 import com.celeste.library.core.model.registry.Registry;
 import com.celeste.library.core.model.registry.impl.*;
 

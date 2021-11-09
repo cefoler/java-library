@@ -22,7 +22,7 @@ public final class DateBuilder {
   }
 
   public DateBuilder format(final String format) {
-    this.dateFormat = new SimpleDateFormat(format.replaceAll(RegexPattern.LETTERS.getPattern(), ""));
+    this.dateFormat = new SimpleDateFormat(format);
     return setTimezone();
   }
 

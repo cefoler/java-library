@@ -1,5 +1,6 @@
-package com.celeste.library.core.model.registry;
+package com.celeste.library.core.model.registry.builder;
 
+import com.celeste.library.core.model.registry.Registry;
 import com.celeste.library.core.model.registry.type.KeyType;
 import com.celeste.library.core.model.registry.type.MapType;
 import com.google.common.annotations.Beta;

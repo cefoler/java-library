@@ -3,6 +3,7 @@ package com.celeste.library.core.util.builder;
 import java.util.Properties;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
+import lombok.Synchronized;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class DataBuilder extends Properties {
@@ -11,35 +12,40 @@ public class DataBuilder extends Properties {
     super(properties);
   }
 
-  public static synchronized DataBuilder create() {
+  @Synchronized
+  public static DataBuilder create() {
     return new DataBuilder();
   }
 
-  public static synchronized DataBuilder create(final Properties properties) {
+  @Synchronized
+  public static DataBuilder create(final Properties properties) {
     return new DataBuilder(properties);
   }
 
-  public synchronized DataBuilder set(final Object key, final Object value) {
+  @Synchronized
+  public DataBuilder set(final Object key, final Object value) {
     put(String.valueOf(key), value);
     return this;
   }
 
-  public synchronized DataBuilder setIfAbsent(final Object key, final Object value) {
+  @Synchronized
+  public DataBuilder setIfAbsent(final Object key, final Object value) {
     putIfAbsent(String.valueOf(key), value);
     return this;
   }
 
-  public synchronized boolean contains(final Object key) {
+  @Synchronized
+  public boolean contains(final Object key) {
     return containsKey(key);
   }
 
-  @SuppressWarnings("unchecked")
-  public synchronized <T> T getData(final String key) {
+  @Synchronized @SuppressWarnings("unchecked")
+  public <T> T getData(final String key) {
     return (T) get(key);
   }
 
-  @SuppressWarnings("unchecked")
-  public synchronized <T> T getData(final String key, final Object orElse) {
+  @Synchronized @SuppressWarnings("unchecked")
+  public <T> T getData(final String key, final Object orElse) {
     final T value = getData(key);
     return value != null ? value : (T) orElse;
   }
