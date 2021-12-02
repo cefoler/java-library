@@ -6,10 +6,7 @@ Dependency for utility classes to help in Java development, this repository has 
 ## Modules
 
 ### shared
-Utility classes for Java development such as DateUtil, TimeMultiplier, PropertiesBuilder, Registries and more.
+Utility classes for Java development such as DateFormatter, StringFormatter, DataBuilder, Registry and more.
 
 ### spigot
-Utility classes for Spigot development such as EventWaiter, EventFilter and MenuAPI.
-
-### bungeecord
-Utility classes for Bungeecord development such as StringUtils
+Utility classes for Spigot development such as EventWaiter, EventFilter and MenuAPI with Contexts and abstract Menu class.
