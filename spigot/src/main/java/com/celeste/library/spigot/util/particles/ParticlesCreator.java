@@ -3,15 +3,39 @@ package com.celeste.library.spigot.util.particles;
 import com.celeste.library.spigot.util.particles.type.Particles;
 import com.celeste.library.spigot.util.particles.type.Particles.BlockData;
 import com.celeste.library.spigot.util.particles.type.Particles.ItemData;
-import org.bukkit.Color;
-import org.bukkit.FireworkEffect;
-import org.bukkit.Location;
+import org.bukkit.*;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Firework;
+import org.bukkit.entity.Item;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.FireworkMeta;
+import org.bukkit.util.Vector;
+
+import java.util.HashSet;
+import java.util.Set;
+import java.util.concurrent.ThreadLocalRandom;
 
 public final class ParticlesCreator {
 
+  private static final ThreadLocalRandom RANDOM;
+
+  static {
+    RANDOM = ThreadLocalRandom.current();
+  }
+
+  /**
+   * Spawns a firework on the location
+   * and sends him with the specified
+   * details.
+   *
+   * @param location Base location
+   * @param fireworkEffect Firework Effect shown
+   * @param trail If trail can be seen
+   * @param power Power of the firework
+   * @param colors Colors to show
+   *
+   * @return Firework
+   */
   public static Firework createFirework(final Location location, final FireworkEffect.Type fireworkEffect, final boolean flicker, final boolean trail, final int power, final Color... colors) {
     final Firework firework = (Firework) location.getWorld().spawnEntity(location, EntityType.FIREWORK);
     final FireworkMeta fireworkMeta = firework.getFireworkMeta();
@@ -29,6 +53,38 @@ public final class ParticlesCreator {
 
     firework.setFireworkMeta(fireworkMeta);
     return firework;
+  }
+
+  /**
+   * Spawns the amount of items from
+   * the materials provided and then it will
+   * be sent in the another direction
+   * creating a animation of explosion.
+   *
+   * @param multiply Speed that the item will travel
+   * @param location Base location where the animation starts
+   * @param amount Amount of items created
+   * @param materials Materials that the items will be created
+   *
+   * @return Set of Items created
+   */
+  public static Set<Item> spawnItemsWithSpeed(final float multiply, final Location location, final int amount, final Material... materials) {
+    final Set<Item> items = new HashSet<>();
+    final World world = location.getWorld();
+
+    for (int i = 0; i < amount; i++) {
+      final Item item = world.dropItem(location.clone(), new ItemStack(materials[RANDOM.nextInt(materials.length)]));
+      item.setPickupDelay(Integer.MAX_VALUE);
+
+      final Vector vector = new Vector((RANDOM.nextBoolean() ? -1 : 0) + (RANDOM.nextDouble()), 1, (RANDOM.nextBoolean() ? -1 : 0) + (RANDOM.nextDouble()))
+          .multiply(multiply)
+          .normalize();
+
+      item.setVelocity(vector);
+      items.add(item);
+    }
+
+    return items;
   }
 
   public static Firework createFirework(final Location location, final FireworkEffect.Type fireworkEffect, final Color... colors) {
