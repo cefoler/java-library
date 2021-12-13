@@ -14,12 +14,13 @@ public abstract class AbstractTimer implements Timer {
 
   protected Plugin plugin;
 
-  protected static BukkitTask TASK;
-  protected static boolean CANCELLED;
+  protected BukkitTask task;
+  protected boolean cancelled;
 
-  static {
-    TASK = null;
-    CANCELLED = true;
+  public AbstractTimer(final Plugin plugin) {
+    this.plugin = plugin;
+    this.task = null;
+    this.cancelled = true;
   }
 
   public abstract void run();
@@ -36,8 +37,8 @@ public abstract class AbstractTimer implements Timer {
   }
 
   public void start(final long delay, final long period) {
-    TASK = Bukkit.getScheduler().runTaskTimer(plugin, this::run, delay, period);
-    CANCELLED = false;
+    this.task = Bukkit.getScheduler().runTaskTimer(plugin, this::run, delay, period);
+    this.cancelled = false;
   }
 
   public void startAsync() {
@@ -48,17 +49,17 @@ public abstract class AbstractTimer implements Timer {
     getScheduled().scheduleWithFixedDelay(this::run, delay, period, unit);
   }
 
-  public static void stop() {
-    if (TASK == null) {
+  public void stop() {
+    if (task == null) {
       return;
     }
 
-    CANCELLED = true;
-    TASK.cancel();
+    cancelled = true;
+    task.cancel();
   }
 
-  public static boolean isCancelled() {
-    return CANCELLED;
+  public boolean isCancelled() {
+    return cancelled;
   }
 
 }

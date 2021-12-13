@@ -4,10 +4,12 @@ import com.celeste.library.core.model.registry.Registry;
 import com.celeste.library.core.model.registry.impl.ConcurrentRegistry;
 import java.util.UUID;
 import java.util.function.Consumer;
+
+import lombok.Builder;
 import lombok.Data;
-import org.jetbrains.annotations.NotNull;
 
 @Data
+@Builder
 public final class ChatMonitor {
 
   public static final Registry<UUID, ChatMonitor> MAP;
@@ -21,26 +23,7 @@ public final class ChatMonitor {
   private Consumer<String> message;
   private Consumer<Void> cancel;
 
-  public static ChatMonitor builder() {
-    return new ChatMonitor();
-  }
-
-  public ChatMonitor player(@NotNull final UUID playerId) {
-    this.playerId = playerId;
-    return this;
-  }
-
-  public ChatMonitor message(@NotNull final Consumer<String> message) {
-    this.message = message;
-    return this;
-  }
-
-  public ChatMonitor cancel(@NotNull final Consumer<Void> cancel) {
-    this.cancel = cancel;
-    return this;
-  }
-
-  public void build() {
+  public void register() {
     MAP.register(playerId, this);
   }
 

@@ -128,11 +128,11 @@ public enum Particles {
         });
   }
 
-  private static boolean isDataCorrect(final Particles effect, final ParticleData data) {
+  private static boolean isCorrectData(final Particles effect, final ParticleData data) {
     return (effect == BLOCK_CRACK || effect == BLOCK_DUST) && data instanceof BlockData || effect == ITEM_CRACK && data instanceof ItemData;
   }
 
-  private static boolean isColorCorrect(final Particles effect, final ParticleColor color) {
+  private static boolean isCorrectColor(final Particles effect, final ParticleColor color) {
     return (effect == SPELL_MOB || effect == SPELL_MOB_AMBIENT || effect == REDSTONE) && color instanceof OrdinaryColor || effect == NOTE && color instanceof NoteColor;
   }
 
@@ -230,7 +230,7 @@ public enum Particles {
       throw new ParticlesException("This particle effect is not colorable");
     }
 
-    if (!isColorCorrect(this, color)) {
+    if (!isCorrectColor(this, color)) {
       throw new ParticlesException("The particle color type is incorrect");
     }
 
@@ -246,7 +246,7 @@ public enum Particles {
       throw new ParticlesException("This particle effect is not colorable");
     }
 
-    if (!isColorCorrect(this, color)) {
+    if (!isCorrectColor(this, color)) {
       throw new ParticlesException("The particle color type is incorrect");
     }
 
@@ -266,7 +266,7 @@ public enum Particles {
       throw new ParticlesException("This particle effect does not require additional data");
     }
 
-    if (!isDataCorrect(this, data)) {
+    if (!isCorrectData(this, data)) {
       throw new ParticlesException("The particle data type is incorrect");
     }
 
@@ -284,7 +284,7 @@ public enum Particles {
       throw new ParticlesException("This particle effect does not require additional data");
     }
 
-    if (!isDataCorrect(this, data)) {
+    if (!isCorrectData(this, data)) {
       throw new ParticlesException("The particle data type is incorrect");
     }
 
@@ -305,7 +305,7 @@ public enum Particles {
       throw new ParticlesException("This particle effect does not require additional data");
     }
 
-    if (!isDataCorrect(this, data)) {
+    if (!isCorrectData(this, data)) {
       throw new ParticlesException("The particle data type is incorrect");
     }
 
@@ -322,7 +322,7 @@ public enum Particles {
       throw new ParticlesException("This particle effect does not require additional data");
     }
 
-    if (!isDataCorrect(this, data)) {
+    if (!isCorrectData(this, data)) {
       throw new ParticlesException("The particle data type is incorrect");
     }
 
@@ -334,6 +334,7 @@ public enum Particles {
   }
 
   public static final class NoteColor extends ParticleColor {
+
     private final int note;
 
     public NoteColor(final int note) {
@@ -389,14 +390,17 @@ public enum Particles {
     public float getValueZ() {
       return (float) this.blue / 255.0F;
     }
+
   }
 
   public abstract static class ParticleColor {
+
     public abstract float getValueX();
 
     public abstract float getValueY();
 
     public abstract float getValueZ();
+
   }
 
   public static final class BlockData extends ParticleData {

@@ -14,16 +14,16 @@ import static com.celeste.library.spigot.util.monitor.ChatMonitor.*;
 
 public final class MonitorListener implements Listener {
 
-  private static boolean registered;
+  private static boolean REGISTER;
 
   static {
-    registered = false;
+    REGISTER = false;
   }
 
   public MonitorListener(final Plugin plugin) {
-    if (!registered) {
+    if (!REGISTER) {
       Bukkit.getPluginManager().registerEvents(this, plugin);
-      registered = true;
+      REGISTER = true;
     }
   }
 

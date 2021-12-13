@@ -108,6 +108,7 @@ public final class ItemBuilder implements Cloneable {
           + ".PropertyMap");
       final Class<?> metaSkullClazz = ReflectionNms.getObc("inventory.CraftMetaSkull");
 
+      // PROFILE
       PROFILE_CONSTRUCTOR = Reflection.getConstructor(profileClazz, UUID.class, String.class);
       PROPERTY_CONSTRUCTOR = Reflection.getConstructor(propertyClazz, String.class, String.class);
 

@@ -11,16 +11,16 @@ import org.bukkit.plugin.Plugin;
 
 public final class MenuListener implements Listener {
 
-  private static boolean register;
+  private static boolean REGISTER;
 
   static {
-    register = false;
+    REGISTER = false;
   }
 
   public MenuListener(final Plugin plugin) {
-    if (!register) {
+    if (!REGISTER) {
       Bukkit.getPluginManager().registerEvents(this, plugin);
-      register = true;
+      REGISTER = true;
     }
   }
 

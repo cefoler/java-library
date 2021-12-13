@@ -7,11 +7,14 @@ import com.celeste.library.spigot.util.message.type.ClickEventType;
 import com.celeste.library.spigot.util.message.type.HoverEventType;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
+
+import lombok.Builder;
 import lombok.SneakyThrows;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
+@Builder
 public final class Json {
 
   private static final Constructor<?> PACKET_CHAT_CONSTRUCTOR;
@@ -44,7 +47,7 @@ public final class Json {
   private HoverEventType hoverType;
   private ClickEventType clickType;
 
-  public Json build() {
+  public Json buildJsonString() {
     if (click == null && hover == null) {
       this.json = "{\"text\":\"" + text + "\"}";
       return this;
@@ -90,35 +93,6 @@ public final class Json {
     for (final Player player : Bukkit.getOnlinePlayers()) {
       ReflectionNms.sendPacket(player, packet);
     }
-  }
-
-  public static Json builder() {
-    return new Json();
-  }
-
-  public Json text(@NotNull final String text) {
-    this.text = text;
-    return this;
-  }
-
-  public Json hover(@NotNull final String hover) {
-    this.hover = hover;
-    return this;
-  }
-
-  public Json click(@NotNull final String click) {
-    this.click = click;
-    return this;
-  }
-
-  public Json hoverType(@NotNull final HoverEventType hoverType) {
-    this.hoverType = hoverType;
-    return this;
-  }
-
-  public Json clickType(@NotNull final ClickEventType clickType) {
-    this.clickType = clickType;
-    return this;
   }
 
 }

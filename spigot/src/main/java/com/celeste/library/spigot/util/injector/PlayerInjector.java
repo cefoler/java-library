@@ -5,6 +5,12 @@ import org.bukkit.potion.PotionEffect;
 
 public final class PlayerInjector {
 
+  public static void reset(final Player player) {
+    clear(player);
+    heal(player);
+    defaultSpeed(player);
+  }
+
   public static void clear(final Player player) {
     player.getInventory().clear();
     player.getInventory().setArmorContents(null);
@@ -14,12 +20,6 @@ public final class PlayerInjector {
     for (PotionEffect effect : player.getActivePotionEffects()) {
       player.removePotionEffect(effect.getType());
     }
-  }
-
-  public static void reset(final Player player) {
-    clear(player);
-    heal(player);
-    defaultSpeed(player);
   }
 
   public static void heal(final Player player) {
