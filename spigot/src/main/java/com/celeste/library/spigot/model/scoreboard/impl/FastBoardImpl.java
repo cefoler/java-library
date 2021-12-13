@@ -1,5 +1,6 @@
 package com.celeste.library.spigot.model.scoreboard.impl;
 
+import com.celeste.library.core.util.Reflection;
 import com.celeste.library.spigot.model.scoreboard.Board;
 import com.celeste.library.spigot.util.ReflectionNms;
 import lombok.Getter;
@@ -94,7 +95,7 @@ public class FastBoardImpl implements Board {
       CHAT_COMPONENT_CLASS = ReflectionNms.getNms("network.chat.IChatBaseComponent");
       CHAT_FORMAT_ENUM = ReflectionNms.getNms("EnumChatFormat");
       EMPTY_MESSAGE = Array.get(MESSAGE_FROM_STRING.invoke(""), 0);
-      RESET_FORMATTING = getValueFromEnum(CHAT_FORMAT_ENUM, "RESET", 21);
+      RESET_FORMATTING = Reflection.getValueFromEnum(CHAT_FORMAT_ENUM, "RESET", 21);
       PLAYER_GET_HANDLE = lookup.findVirtual(ReflectionNms.getObc("entity.CraftPlayer"), "getHandle", MethodType.methodType(entityPlayerClass));
       PLAYER_CONNECTION = lookup.unreflectGetter(playerConnectionField);
       SEND_PACKET = lookup.findVirtual(playerConnectionClass, "sendPacket", MethodType.methodType(Void.TYPE, packetClass));

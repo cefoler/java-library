@@ -436,6 +436,23 @@ public final class Reflection {
     return constructor.newInstance(arguments);
   }
 
+  public static Object getValueFromEnum(final Class<?> enumClass, final String enumName) {
+    return Enum.valueOf(enumClass.asSubclass(Enum.class), enumName);
+  }
+
+  public static Object getValueFromEnum(final Class<?> enumClass, final String enumName, final int fallbackOrdinal) {
+    try {
+      return getValueFromEnum(enumClass, enumName);
+    } catch (IllegalArgumentException exception) {
+      final Object[] constants = enumClass.getEnumConstants();
+      if (constants.length > fallbackOrdinal) {
+        return constants[fallbackOrdinal];
+      }
+
+      throw exception;
+    }
+  }
+
   @SuppressWarnings("unchecked")
   public static <T> T invoke(final Method method, final Object instance, final Object... arguments)
       throws InvocationTargetException, IllegalAccessException {
