@@ -39,8 +39,13 @@ public final class ItemInjector {
   static {
     try {
       final Class<?> craftItemStackClazz = ReflectionNms.getObc("inventory.CraftItemStack");
-      final Class<?> itemStackClazz = ReflectionNms.getNms("ItemStack");
-      final Class<?> compoundClazz = ReflectionNms.getNms("NBTTagCompound");
+      final Class<?> itemStackClazz = ReflectionNms.isEqualsOrMoreRecent(17)
+          ? ReflectionNms.getNmsUnversionated("world.item", "ItemStack")
+          : ReflectionNms.getNms("ItemStack");
+
+      final Class<?> compoundClazz = ReflectionNms.isEqualsOrMoreRecent(17)
+          ? ReflectionNms.getNmsUnversionated("nbt", "NBTTagCompound")
+          : ReflectionNms.getNms("NBTTagCompound");
 
       COMPOUND_CONSTRUCTOR = Reflection.getConstructor(compoundClazz);
 
@@ -54,10 +59,21 @@ public final class ItemInjector {
       GET_INT = Reflection.getMethod(compoundClazz, "getDouble", String.class);
 
       // SET
-      final Class<?> baseClazz = ReflectionNms.getNms("NBTBase");
-      final Class<?> stringClazz = ReflectionNms.getNms("NBTTagString");
-      final Class<?> doubleClazz = ReflectionNms.getNms("NBTTagDouble");
-      final Class<?> intClazz = ReflectionNms.getNms("NBTTagInt");
+      final Class<?> baseClazz = ReflectionNms.isEqualsOrMoreRecent(17)
+          ? ReflectionNms.getNmsUnversionated("nbt", "NBTBase")
+          : ReflectionNms.getNms("NBTBase");
+
+      final Class<?> stringClazz = ReflectionNms.isEqualsOrMoreRecent(17)
+          ? ReflectionNms.getNmsUnversionated("nbt", "NBTTagString")
+          : ReflectionNms.getNms("NBTTagString");
+
+      final Class<?> doubleClazz = ReflectionNms.isEqualsOrMoreRecent(17)
+          ? ReflectionNms.getNmsUnversionated("nbt", "NBTTagDouble")
+          : ReflectionNms.getNms("NBTTagDouble");
+
+      final Class<?> intClazz = ReflectionNms.isEqualsOrMoreRecent(17)
+          ? ReflectionNms.getNmsUnversionated("nbt", "NBTTagInt")
+          : ReflectionNms.getNms("NBTTagInt");
 
       STRING_CONSTRUCTOR = Reflection.getConstructor(stringClazz, String.class);
       DOUBLE_CONSTRUCTOR = Reflection.getConstructor(doubleClazz, double.class);

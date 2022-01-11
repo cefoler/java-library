@@ -22,8 +22,13 @@ public final class Json {
 
   static {
     try {
-      final Class<?> packetChatClazz = ReflectionNms.getNms("PacketPlayOutChat");
-      final Class<?> componentClazz = ReflectionNms.getNms("IChatBaseComponent");
+      final Class<?> packetChatClazz = ReflectionNms.isEqualsOrMoreRecent(17)
+          ? ReflectionNms.getNmsUnversionated("network.protocol.game", "PacketPlayOutChat")
+          : ReflectionNms.getNms("PacketPlayOutChat");
+
+      final Class<?> componentClazz = ReflectionNms.isEqualsOrMoreRecent(17)
+          ? ReflectionNms.getNmsUnversionated("network.chat", "IChatBaseComponent")
+          : ReflectionNms.getNms("IChatBaseComponent");
 
       final Class<?> serializer = Reflection.getDcClasses(componentClazz).length > 0
           ? Reflection.getDcClasses(componentClazz, 0)

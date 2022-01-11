@@ -24,10 +24,18 @@ public final class ActionBar {
 
   static {
     try {
-      final Class<?> packetChatClazz = ReflectionNms.getNms("PacketPlayOutChat");
-      final Class<?> componentClazz = ReflectionNms.getNms("IChatBaseComponent");
+      final Class<?> packetChatClazz = ReflectionNms.isEqualsOrMoreRecent(17)
+          ? ReflectionNms.getNmsUnversionated("network.protocol.game", "PacketPlayOutChat")
+          : ReflectionNms.getNms("PacketPlayOutChat");
+
+      final Class<?> componentClazz = ReflectionNms.isEqualsOrMoreRecent(17)
+          ? ReflectionNms.getNmsUnversionated("network.chat", "IChatBaseComponent")
+          : ReflectionNms.getNms("IChatBaseComponent");
+
       final Class<?> messageTypeClazz = ReflectionNms.isEqualsOrMoreRecent(12)
-          ? ReflectionNms.getNms("ChatMessageType")
+          ? ReflectionNms.isEqualsOrMoreRecent(17)
+          ? ReflectionNms.getNmsUnversionated("network.chat", "ChatMessageType")
+          : ReflectionNms.getNms("ChatMessageType")
           : byte.class;
 
       final Class<?> serializer = Reflection.getDcClasses(componentClazz).length > 0

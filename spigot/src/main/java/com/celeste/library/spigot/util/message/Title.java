@@ -27,7 +27,9 @@ public final class Title {
   static {
     try {
       final Class<?> packetTitleClazz = ReflectionNms.getNms("PacketPlayOutTitle");
-      final Class<?> componentClazz = ReflectionNms.getNms("IChatBaseComponent");
+      final Class<?> componentClazz = ReflectionNms.isEqualsOrMoreRecent(17)
+          ? ReflectionNms.getNmsUnversionated("network.chat", "IChatBaseComponent")
+          : ReflectionNms.getNms("IChatBaseComponent");
 
       final Class<?> titleActionClazz = Reflection.getDcClasses(packetTitleClazz).length > 0
           ? Reflection.getDcClasses(packetTitleClazz, 0)
