@@ -3,6 +3,7 @@ package com.celeste.library.spigot.model.scoreboard.impl;
 import com.celeste.library.core.util.Reflection;
 import com.celeste.library.spigot.model.scoreboard.Board;
 import com.celeste.library.spigot.util.ReflectionNms;
+import com.google.common.annotations.Beta;
 import lombok.Getter;
 import lombok.SneakyThrows;
 import org.bukkit.ChatColor;
@@ -20,14 +21,13 @@ import java.util.concurrent.ThreadLocalRandom;
 
 import static com.celeste.library.core.util.Reflection.*;
 import static com.celeste.library.spigot.model.scoreboard.impl.FastBoardImpl.ObjectiveMode.*;
-import static com.celeste.library.spigot.model.scoreboard.impl.FastBoardImpl.VersionType.*;
 
+@Beta
 @Getter
-public class FastBoardImpl implements Board {
+public final class FastBoardImpl implements Board {
 
   private static final Map<Class<?>, Field[]> PACKETS;
   private static final String[] COLOR_CODES;
-  private static final VersionType VERSION_TYPE;
 
   private static final Class<?> CHAT_COMPONENT_CLASS;
   private static final Class<?> CHAT_FORMAT_ENUM;
@@ -58,7 +58,7 @@ public class FastBoardImpl implements Board {
         .toArray(String[]::new);
   }
 
-  protected final Player player;
+  private final Player player;
   private final String id;
 
   private final List<String> lines;
@@ -68,21 +68,15 @@ public class FastBoardImpl implements Board {
 
   static {
     try {
-      if (ReflectionNms.isEqualsOrMoreRecent(13)) {
-        VERSION_TYPE = V1_13;
-      } else {
-        VERSION_TYPE = V1_8;
-      }
-
       final String gameProtocolPackage = "network.protocol.game.";
 
-      final Class<?> entityPlayerClass = ReflectionNms.getNms("server.level.EntityPlayer");
-      final Class<?> playerConnectionClass = ReflectionNms.getNms("server.network.PlayerConnection");
-      final Class<?> packetClass = ReflectionNms.getNms("network.protocol.Packet");
-      final Class<?> packetSbObjClass = ReflectionNms.getNms(gameProtocolPackage + "PacketPlayOutScoreboardObjective");
-      final Class<?> packetSbDisplayObjClass = ReflectionNms.getNms(gameProtocolPackage + "PacketPlayOutScoreboardDisplayObjective");
-      final Class<?> packetSbScoreClass = ReflectionNms.getNms(gameProtocolPackage + "PacketPlayOutScoreboardScore");
-      final Class<?> packetSbTeamClass = ReflectionNms.getNms(gameProtocolPackage + "PacketPlayOutScoreboardTeam");
+      final Class<?> entityPlayerClass = ReflectionNms.getNmsUnversionated("server.level", "EntityPlayer");
+      final Class<?> playerConnectionClass = ReflectionNms.getNmsUnversionated("server.network", "PlayerConnection");
+      final Class<?> packetClass = ReflectionNms.getNmsUnversionated("network.protocol", "Packet");
+      final Class<?> packetSbObjClass = ReflectionNms.getNmsUnversionated(gameProtocolPackage, "PacketPlayOutScoreboardObjective");
+      final Class<?> packetSbDisplayObjClass = ReflectionNms.getNmsUnversionated(gameProtocolPackage, "PacketPlayOutScoreboardDisplayObjective");
+      final Class<?> packetSbScoreClass = ReflectionNms.getNmsUnversionated(gameProtocolPackage, "PacketPlayOutScoreboardScore");
+      final Class<?> packetSbTeamClass = ReflectionNms.getNmsUnversionated(gameProtocolPackage, "PacketPlayOutScoreboardTeam");
 
       final Field playerConnectionField = Arrays.stream(entityPlayerClass.getFields())
           .filter((field) -> field.getType().isAssignableFrom(playerConnectionClass))
@@ -112,16 +106,16 @@ public class FastBoardImpl implements Board {
         Class<?> clazz = null;
         do {
           if (!iterator.hasNext()) {
-            if (!V1_8.isHigherOrEqual()) {
+            if (ReflectionNms.isEqualsOrLessRecent(7)) {
               continue;
             }
 
-            final String enumSbActionClass = V1_13.isHigherOrEqual()
+            final String enumSbActionClass = ReflectionNms.isEqualsOrMoreRecent(13)
                 ? "ScoreboardServer$Action"
                 : "PacketPlayOutScoreboardScore$EnumScoreboardAction";
 
             ENUM_SB_HEALTH_DISPLAY = ReflectionNms.getNms("world.scores.criteria.IScoreboardCriteria$EnumScoreboardHealthDisplay");
-            ENUM_SB_ACTION = ReflectionNms.getNms("server." + enumSbActionClass);
+            ENUM_SB_ACTION = ReflectionNms.getNmsUnversionated("server", enumSbActionClass);
             ENUM_SB_HEALTH_DISPLAY_INTEGER = getValueFromEnum(ENUM_SB_HEALTH_DISPLAY, "INTEGER", 0);
             ENUM_SB_ACTION_CHANGE = getValueFromEnum(ENUM_SB_ACTION, "CHANGE", 0);
             ENUM_SB_ACTION_REMOVE = getValueFromEnum(ENUM_SB_ACTION, "REMOVE", 1);
@@ -164,7 +158,7 @@ public class FastBoardImpl implements Board {
       return;
     }
 
-    if (!V1_13.isHigherOrEqual() && title.length() > 32) {
+    if (!ReflectionNms.isEqualsOrMoreRecent(13) && title.length() > 32) {
       throw new IllegalArgumentException("Title is longer than 32 chars");
     }
 
@@ -216,7 +210,7 @@ public class FastBoardImpl implements Board {
 
   public synchronized void set(final Collection<String> newLines) {
     checkLineNumber(newLines.size(), false, true);
-    if (!V1_13.isHigherOrEqual()) {
+    if (!ReflectionNms.isEqualsOrMoreRecent(13)) {
       int lineCount = 0;
 
       for (Iterator<String> iterator = newLines.iterator(); iterator.hasNext(); lineCount++) {
@@ -284,8 +278,8 @@ public class FastBoardImpl implements Board {
     this.deleted = true;
   }
 
-  protected boolean hasLinesMaxLength() {
-    return !V1_13.isHigherOrEqual();
+  private boolean hasLinesMaxLength() {
+    return !ReflectionNms.isEqualsOrMoreRecent(13);
   }
 
   private int getScoreByLine(final int line) {
@@ -326,7 +320,7 @@ public class FastBoardImpl implements Board {
     }
 
     setComponentField(packet, title);
-    if (V1_8.isHigherOrEqual()) {
+    if (ReflectionNms.isEqualsOrMoreRecent(8)) {
       setField(packet, ENUM_SB_HEALTH_DISPLAY, ENUM_SB_HEALTH_DISPLAY_INTEGER);
     }
   }
@@ -346,7 +340,7 @@ public class FastBoardImpl implements Board {
     final Object packet = PACKET_SB_SCORE.newInstance();
     setField(packet, String.class, COLOR_CODES[score]);
 
-    if (V1_8.isHigherOrEqual()) {
+    if (ReflectionNms.isEqualsOrMoreRecent(8)) {
       setField(packet, ENUM_SB_ACTION, action == ScoreboardAction.REMOVE ? ENUM_SB_ACTION_REMOVE : ENUM_SB_ACTION_CHANGE);
     }
 
@@ -447,7 +441,7 @@ public class FastBoardImpl implements Board {
 
   @SneakyThrows
   private void setComponentField(Object packet, String value) {
-    if (V1_13.isHigherOrEqual()) {
+    if (ReflectionNms.isEqualsOrMoreRecent(13)) {
       setField(packet, String.class, value);
       return;
     }
@@ -458,15 +452,6 @@ public class FastBoardImpl implements Board {
             ? EMPTY_MESSAGE
             : Array.get(MESSAGE_FROM_STRING.invoke(value), 0));
       }
-    }
-  }
-
-  enum VersionType {
-    V1_8,
-    V1_13;
-
-    public boolean isHigherOrEqual() {
-      return VERSION_TYPE.ordinal() >= this.ordinal();
     }
   }
 

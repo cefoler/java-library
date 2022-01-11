@@ -4,6 +4,7 @@ import com.celeste.library.core.util.Reflection;
 import com.celeste.library.spigot.exception.particles.ParticlesException;
 import com.celeste.library.spigot.util.ReflectionNms;
 import com.celeste.library.spigot.util.particles.type.Particles;
+import com.google.common.annotations.Beta;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.World;
@@ -20,11 +21,12 @@ public final class ParticlePacket {
   private static final int VERSION;
   private static final boolean USE_SEND_PARTICLE;
 
+  private static final Constructor<?> PACKET_CONSTRUCTOR;
+  private static final Method GET_HANDLE_METHOD;
+  private static final Field PLAYER_CONNECTION_FIELD;
+  private static final Method SEND_PACKET_METHOD;
+
   private static Class<?> ENUM_PARTICLE;
-  private static Constructor<?> PACKET_CONSTRUCTOR;
-  private static Method GET_HANDLE_METHOD;
-  private static Field PLAYER_CONNECTION_FIELD;
-  private static Method SEND_PACKET_METHOD;
 
   private final Particles effect;
   private float offsetX;
@@ -38,20 +40,32 @@ public final class ParticlePacket {
 
   static {
     try {
-      final String serverVersion = Bukkit.getServer().getClass().getPackage().getName().substring(23);
+      VERSION = ReflectionNms.getVersion();
 
-      VERSION = Integer.parseInt(serverVersion.split("_")[1]);
+      final Class<?> packetClass = ReflectionNms.isEqualsOrMoreRecent(17)
+          ? ReflectionNms.getNmsUnversionated("network.protocol.game", "PacketPlayOutWorldParticles")
+          : ReflectionNms.getNms("PacketPlayOutWorldParticles");
+
+      final Class<?> entityPlayer = ReflectionNms.isEqualsOrMoreRecent(17)
+          ? ReflectionNms.getNmsUnversionated("server.level", "EntityPlayer")
+          : ReflectionNms.getNms("EntityPlayer");
+
+      final Class<?> packet = ReflectionNms.isEqualsOrMoreRecent(17)
+          ? ReflectionNms.getNmsUnversionated("network.protocol", "Packet")
+          : ReflectionNms.getNms("Packet");
+
+
+      PACKET_CONSTRUCTOR = Reflection.getConstructor(packetClass);
+      PLAYER_CONNECTION_FIELD = entityPlayer.getField("playerConnection");
+      GET_HANDLE_METHOD = ReflectionNms.getObc("CraftPlayer").getMethod("getHandle");
+      SEND_PACKET_METHOD = Reflection.getMethod(PLAYER_CONNECTION_FIELD.getType(), "sendPacket", packet);
+
       if (VERSION <= 7 || VERSION >= 13) {
         USE_SEND_PARTICLE = true;
       } else {
+        // No need for 1.17 class support because this is only used in 1.8 up to 1.13
         ENUM_PARTICLE = ReflectionNms.getNms("EnumParticle");
         USE_SEND_PARTICLE = false;
-
-        final Class<?> packetClass = ReflectionNms.getNms("PacketPlayOutWorldParticles");
-        PACKET_CONSTRUCTOR = Reflection.getConstructor(packetClass);
-        GET_HANDLE_METHOD = ReflectionNms.getObc("CraftPlayer").getMethod("getHandle");
-        PLAYER_CONNECTION_FIELD = ReflectionNms.getNms("EntityPlayer").getField("playerConnection");
-        SEND_PACKET_METHOD = Reflection.getMethod(PLAYER_CONNECTION_FIELD.getType(), "sendPacket", ReflectionNms.getNms("Packet"));
       }
     } catch (final Exception exception) {
       throw new ParticlesException("Your current Bukkit version seems to be incompatible with this library", exception);
@@ -97,10 +111,9 @@ public final class ParticlePacket {
     try {
       this.packet = PACKET_CONSTRUCTOR.newInstance();
       if (VERSION < 8) {
-        String name = effect.getName();
-        if (data != null) {
-          name = name + data.getPacketDataString();
-        }
+        final String name = data == null
+            ? effect.getName()
+            : effect.getName() + data.getPacketDataString();
 
         Reflection.getDcField(packet, "a").set(packet, name);
       } else {

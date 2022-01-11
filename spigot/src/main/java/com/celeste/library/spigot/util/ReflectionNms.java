@@ -34,7 +34,7 @@ public final class ReflectionNms {
         : getNms("PlayerConnection");
 
       final Class<?> packetClazz = isEqualsOrMoreRecent(17)
-        ? Reflection.getClazz("net.minecraft.network.protocol.Packet")
+        ? getNmsUnversionated("network.protocol", "Packet")
         : getNms("Packet");
 
       final Class<?> entityPlayerClazz = isEqualsOrMoreRecent(17)
@@ -109,6 +109,10 @@ public final class ReflectionNms {
    */
   public static boolean isEqualsOrLessRecent(final int checkVersion) {
     return Integer.parseInt(VERSION.split("_")[1]) <= checkVersion;
+  }
+
+  public static int getVersion() {
+    return Integer.parseInt(VERSION.split("_")[1]);
   }
 
 }

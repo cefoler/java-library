@@ -1,5 +1,6 @@
 package com.celeste.library.spigot.util.particles.type;
 
+import com.google.common.annotations.Beta;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
@@ -20,6 +21,7 @@ import org.bukkit.util.Vector;
 
 import static com.celeste.library.spigot.util.particles.type.Particles.ParticleProperty.*;
 
+@Beta
 @Getter
 public enum Particles {
 
@@ -71,11 +73,10 @@ public enum Particles {
     NAME_MAP = new ConcurrentHashMap<>();
     ID_MAP = new ConcurrentHashMap<>();
 
-    final Particles[] particles = values();
-    for (Particles effect : particles) {
-      NAME_MAP.put(effect.name, effect);
-      ID_MAP.put(effect.id, effect);
-    }
+    Arrays.asList(values()).forEach(effect -> {
+      NAME_MAP.put(effect.getName(), effect);
+      ID_MAP.put(effect.getId(), effect);
+    });
   }
 
   private final String name;

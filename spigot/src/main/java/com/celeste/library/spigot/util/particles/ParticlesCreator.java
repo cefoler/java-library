@@ -3,6 +3,7 @@ package com.celeste.library.spigot.util.particles;
 import com.celeste.library.spigot.util.particles.type.Particles;
 import com.celeste.library.spigot.util.particles.type.Particles.BlockData;
 import com.celeste.library.spigot.util.particles.type.Particles.ItemData;
+import com.google.common.annotations.Beta;
 import org.bukkit.*;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Firework;
@@ -15,6 +16,7 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.concurrent.ThreadLocalRandom;
 
+@Beta
 public final class ParticlesCreator {
 
   private static final ThreadLocalRandom RANDOM;

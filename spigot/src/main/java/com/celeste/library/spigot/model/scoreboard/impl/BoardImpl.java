@@ -15,7 +15,7 @@ import org.bukkit.scoreboard.Team;
 
 @Getter
 @Setter
-public class BoardImpl implements Board {
+public final class BoardImpl implements Board {
 
   private String title;
 

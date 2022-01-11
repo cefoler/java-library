@@ -57,12 +57,12 @@ public final class InventoryInjector {
   }
 
   public void removeItemsFromMaterial(final Material material, int amount, final Player player) {
-    final AtomicInteger count = new AtomicInteger();
     final List<ItemStack> items = Arrays.stream(player.getInventory().getContents())
         .filter(item -> item != null && item.getType() == material)
         .collect(Collectors.toList());
 
-    for (ItemStack item : items) {
+    final AtomicInteger count = new AtomicInteger();
+    items.forEach(item -> {
       final int newCount = count.get();
       if (newCount + item.getAmount() < amount) {
         count.set(newCount + item.getAmount());
@@ -75,7 +75,7 @@ public final class InventoryInjector {
       item.setAmount(amountLeft);
 
       player.getInventory().remove(item);
-    }
+    });
   }
 
 }

@@ -36,6 +36,16 @@ public abstract class AbstractBukkitPlugin extends JavaPlugin {
     this.service = Bukkit.getServer().getServicesManager();
   }
 
+  @Override
+  public void onEnable() {
+    registerSystems();
+  }
+
+  @Override
+  public void onDisable() {
+    shutdownExecutors();
+  }
+
   public void registerSystems() {
     new MenuListener(this);
     new MonitorListener(this);
