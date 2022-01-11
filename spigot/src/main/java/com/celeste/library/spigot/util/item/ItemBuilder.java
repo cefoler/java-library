@@ -4,6 +4,7 @@ import com.celeste.library.core.util.Reflection;
 import com.celeste.library.core.util.Wrapper;
 import com.celeste.library.spigot.error.ServerStartError;
 import com.celeste.library.spigot.util.ReflectionNms;
+import com.celeste.library.spigot.util.item.enchantments.Glow;
 import com.celeste.library.spigot.util.item.type.EnchantmentType;
 import com.google.common.collect.ImmutableList;
 import java.lang.reflect.Constructor;
@@ -272,11 +273,11 @@ public final class ItemBuilder implements Cloneable {
     return this;
   }
 
-  public ItemBuilder addEnchantment(final String... enchantments) {
-    return addEnchantment(ImmutableList.copyOf(enchantments));
+  public ItemBuilder addEnchantments(final String... enchantments) {
+    return addEnchantments(ImmutableList.copyOf(enchantments));
   }
 
-  public ItemBuilder addEnchantment(final List<String> enchantments) {
+  public ItemBuilder addEnchantments(final List<String> enchantments) {
     if (enchantments.size() == 0) {
       return this;
     }
@@ -287,21 +288,20 @@ public final class ItemBuilder implements Cloneable {
         continue;
       }
 
-      final Enchantment enchant = EnchantmentType.getRealEnchantment(split[0]);
-      itemStack.addUnsafeEnchantment(enchant, Integer.parseInt(split[1]));
+      addEnchantments(split[0], Integer.parseInt(split[1]));
     }
 
     return this;
   }
 
-  public ItemBuilder addEnchantment(final String enchantment, final int level) {
+  public ItemBuilder addEnchantments(final String enchantment, final int level) {
     final Enchantment enchant = EnchantmentType.getRealEnchantment(enchantment);
-    itemStack.addUnsafeEnchantment(enchant, level);
+    meta.addEnchant(enchant, level, true);
     return this;
   }
 
   @SafeVarargs
-  public final ItemBuilder addEnchantment(final Entry<String, Integer>... enchantments) {
+  public final ItemBuilder addEnchantments(final Entry<String, Integer>... enchantments) {
     if (enchantments.length == 0) {
       return this;
     }
@@ -314,7 +314,7 @@ public final class ItemBuilder implements Cloneable {
     return this;
   }
 
-  public ItemBuilder addEnchantment(final Map<String, Integer> enchantments) {
+  public ItemBuilder addEnchantments(final Map<String, Integer> enchantments) {
     if (enchantments.size() == 0) {
       return this;
     }
@@ -381,16 +381,12 @@ public final class ItemBuilder implements Cloneable {
 
   public ItemBuilder glow(final boolean glow) {
     if (glow) {
-      itemStack.addUnsafeEnchantment(Enchantment.DURABILITY, 1);
-      return addItemFlag(ItemFlag.HIDE_ENCHANTS);
-    }
-
-    if (!itemStack.containsEnchantment(Enchantment.DURABILITY)) {
+      meta.addEnchant(new Glow(1), 1, true);
       return this;
     }
 
-    itemStack.removeEnchantment(Enchantment.DURABILITY);
-    return removeItemFlag(ItemFlag.HIDE_ENCHANTS);
+    meta.removeEnchant(new Glow(1));
+    return this;
   }
 
   @SneakyThrows
