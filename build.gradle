@@ -3,7 +3,7 @@ subprojects {
     apply plugin: "maven-publish"
 
     group 'com.celeste'
-    version '3.3.5-SNAPSHOT'
+    version '3.3.6-SNAPSHOT'
 
     repositories {
         mavenLocal()
@@ -16,7 +16,7 @@ subprojects {
     dependencies {
         // Library frameworks
         implementation 'com.google.guava:guava:30.1.1-jre'
-        implementation 'com.google.flogger:flogger:0.6'
+        implementation 'com.google.flogger:flogger:0.7.4'
 
         // Annotations
         def lombok = "org.projectlombok:lombok:1.18.22"
