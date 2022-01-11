@@ -38,13 +38,27 @@ public final class MenuHolder implements InventoryHolder {
 
   static {
     try {
-      final Class<?> packetWindowClazz = ReflectionNms.getNms("PacketPlayOutOpenWindow");
-      final Class<?> componentClazz = ReflectionNms.getNms("IChatBaseComponent");
-      final Class<?> messageClazz = ReflectionNms.getNms("ChatMessage");
+      final Class<?> packetWindowClazz = ReflectionNms.isEqualsOrMoreRecent(17)
+          ? ReflectionNms.getNmsUnversionated("network.protocol.game", "PacketPlayOutOpenWindow")
+          : ReflectionNms.getNms("PacketPlayOutOpenWindow");
+
+      final Class<?> componentClazz = ReflectionNms.isEqualsOrMoreRecent(17)
+          ? ReflectionNms.getNmsUnversionated("network.chat", "IChatBaseComponent")
+          : ReflectionNms.getNms("IChatBaseComponent");
+
+      final Class<?> messageClazz = ReflectionNms.isEqualsOrMoreRecent(17)
+          ? ReflectionNms.getNmsUnversionated("network.chat", "ChatMessage")
+          : ReflectionNms.getNms("ChatMessage");
 
       final Class<?> craftEntityClazz = ReflectionNms.getObc("entity.CraftEntity");
-      final Class<?> entityPlayerClazz = ReflectionNms.getNms("EntityPlayer");
-      final Class<?> containerClazz = ReflectionNms.getNms("Container");
+
+      final Class<?> entityPlayerClazz = ReflectionNms.isEqualsOrMoreRecent(17)
+          ? ReflectionNms.getNmsUnversionated("server.level", "EntityPlayer")
+          : ReflectionNms.getNms("EntityPlayer");
+
+      final Class<?> containerClazz = ReflectionNms.isEqualsOrMoreRecent(17)
+          ? ReflectionNms.getNmsUnversionated("world.inventory", "Container")
+          : ReflectionNms.getNms("Container");
 
       PACKET_WINDOW_CONSTRUCTOR = Reflection.getConstructor(packetWindowClazz, int.class,
           String.class, componentClazz, int.class);
