@@ -9,4 +9,4 @@ Dependency for utility classes to help in Java development, this repository has 
 Utility classes for Java development such as DateFormatter, StringFormatter, DataBuilder, Registry and more.
 
 ### spigot
-Utility classes for Spigot development such as EventWaiter, EventFilter and MenuAPI with Contexts and abstract Menu class.
+Utility classes for Spigot development such as EventWaiter, EventFilter and InventoryAPI with Contexts and abstract Menu class.
