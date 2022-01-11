@@ -29,9 +29,17 @@ public final class ReflectionNms {
 
     try {
       final Class<?> craftPlayerClazz = getObc("entity.CraftPlayer");
-      final Class<?> playerConnectionClazz = getNms("PlayerConnection");
-      final Class<?> packetClazz = getNms("Packet");
-      final Class<?> entityPlayerClazz = getNms("EntityPlayer");
+      final Class<?> playerConnectionClazz = isEqualsOrMoreRecent(17)
+        ? getNms("network.PlayerConnection")
+        : getNms("PlayerConnection");
+
+      final Class<?> packetClazz = isEqualsOrMoreRecent(17)
+        ? Reflection.getClazz("net.minecraft.network.protocol.Packet")
+        : getNms("Packet");
+
+      final Class<?> entityPlayerClazz = isEqualsOrMoreRecent(17)
+          ? getNms("level.EntityPlayer")
+          : getNms("EntityPlayer");
 
       GET_HANDLE = Reflection.getMethod(craftPlayerClazz, "getHandle");
       SEND_PACKET = Reflection.getMethod(playerConnectionClazz, "sendPacket", packetClazz);
