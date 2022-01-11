@@ -59,12 +59,23 @@ public final class ReflectionNms {
   }
 
   /**
+   * VERSIONATED PATH
    * @param nms Name of the NMS class
    * @return An NMS class
    * @throws ClassNotFoundException If class was not found
    */
   public static Class<?> getNms(final String nms) throws ClassNotFoundException {
     return Class.forName(PATH_NMS + nms);
+  }
+
+  /**
+   * @param subPackage Subpackage path
+   * @param className Class name
+   * @return An NMS class
+   * @throws ClassNotFoundException If class was not found
+   */
+  public static Class<?> getNmsUnversionated(final String subPackage, final String className) throws ClassNotFoundException {
+    return Class.forName("net.minecraft." + subPackage + "." + className);
   }
 
   /**

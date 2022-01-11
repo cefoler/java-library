@@ -71,8 +71,13 @@ public final class ItemBuilder implements Cloneable {
   static {
     try {
       final Class<?> craftItemStackClazz = ReflectionNms.getObc("inventory.CraftItemStack");
-      final Class<?> itemStackClazz = ReflectionNms.getNms("ItemStack");
-      final Class<?> compoundClazz = ReflectionNms.getNms("NBTTagCompound");
+      final Class<?> itemStackClazz = ReflectionNms.isEqualsOrMoreRecent(17)
+          ? ReflectionNms.getNmsUnversionated("world.item","ItemStack")
+          : ReflectionNms.getNms("ItemStack");
+
+      final Class<?> compoundClazz = ReflectionNms.isEqualsOrMoreRecent(17)
+          ? ReflectionNms.getNmsUnversionated("nbt", "NBTTagCompound")
+          : ReflectionNms.getNms("NBTTagCompound");
 
       COMPOUND_CONSTRUCTOR = Reflection.getConstructor(compoundClazz);
 
@@ -82,18 +87,15 @@ public final class ItemBuilder implements Cloneable {
       SET_TAG = Reflection.getMethod(itemStackClazz, "setTag", compoundClazz);
       GET_ITEM_META = Reflection.getMethod(craftItemStackClazz, "getItemMeta", itemStackClazz);
 
-      SET_CUSTOM_MODEL_DATA = null;
-      HAS_CUSTOM_MODEL_DATA = null;
+      // MODEL DATA
+      final Class<?> metaItemClazz = ReflectionNms.getObc("inventory.CraftMetaItem");
+      SET_CUSTOM_MODEL_DATA = ReflectionNms.isEqualsOrMoreRecent(13)
+          ? Reflection.getDcMethod(metaItemClazz, "setCustomModelData")
+          : null;
 
-//      // MODEL DATA
-//      final Class<?> metaItemClazz = ReflectionNms.getObc("inventory.CraftMetaItem");
-//      SET_CUSTOM_MODEL_DATA = ReflectionNms.isEqualsOrMoreRecent(13)
-//          ? Reflection.getDcMethod(metaItemClazz, "setCustomModelData")
-//          : null;
-//
-//      HAS_CUSTOM_MODEL_DATA = ReflectionNms.isEqualsOrMoreRecent(13)
-//          ? Reflection.getDcMethod(metaItemClazz, "hasCustomModelData")
-//          : null;
+      HAS_CUSTOM_MODEL_DATA = ReflectionNms.isEqualsOrMoreRecent(13)
+          ? Reflection.getDcMethod(metaItemClazz, "hasCustomModelData")
+          : null;
 
       // UNBREAKABLE
       SET_BOOLEAN = Reflection.getMethod(compoundClazz, "setBoolean", String.class, boolean.class);
