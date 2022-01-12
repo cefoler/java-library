@@ -1,6 +1,7 @@
 package com.celeste.library.spigot;
 
 import com.celeste.library.core.factory.ThreadingFactory;
+import com.celeste.library.spigot.util.item.enchantments.Glow;
 import com.celeste.library.spigot.view.listener.MenuListener;
 import com.celeste.library.spigot.view.listener.MonitorListener;
 import java.util.Arrays;
@@ -10,6 +11,7 @@ import lombok.Getter;
 import me.saiintbrisson.bukkit.command.BukkitFrame;
 import me.saiintbrisson.minecraft.command.message.MessageHolder;
 import org.bukkit.Bukkit;
+import org.bukkit.enchantments.Enchantment;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.ServicesManager;
@@ -39,6 +41,7 @@ public abstract class AbstractBukkitPlugin extends JavaPlugin {
   @Override
   public void onEnable() {
     registerSystems();
+    loadEnchantments();
   }
 
   @Override
@@ -54,6 +57,11 @@ public abstract class AbstractBukkitPlugin extends JavaPlugin {
   public void shutdownExecutors() {
     EXECUTOR.shutdown();
     SCHEDULED.shutdown();
+  }
+
+  private void loadEnchantments() {
+    final Glow glow = new Glow(1);
+    Enchantment.registerEnchantment(glow);
   }
 
   public void registerListeners(final Listener... listeners) {

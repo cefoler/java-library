@@ -70,7 +70,6 @@ public final class RgbUtils {
     return string;
   }
 
-
   public static List<String> process(final List<String> strings) {
     return strings.stream()
         .map(RgbUtils::process)

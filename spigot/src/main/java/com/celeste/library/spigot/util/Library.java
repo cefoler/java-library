@@ -14,14 +14,14 @@ import java.util.stream.Collectors;
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public final class Library {
 
-  private static List<Player> getPlayers(final List<UUID> players) {
+  public static List<Player> getPlayers(final List<UUID> players) {
     return players.stream()
         .map(Bukkit::getPlayer)
         .filter(Objects::nonNull)
         .collect(Collectors.toList());
   }
 
-  private static ConsoleCommandSender getConsole() {
+  public static ConsoleCommandSender getConsole() {
     return Bukkit.getServer().getConsoleSender();
   }
 
