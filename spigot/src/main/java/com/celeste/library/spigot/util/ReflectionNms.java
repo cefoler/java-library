@@ -44,7 +44,7 @@ public final class ReflectionNms {
       GET_HANDLE = Reflection.getMethod(craftPlayerClazz, "getHandle");
       SEND_PACKET = Reflection.getMethod(playerConnectionClazz, "sendPacket", packetClazz);
 
-      PLAYER_CONNECTION = Reflection.getField(entityPlayerClazz, isEqualsOrMoreRecent(17) ? "connection" : "playerConnection");
+      PLAYER_CONNECTION = Reflection.getDcField(entityPlayerClazz, isEqualsOrMoreRecent(17) ? "connection" : "playerConnection");
     } catch (Exception exception) {
       throw new ServerStartError(exception);
     }
