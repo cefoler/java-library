@@ -3,7 +3,7 @@ subprojects {
     apply plugin: "maven-publish"
 
     group 'com.celeste'
-    version '3.3.6-SNAPSHOT'
+    version '3.4.0-SNAPSHOT'
 
     repositories {
         mavenLocal()

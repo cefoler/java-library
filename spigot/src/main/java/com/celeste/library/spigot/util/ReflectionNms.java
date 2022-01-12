@@ -30,7 +30,7 @@ public final class ReflectionNms {
     try {
       final Class<?> craftPlayerClazz = getObc("entity.CraftPlayer");
       final Class<?> playerConnectionClazz = isEqualsOrMoreRecent(17)
-        ? getNmsUnversionated("network", "PlayerConnection")
+        ? getNmsUnversionated("server.network", "PlayerConnection")
         : getNms("PlayerConnection");
 
       final Class<?> packetClazz = isEqualsOrMoreRecent(17)
@@ -38,7 +38,7 @@ public final class ReflectionNms {
         : getNms("Packet");
 
       final Class<?> entityPlayerClazz = isEqualsOrMoreRecent(17)
-          ? getNmsUnversionated("level", "EntityPlayer")
+          ? getNmsUnversionated("server.level", "EntityPlayer")
           : getNms("EntityPlayer");
 
       GET_HANDLE = Reflection.getMethod(craftPlayerClazz, "getHandle");
