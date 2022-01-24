@@ -3,39 +3,35 @@ package com.celeste.library.core.util.formatter;
 import com.celeste.library.core.util.formatter.type.TimeLanguage;
 import com.celeste.library.core.util.formatter.type.TimeType;
 import com.celeste.library.core.util.pattern.RegexPattern;
+import java.time.Instant;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
-
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.TimeZone;
 
 import static java.util.concurrent.TimeUnit.*;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public final class DateFormatter {
 
-  private static final SimpleDateFormat DEFAULT_DATE_FORMAT;
+  private static final DateTimeFormatter FORMATTER;
+  private static final ZoneId ZONE_ID;
 
   static {
-    DEFAULT_DATE_FORMAT = new SimpleDateFormat("MM/dd/yyyy HH:mm");
-    DEFAULT_DATE_FORMAT.setTimeZone(TimeZone.getDefault());
+    FORMATTER = DateTimeFormatter.ofPattern("MM/dd/yyyy HH:mm");
+    ZONE_ID = ZoneId.systemDefault();
+
+    FORMATTER.withZone(ZONE_ID);
   }
 
-  public static String convertToString(final long time, final SimpleDateFormat dateFormat) {
-    return dateFormat.format(time);
+  public static String convertToString(final long time, final DateTimeFormatter dateFormat) {
+    return LocalDateTime.ofInstant(Instant.ofEpochMilli(time), ZONE_ID)
+        .format(dateFormat);
   }
 
   public static String convertToString(final long time) {
-    return DEFAULT_DATE_FORMAT.format(time);
-  }
-
-  public static String convertToString(final Date date, final SimpleDateFormat dateFormat) {
-    return dateFormat.format(date.getTime());
-  }
-
-  public static String convertToString(final Date date) {
-    return DEFAULT_DATE_FORMAT.format(date.getTime());
+    return convertToString(time, FORMATTER);
   }
 
   /**

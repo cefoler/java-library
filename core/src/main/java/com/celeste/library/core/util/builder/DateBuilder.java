@@ -2,44 +2,39 @@ package com.celeste.library.core.util.builder;
 
 import com.celeste.library.core.util.formatter.DateFormatter;
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.TimeZone;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 
 public final class DateBuilder {
 
-  private SimpleDateFormat dateFormat;
+  private DateTimeFormatter dateFormat;
 
   public static DateBuilder builder() {
     return new DateBuilder();
   }
 
-  public DateBuilder format(final SimpleDateFormat format) {
+  public DateBuilder format(final DateTimeFormatter format) {
     this.dateFormat = format;
     return setTimezone();
   }
 
   public DateBuilder format(final String format) {
-    this.dateFormat = new SimpleDateFormat(format);
+    this.dateFormat = DateTimeFormatter.ofPattern(format);
     return setTimezone();
   }
 
   private DateBuilder setTimezone() {
-    setTimezone(TimeZone.getDefault());
+    setTimezone(ZoneId.systemDefault());
     return this;
   }
 
-  private DateBuilder setTimezone(final TimeZone timezone) {
-    dateFormat.setTimeZone(timezone);
+  private DateBuilder setTimezone(final ZoneId zoneId) {
+    dateFormat.withZone(zoneId);
     return this;
   }
 
   public String convert(final long time) {
     return DateFormatter.convertToString(time, dateFormat);
-  }
-
-  public String convert(final Date date) {
-    return DateFormatter.convertToString(date, dateFormat);
   }
 
 }
